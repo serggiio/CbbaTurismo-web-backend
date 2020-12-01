@@ -14,17 +14,25 @@ class ProvinceSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         DB::table('province')->truncate();
         DB::table('province')->insert([
-            'provinceName' => 'Cercado'
+            'provinceName' => 'Cercado',
+            'latitude' => -17.3697351,
+            'longitude' => -66.1653224
         ]);
 
         DB::table('province')->insert([
-            'provinceName' => 'Cochabamba'
+            'provinceName' => 'Cochabamba',
+            'latitude' => -17.3697351,
+            'longitude' => -66.1653224
         ]);
         DB::table('province')->insert([
-            'provinceName' => 'Tarata'
+            'provinceName' => 'Tarata',
+            'latitude' => -17.6091383,
+            'longitude' => -66.0255368
         ]);
         DB::table('province')->insert([
-            'provinceName' => 'Sacaba'
+            'provinceName' => 'Sacaba',
+            'latitude' => -17.4057139,
+            'longitude' => -66.0430242
         ]);
     }
 }

@@ -27,6 +27,13 @@ Route::group(['prefix' => 'admin'], function() {
         
     ]);
 
+    Route::get('/registerNewPlace', [
+
+        'as' 	=> 		'front.newPlace',
+        'uses'	=>		'FrontController@registerNewPlace'
+        
+    ]);
+
 });
 
 //Auth::routes();

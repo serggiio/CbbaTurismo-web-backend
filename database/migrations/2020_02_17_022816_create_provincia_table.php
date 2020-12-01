@@ -17,6 +17,8 @@ class CreateProvinciaTable extends Migration
             $table->increments('provinceId');
 
             $table->string('provinceName', 140)->unique();
+            $table->double('latitude');
+            $table->double('longitude');
             $table->timestamps();
         });
     }
