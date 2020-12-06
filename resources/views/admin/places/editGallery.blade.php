@@ -43,66 +43,57 @@
             </div>
 
   
-            <h2>Lista de lugares registrados</h2>
+            <h2>Editar Galeria: </h2>
 
-            <table class="table table-hover">
-                <thead class="thead-dark">
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Provincia</th>
-                    <th scope="col">Tipo</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col">Vista movil</th>
-                    <th scope="col">Editar</th>
-                    <th scope="col">Eliminar</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  
-                    @foreach($places as $place)
-                    <tr>
-                        
-                        <th scope="row">{{$place['touristicPlaceId']}}</th>
-                        <td>{{$place['placeName']}}</td>
-                        <td>{{$place['provinceName']}}</td>
-                        @if ($place['type'] == 'place')
-                          <td>Lugar</td>
-                        @endif
-                        @if ($place['type'] == 'event')
-                          <td>Evento</td>
-                        @endif
-                        <td>{{$place['statusName']}}</td>
-                        <td>
-                            <a class="nav-link" href="{{ route('front.index')}}">   
-                                <i class="fas fa-mobile-alt"></i>
-                            </a>
-                        </td>
-                        <td>
-                            <a class="nav-link" href="{{ route('front.placeDetail', $place['touristicPlaceId'])}}">   
-                                Editar
-                            </a>
-                        </td>
-                        <td>
-                            <a class="nav-link" href="{{ route('front.index')}}">   
-                                Eliminar
-                            </a>
-                        </td>
-                      </tr>
-                    @endforeach
-                    
+            <div class="row">
+              <div class="col-md-1"></div>
+              <div class="col-md-10">
+                  <form method="POST" action="{{ action('FrontController@saveNewPlace') }}" style="padding-top: 5%" enctype="multipart/form-data">
+                      @csrf <!-- {{ csrf_field() }} -->
+                      
+                      <div class="form-group">
+                        <label for="placeName">Creado: </label>
+                        <div class="col-md-5"><input class="form-control" required readonly name="placeName" type="text" id="placeName" value="{{ $gallery['created_at'] }}"></div>
+                    </div>
+                      
+                      <div class="form-group">
+                          <label for="placeName">Nombre</label>
+                          
+                          <div class="row">
+                            <div class="col-md-5"><input class="form-control" required name="placeName" type="text" id="placeName" value="{{ $gallery['galleryName'] }}"></div>
+                            <div class="col-md-7"><button type="submit" class="btn btn-primary col-md-2">Actualizar</button></div>
+                          </div>
+                          
+                      </div>
 
-                </tbody>
-              </table>
+                  </form><br>
 
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">Imagenes: </h5>
+                      
+                      <div class="row">
+                        @foreach ($gallery['images'] as $item)
+                          <div class="col-md-3 card">
+                            <div class="card-body" style="height: 10%">
+                              <h5 class="card-title">Imagen: </h5>
+                              
+                              <img width="100%" height="100%" src="{{ asset($gallery['galleryPath'] . '/' . $item['imagePath']) }}" class="">
+                              
+                            </div>
+                            <div class="card-footer">
+                              <a href="{{route('admin.galleryImage.destroy', $item['imageId'])}}" onclick="return confirm('Eliminar esta imagen?')" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+                            </div>
+                          </div>
+                        @endforeach
+                      </div>
+                      
+                    </div>
+                  </div>
 
-            	<div class="row">
-                <div class="col-md-4"></div>
-                <div class="col-md-4">
-                  {!! $places->render() !!}
-                </div>
-                <div class="col-md-4"></div>
               </div>
+              <div class="col-md-1"></div>
+          </div>
 
 
 

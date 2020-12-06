@@ -39,8 +39,10 @@ class TouristicPlaceController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request);
         return 'FUNCIONANDO PAPU';
     }
+
 
         /**
      * Display the specified resource.

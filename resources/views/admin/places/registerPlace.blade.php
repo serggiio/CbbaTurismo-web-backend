@@ -50,11 +50,19 @@
             <div class="row">
                 <div class="col-md-2"></div>
                 <div class="col-md-8">
-                    <form style="padding-top: 5%">
+                    <form method="POST" action="{{ action('FrontController@saveNewPlace') }}" style="padding-top: 5%" enctype="multipart/form-data">
+                      @csrf <!-- {{ csrf_field() }} -->
 
                         <div class="form-group">
                           <label for="inputPlaceName">Nombre</label>
-                          <input type="text" class="form-control" id="inputPlaceName" required>
+                          <input class="form-control" required name="inputPlaceName" type="text" id="inputPlaceName">
+                        </div>
+
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="inputPlaceType" id="inputPlaceType" value="place" checked>
+                          <label class="form-check-label" for="Radios1">Lugar turistico</label><br>
+                          <input class="form-check-input" type="radio" name="inputPlaceType" id="inputPlaceType" value="event">
+                          <label class="form-check-label" for="Radios2">Evento</label>
                         </div>
 
                         <div class="row">
@@ -68,9 +76,9 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="inputPlaceTags">Tags</label>
-                                <select class="form-control select-tag" multiple="" required="required" name="inputPlaceTags">
+                                <select class="form-control select-tag" multiple="multiple" required="required" name="inputPlaceTags[]">
                                     @foreach($tags as $tag)
-                                        <option value="$tag['tagId']">{{$tag['tagName']}}</option>
+                                        <option value="{{$tag['tagId']}}">{{$tag['tagName']}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -78,7 +86,13 @@
 
                         <div class="form-group">
                             <label for="inputPlaceStreet">Calles</label>
-                            <input type="text" class="form-control" id="inputPlaceStreet">
+                            <input class="form-control" name="inputPlaceStreet" type="text" id="inputPlaceStreet">
+                        </div>
+
+                        <div class="form-group">
+                          <label for="image">Imagen</label>
+                          <input id="image" type="file" name="image"><br>
+                          <label for="img">Tamaño maximo 250 x 250</label>
                         </div>
 
                         <div class="form-group">
@@ -129,8 +143,9 @@
                                             <div class="col-md-6">
                                                 <div id="mapholder"></div><br>
                                                 <div class="form-group">
-                                                    <input type="text" class="form-control" id="inputPlaceLatitude" required readonly>
-                                                    <input type="text" class="form-control" id="inputPlaceLongitude" required readonly>
+                                                    
+                                                    <input class="form-control" name="inputPlaceLatitude" type="text" id="inputPlaceLatitude" readonly>
+                                                    <input class="form-control" name="inputPlaceLongitude" type="text" id="inputPlaceLongitude" readonly>
                                                 </div>
                                             </div>
                                             <div class="col-md-3"></div>
@@ -145,10 +160,10 @@
 
                         
 
-                        <div style="text-align: center;" class="form-group">
+                        
                             <br>
                             <button type="submit" class="btn btn-primary">Registrar Lugar!</button>
-                        </div>
+                        
                     </form>
                 </div>
                 <div class="col-md-2"></div>
@@ -178,7 +193,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.3.1.min.js"><\/script>')</script>
         
-        //Init map script
+
         <script>
             var map;
             function initMap() {
@@ -189,7 +204,6 @@
             }
         </script>
 
-        //script select province, tags
         <script>
             $.noConflict();
             $('.textarea-inputPlaceDescription').trumbowyg();
@@ -207,7 +221,6 @@
         </script>
 
 
-        //script listeners, map
         <script>
 
             var lat = -17.3783261;
@@ -251,10 +264,10 @@
 
                         //readonly inputs
                         var inputLat = document.getElementById("inputPlaceLatitude"); 
-                        inputLat.value = 'Latitud: ' + clickPosition.lat;
+                        inputLat.value = '' + clickPosition.lat;
 
                         var inputLon = document.getElementById("inputPlaceLongitude"); 
-                        inputLon.value = 'Longitud: ' + clickPosition.lng;
+                        inputLon.value = '' + clickPosition.lng;
 
                 });
             
@@ -269,6 +282,22 @@
                 map.setCenter(selectLocation);
 
             }
+
+            var uploadField = document.getElementById("image");
+
+            uploadField.onchange = function() {
+               console.log('tamaño: ' + this.files[0].size); 
+                /*if(this.files[0].size > 41982){
+                  alert("El tamaño de la imagen es muy grande!");
+                  this.value = "";
+                }*/
+
+                /*let img = new Image()
+                img.src = window.URL.createObjectURL(this.files[0])
+                img.onload = () => {
+                  alert(img.width + " " + img.height);
+                }*/
+            };
 
             
         </script>

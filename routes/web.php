@@ -34,6 +34,78 @@ Route::group(['prefix' => 'admin'], function() {
         
     ]);
 
+    Route::post('/storeNewPlace', [
+
+        'as' 	=> 		'front.storeNewPlace',
+        'uses'	=>		'FrontController@saveNewPlace'
+        
+    ]);
+
+    //users module
+    Route::get('/users', [
+
+        'as' 	=> 		'front.users',
+        'uses'	=>		'FrontController@users'
+        
+    ]);
+
+    Route::get('/registerNewUser', [
+
+        'as' 	=> 		'front.newUser',
+        'uses'	=>		'FrontController@registerNewUser'
+        
+    ]);
+
+    Route::post('/storeNewUser', [
+
+        'as' 	=> 		'front.storeNewUser',
+        'uses'	=>		'FrontController@saveNewUser'
+        
+    ]);
+
+    //edit, delete place
+    Route::get('/placeDetail/{id}', [
+
+        'as' 	=> 		'front.placeDetail',
+        'uses'	=>		'FrontController@placeDetail'
+        
+    ]);
+
+    Route::post('/storeUpdatedPlace', [
+
+        'as' 	=> 		'front.storeUpdatedPlace',
+        'uses'	=>		'FrontController@saveUpdatedPlace'
+        
+    ]);
+
+    //create gallery
+    Route::post('/createGallery', [
+
+        'as' 	=> 		'front.createGallery',
+        'uses'	=>		'FrontController@createGallery'
+        
+    ]);
+
+    //delete gallery
+    Route::get('gallery/{id}/destroy', [
+		'as'	=>	'admin.gallery.destroy',
+		'uses'	=>	'FrontController@destroyGallery'
+    ]);
+    
+    //edit gallery
+    Route::get('gallery/{id}', [
+        'as'	=>	'admin.gallery.edit',
+        'uses'	=>	'FrontController@editGallery'
+    ]);
+
+    //delete image
+    Route::get('galleryImage/{id}/destroy', [
+        'as'	=>	'admin.galleryImage.destroy',
+        'uses'	=>	'FrontController@destroyGalleryImage'
+    ]);
+
+    
+
 });
 
 //Auth::routes();

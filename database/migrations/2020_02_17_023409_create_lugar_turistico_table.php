@@ -20,15 +20,15 @@ class CreateLugarTuristicoTable extends Migration
             $table->integer('provinceId')->unsigned();
             $table->integer('userId')->unsigned();
             $table->integer('placeStatusId')->nullable()->unsigned();
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->text('history')->nullable();
             $table->string('placeName');
             $table->string('mainImage');
-            $table->string('mainVideo');
-            $table->text('streets');
+            $table->string('mainVideo')->nullable();
+            $table->text('streets')->nullable();
             $table->double('latitude');
             $table->double('longitude');
-            $table->string('businessHours');
+            $table->string('businessHours')->nullable();
             $table->string('type');
             $table->date('startDate')->nullable();
             $table->date('endDate')->nullable();
@@ -36,7 +36,7 @@ class CreateLugarTuristicoTable extends Migration
 
             $table->foreign('provinceId')->references('provinceId')->on('province')->onDelete('cascade');
             $table->foreign('placeStatusId')->references('statusId')->on('status')->onDelete('cascade');
-            $table->foreign('userId')->references('userId')->on('users')->onDelete('cascade');
+            $table->foreign('userId')->references('userId')->on('usertable')->onDelete('cascade');
             
         });
     }

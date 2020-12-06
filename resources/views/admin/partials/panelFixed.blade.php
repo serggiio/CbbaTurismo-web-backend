@@ -50,13 +50,13 @@
       </h6>
       <ul class="nav flex-column mb-2">
         <li class="nav-item">
-          <a class="nav-link" href="#">
+          <a class="nav-link" href="{{ route('front.users')}}">
             <i class="fas fa-list-ol"></i>
             Lista de usuarios
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">
+          <a class="nav-link" href="{{ route('front.newUser')}}">
             <i class="fas fa-plus-square"></i>
             Registrar usuario
           </a>

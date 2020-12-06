@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
-    <title>@yield('Panel de control')</title>
+    <title>@yield('Usuarios')</title>
 
 
 
@@ -43,43 +43,32 @@
             </div>
 
   
-            <h2>Lista de lugares registrados</h2>
+            <h2>Lista de usuarios registrados</h2>
 
             <table class="table table-hover">
                 <thead class="thead-dark">
                   <tr>
                     <th scope="col">#</th>
                     <th scope="col">Nombre</th>
-                    <th scope="col">Provincia</th>
+                    <th scope="col">Correo</th>
                     <th scope="col">Tipo</th>
                     <th scope="col">Estado</th>
-                    <th scope="col">Vista movil</th>
                     <th scope="col">Editar</th>
                     <th scope="col">Eliminar</th>
                   </tr>
                 </thead>
                 <tbody>
                   
-                    @foreach($places as $place)
+                    @foreach($users as $user)
                     <tr>
                         
-                        <th scope="row">{{$place['touristicPlaceId']}}</th>
-                        <td>{{$place['placeName']}}</td>
-                        <td>{{$place['provinceName']}}</td>
-                        @if ($place['type'] == 'place')
-                          <td>Lugar</td>
-                        @endif
-                        @if ($place['type'] == 'event')
-                          <td>Evento</td>
-                        @endif
-                        <td>{{$place['statusName']}}</td>
+                        <th scope="row">{{$user['userId']}}</th>
+                        <td>{{$user['name']. ' ' . $user['lastName']}}</td>
+                        <td>{{$user['email']}}</td>
+                        <td>{{$user['nameType']}}</td>
+                        <td>{{$user['statusId']}}</td>
                         <td>
                             <a class="nav-link" href="{{ route('front.index')}}">   
-                                <i class="fas fa-mobile-alt"></i>
-                            </a>
-                        </td>
-                        <td>
-                            <a class="nav-link" href="{{ route('front.placeDetail', $place['touristicPlaceId'])}}">   
                                 Editar
                             </a>
                         </td>
@@ -99,7 +88,7 @@
             	<div class="row">
                 <div class="col-md-4"></div>
                 <div class="col-md-4">
-                  {!! $places->render() !!}
+                  {!! $users->render() !!}
                 </div>
                 <div class="col-md-4"></div>
               </div>
