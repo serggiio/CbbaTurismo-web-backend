@@ -180,7 +180,7 @@
 
                         <div class="tab-pane fade" id="gallery" role="tabpanel" aria-labelledby="gallery-tab">
 
-                            
+
                             @if (empty($place['gallery'][0]))
                                 <!--No gallery-->
                                 <form method="POST" action="{{ action('FrontController@saveNewPlace') }}" style="padding-top: 5%" enctype="multipart/form-data">
@@ -215,7 +215,7 @@
                                                 </div>
                                             </div>
 
-                                    @endforeach
+                                             @endforeach
                                         </div>
                                         
                                     </div>
@@ -372,7 +372,6 @@
             function selectListener(){
                 let select = document.getElementById("inputPlaceProvince");
                 let valueJson = JSON.parse(select.value);
-                //alert('la concha de la lora' + valueJson.latitude);
                 
                 let selectLocation = new google.maps.LatLng(valueJson.latitude, valueJson.longitude);
                 map.setCenter(selectLocation);

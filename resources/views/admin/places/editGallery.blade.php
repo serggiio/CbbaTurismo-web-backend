@@ -41,29 +41,38 @@
                 </button>
               </div>
             </div>
+            <a class="btn btn-light" href="{{ route('front.placeDetail', $gallery['touristicPlaceId'])}}" role="button"><i class="fas fa-arrow-circle-left"></i> Volver</a>
 
   
             <h2>Editar Galeria: </h2>
+            
 
             <div class="row">
               <div class="col-md-1"></div>
               <div class="col-md-10">
-                  <form method="POST" action="{{ action('FrontController@saveNewPlace') }}" style="padding-top: 5%" enctype="multipart/form-data">
+                  <form method="POST" action="{{ action('FrontController@createImage') }}" style="padding-top: 5%" enctype="multipart/form-data">
                       @csrf <!-- {{ csrf_field() }} -->
                       
                       <div class="form-group">
                         <label for="placeName">Creado: </label>
-                        <div class="col-md-5"><input class="form-control" required readonly name="placeName" type="text" id="placeName" value="{{ $gallery['created_at'] }}"></div>
+                        <div class="col-md-7"><input class="form-control" required readonly name="created_at" type="text" id="created_at" value="{{ $gallery['created_at'] }}"></div>
                     </div>
                       
                       <div class="form-group">
                           <label for="placeName">Nombre</label>
                           
                           <div class="row">
-                            <div class="col-md-5"><input class="form-control" required name="placeName" type="text" id="placeName" value="{{ $gallery['galleryName'] }}"></div>
-                            <div class="col-md-7"><button type="submit" class="btn btn-primary col-md-2">Actualizar</button></div>
+                            <div class="col-md-7"><input class="form-control" required name="galleryName" type="text" id="galleryName" value="{{ $gallery['galleryName'] }}"></div>
+                            <input hidden class="form-control" required name="galleryId" type="text" id="galleryId" value="{{ $gallery['galleryId'] }}">
+                            
                           </div>
                           
+                      </div>
+
+                      <div class="form-group">
+                        <label for="files">Agregar imagenes: </label>
+                        <div class="col-md-7"><input type="file" class="form-control" name="images[]" placeholder="address" multiple><br></div>
+                        <div class="col-md-7"><button type="submit" class="btn btn-primary col-md-2">Actualizar</button></div>
                       </div>
 
                   </form><br>
@@ -82,7 +91,7 @@
                               
                             </div>
                             <div class="card-footer">
-                              <a href="{{route('admin.galleryImage.destroy', $item['imageId'])}}" onclick="return confirm('Eliminar esta imagen?')" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+                              <a href="{{route('admin.galleryImage.destroy', $item['imageId'])}}" onclick="deleteControl({{ $gallery['images'] }})" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
                             </div>
                           </div>
                         @endforeach
@@ -109,5 +118,17 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
   <!-- Swiper JS -->
   <script src="{{ asset('plugins/swiper-master/package/js/swiper.min.js')}}"></script>
+
+  <script>
+    function deleteControl(images){
+      
+      if(images.length == 1){
+        console.log('solo UNO');
+        alert('No puedes eliminar todas las imagenes de una galeria!');
+      }else{
+        return confirm('Eliminar esta imagen?');
+      }
+    }
+  </script>
 
 </html>

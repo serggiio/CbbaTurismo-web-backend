@@ -14,6 +14,7 @@ use App\Favorite as FavObj;
 use App\Rate as RateObj;
 use App\Gallery as GalleryObj;
 use App\Images as ImageObj;
+use App\Status as StatusObj;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
@@ -26,7 +27,7 @@ class FrontController extends Controller
         $touristicPlaces->each(function($touristicPlace){
             $touristicPlace['provinceName'] = $touristicPlace->province['provinceName'];
             $touristicPlace['statusName'] = $touristicPlace->status['statusName'];
-
+            $touristicPlace['rateAvg'] = round($touristicPlace->rate->avg('puntuacion'));
             unset($touristicPlace['province']);
             unset($touristicPlace['status']);
 
@@ -149,6 +150,40 @@ class FrontController extends Controller
         return redirect()->route('front.users');
     }
 
+    public function destroyUser($id){
+        $user = UserTableObj::where('userId', '=', $id)->first();
+        $user->delete();
+        //dd($user);
+        return redirect()->route('front.users');
+    }
+
+    public function userDetail($id){
+        $user = UserTableObj::where('userId', '=', $id)->first();
+        //dd($user);
+        $userTypes = UserTypeObj::orderBy('nameType', 'desc')->get();
+        $userStatus = StatusObj::orderBy('statusName', 'desc')->get();
+        return view('admin.users.detailUser')
+        ->with('user', $user)
+        ->with('types', $userTypes)
+        ->with('status', $userStatus);
+    }
+
+    public function saveUpdatedUser(Request $request){
+        $data = $request->all();
+        //dd($data);
+        $user = UserTableObj::where('userId', '=', $data['userId'])->first();
+        $newData['statusId'] = $data['inputUserStatus'];
+        $newData['typeId'] = $data['inputUserType'];
+        $newData['name'] = $data['name'];
+        $newData['lastName'] = $data['lastName'];
+        $newData['email'] = $data['email'];
+
+        $user->fill($newData);
+        $user->save();
+
+        return redirect()->route('front.user.detail', ['id' => $data['userId']]);
+    }
+
     public function placeDetail($id)
     {
         
@@ -176,10 +211,21 @@ class FrontController extends Controller
         //dd($touristicPlace->toArray()['tag']);
         //dd($id);
         //dd($touristicPlace->toArray());
+        //dd($touristicPlace['gallery'][0]['images']->toArray());//$gallery['images'][0]['imagePath']
         return view('admin.places.detailPlace')
         ->with('place', $touristicPlace)
         ->with('tags', $tags)
         ->with('provinces', $provinces);
+
+    }
+
+
+    public function destroyPlace($id)
+    {
+        $touristicPlace = TouristicObj::where('touristicPlaceId', '=', $id)->first();
+        $touristicPlace->delete();
+        //dd($touristicPlace);
+        return redirect()->route('front.index');
 
     }
     
@@ -285,19 +331,52 @@ class FrontController extends Controller
 
     public function destroyGalleryImage($id)
     {
-        dd($id);
-        $gallery = GalleryObj::where('galleryId', '=', $id)->first();
-        $touristicPlaceId = $gallery['touristicPlaceId'];
-        //dd(public_path(). '/' .$gallery['galleryPath']);
+        
+        $image = ImageObj::where('imageId', '=', $id)->first();
+
+        $images = ImageObj::where('galleryId', '=', $image['galleryId'])->get();
+
+        if(count($images->toArray()) > 1){
+            $gallery = GalleryObj::where('galleryId', '=', $image['galleryId'])->first();
+            //dd(\File::exists(public_path(). '/' . $gallery['galleryPath'] . '/' . $image['imagePath']));
+            if (\File::exists(public_path(). '/' . $gallery['galleryPath'] . '/' . $image['imagePath'])) \File::delete(public_path(). '/' . $gallery['galleryPath'] . '/' . $image['imagePath']);
+            //dd($gallery->toArray());
+            $image->delete();
+        }
+
+        
+        
+        return redirect()->route('admin.gallery.edit', ['id' => $image['galleryId']]);
+    }
+
+    public function createImage(Request $request)
+    {
+        $data=$request->all();
+        //dd($data);
+        $gallery = GalleryObj::where('galleryId', '=', $data['galleryId'])->first();
+
+        $newData['galleryName'] = $data['galleryName'];
+
+        $gallery->fill($newData);
+        $gallery->save();
+
+        if($files=$request->file('images')){
+            //dd($files);
+            foreach($files as $file){
+                $name = $file->getClientOriginalName(). $gallery['galleryId'] . time() . '.' . $file->getClientOriginalExtension();
+                $path = public_path(). '/' . $gallery['galleryPath'] . '/';
+                $file->move($path,$name);
+                
+                $newImage['galleryId'] = $gallery->galleryId;
+                $newImage['imagePath'] = $name;
+                $storedImage = new ImageObj($newImage);
+                $storedImage->save();
+                
+            }
+        }
 
 
-        if (\File::exists(public_path(). '/' .$gallery['galleryPath'])) \File::deleteDirectory(public_path(). '/' .$gallery['galleryPath']);
-        $gallery->images;
-        //dd($gallery->toArray());
-        $gallery->delete();
-
-        /*flash("El articulo  ". $article->title . " se ha eliminado",'success');*/
-        return redirect()->route('front.placeDetail', ['id' => $touristicPlaceId]);
+        return redirect()->route('admin.gallery.edit', ['id' => $data['galleryId']]);
     }
     
 }

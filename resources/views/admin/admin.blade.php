@@ -53,7 +53,7 @@
                     <th scope="col">Provincia</th>
                     <th scope="col">Tipo</th>
                     <th scope="col">Estado</th>
-                    <th scope="col">Vista movil</th>
+                    <th scope="col">Puntuacion /5</th>
                     <th scope="col">Editar</th>
                     <th scope="col">Eliminar</th>
                   </tr>
@@ -74,9 +74,7 @@
                         @endif
                         <td>{{$place['statusName']}}</td>
                         <td>
-                            <a class="nav-link" href="{{ route('front.index')}}">   
-                                <i class="fas fa-mobile-alt"></i>
-                            </a>
+                          {{ $place['rateAvg'] }}
                         </td>
                         <td>
                             <a class="nav-link" href="{{ route('front.placeDetail', $place['touristicPlaceId'])}}">   
@@ -84,7 +82,7 @@
                             </a>
                         </td>
                         <td>
-                            <a class="nav-link" href="{{ route('front.index')}}">   
+                            <a class="nav-link" href="{{ route('admin.place.destroy', $place['touristicPlaceId'])}}" onclick="return confirm('Eliminar?')">   
                                 Eliminar
                             </a>
                         </td>

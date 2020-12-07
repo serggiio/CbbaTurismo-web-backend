@@ -63,12 +63,40 @@ Route::group(['prefix' => 'admin'], function() {
         
     ]);
 
+    //delete user
+    Route::get('user/{id}/destroy', [
+        'as'	=>	'admin.user.destroy',
+        'uses'	=>	'FrontController@destroyUser'
+    ]);
+
+    //edit user
+    Route::get('/user/{id}', [
+
+        'as' 	=> 		'front.user.detail',
+        'uses'	=>		'FrontController@userDetail'
+        
+    ]);
+
+    //store updated user
+    Route::post('/storeUpdatedUser', [
+
+        'as' 	=> 		'front.storeUpdatedUser',
+        'uses'	=>		'FrontController@saveUpdatedUser'
+        
+    ]);
+
     //edit, delete place
     Route::get('/placeDetail/{id}', [
 
         'as' 	=> 		'front.placeDetail',
         'uses'	=>		'FrontController@placeDetail'
         
+    ]);
+
+    //delete place
+    Route::get('place/{id}/destroy', [
+        'as'	=>	'admin.place.destroy',
+        'uses'	=>	'FrontController@destroyPlace'
     ]);
 
     Route::post('/storeUpdatedPlace', [
@@ -102,6 +130,14 @@ Route::group(['prefix' => 'admin'], function() {
     Route::get('galleryImage/{id}/destroy', [
         'as'	=>	'admin.galleryImage.destroy',
         'uses'	=>	'FrontController@destroyGalleryImage'
+    ]);
+
+    //create image
+    Route::post('/createImage', [
+
+        'as' 	=> 		'front.createImage',
+        'uses'	=>		'FrontController@createImage'
+        
     ]);
 
     
