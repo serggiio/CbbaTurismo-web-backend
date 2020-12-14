@@ -17,6 +17,7 @@ class CreateTagTable extends Migration
             $table->increments('tagId');
             
             $table->string('tagName', 70)->unique();
+            $table->string('tagFile', 70)->unique();
             $table->timestamps();
         });
     }

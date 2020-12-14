@@ -70,9 +70,12 @@ Route::group(['prefix' => 'touristicPlace'], function() {
     //get data by criterya
     Route::post('/search', 'TouristicPlaceController@search');
     Route::get('/search', 'TouristicPlaceController@search');
+    Route::post('/searchByLocation', 'TouristicPlaceController@searchByLocation');
 
     //images
     Route::get('/image', 'TouristicPlaceController@getImage');
+    Route::get('/mainImage/{id}', 'TouristicPlaceController@getMainImage');
+    Route::get('/image/{id}', 'TouristicPlaceController@getImageById');
 
     //tags
     Route::post('/tags', 'TouristicPlaceController@getTags');

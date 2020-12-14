@@ -7,7 +7,9 @@ use App\Images as ImagesObj;
 use App\Tag as TagObj;
 use App\Favorite as FavObj;
 use App\Rate as RateObj;
+use App\Gallery as GalleryObj;
 use Illuminate\Http\Request;
+use DB;
 
 class TouristicPlaceController extends Controller
 {
@@ -55,7 +57,7 @@ class TouristicPlaceController extends Controller
         $data = $request->all();
         //$test1 = json_decode($data);
         try {
-            $queryData = TouristicObj::where('placeStatusId', '=', 1)->get();
+            $queryData = TouristicObj::where('placeStatusId', '=', 2)->get();
             //dd($queryData);
             //$tempData = TouristicObj::where('placeStatusId', '=', 1)->get();
             $tagList = array();
@@ -70,6 +72,14 @@ class TouristicPlaceController extends Controller
                     $tagList[] = $value['tagName'];
                 }
                 $queryData['tagList'] = $tagList;
+
+
+                $queryData['gallery']->each(function($queryData){
+                    //dd($queryData['galleryId']);
+    
+                    $queryData['images'] = ImagesObj::where('galleryId', '=', $queryData['galleryId'])->get();
+                });
+
                 //delete unnecesary data
                 unset($queryData['tag']);
                 unset($queryData['province']);
@@ -166,10 +176,30 @@ class TouristicPlaceController extends Controller
         return response()->file($path);
     }
 
+    public function getMainImage($id)
+    {
+        $queryData = TouristicObj::where('touristicPlaceId', '=', $id)->first();
+        //dd($queryData->toArray());
+        $path = public_path() . '/images/places/'. $id .'/'. $queryData['mainImage'];
+        //dd($path);
+        return response()->file($path);
+    }
+
+    public function getImageById($id)
+    {
+        $queryData = ImagesObj::where('imageId', '=', $id)->first();
+        $gallery = GalleryObj::where('galleryId', '=', $queryData['galleryId'])->first();
+        //dd($queryData->toArray());
+        $path = public_path() . '/'. $gallery['galleryPath'] .'/'. $queryData['imagePath'];
+        //dd($path);
+        return response()->file($path);
+    }
+
     public function getTagImage($tagName)
     {   
         //dd($tagName);
-        $path = public_path() . '/images/tags/' . $tagName . ".jpg";
+        $tag = TagObj::where('tagName', '=', $tagName)->first();
+        $path = public_path() . '/images/tags/' . $tag['tagFile'];
         //dd($path);
         return response()->file($path);
     }
@@ -398,7 +428,7 @@ class TouristicPlaceController extends Controller
     {
         $data = $request->all();
         $finalList = array();
-        $query = array(['type', '=', $data['touristicPlace']['type']], ['placeStatusId', '=', 1]);
+        $query = array(['type', '=', $data['touristicPlace']['type']], ['placeStatusId', '=', 2]);
         //array_push($query, ['placeName', 'LIKE', '%'.$data['touristicPlace']['name'].'%']);
         if(isset($data['touristicPlace']['name']) && !empty($data['touristicPlace']['name']) ){
             array_push($query, ['placeName', 'LIKE', '%'.$data['touristicPlace']['name'].'%']);
@@ -423,6 +453,13 @@ class TouristicPlaceController extends Controller
                     $tagList[] = $value['tagName'];
                 }
                 $queryData['tagList'] = $tagList;
+
+                $queryData['gallery']->each(function($queryData){
+                    //dd($queryData['galleryId']);
+    
+                    $queryData['images'] = ImagesObj::where('galleryId', '=', $queryData['galleryId'])->get();
+                });
+
                 //delete unnecesary data
                 unset($queryData['tag']);
                 unset($queryData['province']);
@@ -462,6 +499,43 @@ class TouristicPlaceController extends Controller
                 'code' => 'OK',
                 'get' => true,
                 'data' => $finalList
+            ];    
+        } catch (\Throwable $th) {
+            dd($th);
+            return [
+                'code' => 'Error',
+                'get' => false,
+                'data' => $th,
+                'message' => [
+                    'es' => 'No se encontro la informacion requerida',
+                    'en' => 'The required information was not found'
+                ]
+            ];
+        }
+    }
+
+    public function searchByLocation(Request $request)
+    {
+        $data = $request->all();
+
+
+        //distace km
+        $places = DB::select(DB::raw('SELECT touristicPlaceId, placeName, ( 6371 * ACOS( SIN( RADIANS( latitude ) ) * SIN( RADIANS( '. $data['data']['latitude'] . ' ) ) + COS( RADIANS( longitude - '. $data['data']['longitude'] .' ) ) * COS( RADIANS( latitude ) ) * COS( RADIANS( '. $data['data']['latitude'] .' ) ) ) ) AS distance
+        FROM touristicplace
+        WHERE placeStatusId = 2
+        HAVING distance <'.$data['data']['distance']. 
+        ' ORDER BY distance ASC'));
+
+        foreach ($places as $place) {
+            $place->distance = round($place->distance * 1000);
+        }
+
+        try {
+
+            return [
+                'code' => 'OK',
+                'get' => true,
+                'data' => $places
             ];    
         } catch (\Throwable $th) {
             dd($th);

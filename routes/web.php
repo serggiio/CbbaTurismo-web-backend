@@ -140,6 +140,82 @@ Route::group(['prefix' => 'admin'], function() {
         
     ]);
 
+    //tags
+    Route::get('/tags', [
+
+        'as' 	=> 		'front.tags',
+        'uses'	=>		'FrontController@tags'
+        
+    ]);
+
+    //delete tag
+    Route::get('tag/{id}/destroy', [
+        'as'	=>	'admin.tag.destroy',
+        'uses'	=>	'FrontController@destroyTag'
+    ]);
+
+    //edit, delete tag
+    Route::get('/tagDetail/{id}', [
+
+        'as' 	=> 		'front.tagDetail',
+        'uses'	=>		'FrontController@tagDetail'
+        
+    ]);
+
+    Route::post('/storeUpdatedTag', [
+
+        'as' 	=> 		'front.storeUpdatedTag',
+        'uses'	=>		'FrontController@saveUpdatedTag'
+        
+    ]);
+
+    //create tag
+    Route::post('/createTag', [
+
+        'as' 	=> 		'front.createTag',
+        'uses'	=>		'FrontController@createTag'
+        
+    ]);
+
+
+
+    //provinces
+    Route::get('/provinces', [
+
+        'as' 	=> 		'front.provinces',
+        'uses'	=>		'FrontController@provinces'
+        
+    ]);
+
+    //delete tag
+    Route::get('province/{id}/destroy', [
+        'as'	=>	'admin.province.destroy',
+        'uses'	=>	'FrontController@destroyProvince'
+    ]);
+
+    //edit, delete tag
+    Route::get('/provinceDetail/{id}', [
+
+        'as' 	=> 		'front.provinceDetail',
+        'uses'	=>		'FrontController@provinceDetail'
+        
+    ]);
+
+    Route::post('/storeUpdatedProvince', [
+
+        'as' 	=> 		'front.storeUpdatedProvince',
+        'uses'	=>		'FrontController@saveUpdatedProvince'
+        
+    ]);
+
+    //create tag
+    Route::post('/createProvince', [
+
+        'as' 	=> 		'front.createProvince',
+        'uses'	=>		'FrontController@createProvince'
+        
+    ]);
+
     
 
 });

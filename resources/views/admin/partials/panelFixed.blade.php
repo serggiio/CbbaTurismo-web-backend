@@ -34,11 +34,18 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" href="#">
-            <i class="fas fa-poll"></i>
-              Estadisticas
+            <a class="nav-link" href="{{ route('front.tags')}}">
+            <i class="fas fa-tags"></i>
+              Tags
             </a>
-          </li>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{{ route('front.provinces')}}">
+          <i class="fas fa-map-signs"></i>
+            Provincias
+          </a>
+      </li>
 
       </ul>
 

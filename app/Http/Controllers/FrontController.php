@@ -378,5 +378,133 @@ class FrontController extends Controller
 
         return redirect()->route('admin.gallery.edit', ['id' => $data['galleryId']]);
     }
+
+    public function tags(){
+        $tags = TagObj::orderBy('tagName', 'desc')->paginate(10);
+
+        //dd($tags->toArray());
+        return view('admin.tags.tags')
+        ->with('tags', $tags);
+
+    }
+
+    public function destroyTag($id){
+        //dd($id);
+        $tag = TagObj::where('tagId', '=', $id)->first();
+        $tag->delete();
+        //dd($TagObj);
+        return redirect()->route('front.tags');
+
+    }
+
+    public function tagDetail($id){
+        
+        $tag = TagObj::where('tagId', '=', $id)->first();
+        //dd($tag->toArray());
+        return view('admin.tags.detailtag')
+        ->with('tag', $tag);
+
+    }
+
+    public function saveUpdatedTag(Request $request){
+        //dd($request->all());
+        $data = $request->all();
+
+        $tag = TagObj::where('tagId', '=', $data['tagId'])->first();
+
+        if($file=$request->file('image')){
+            if (\File::exists(public_path(). '/images/tags/' . $tag['tagFile'])) \File::delete(public_path(). '/images/tags/' . $tag['tagFile']);
+            $name = $data['tagName'] . '.' . $file->getClientOriginalExtension();
+            $newData['tagFile'] = $name;
+            $path = public_path() . '/images/tags/';
+            $file->move($path, $name);
+        }
+
+        $newData['tagName'] = $data['tagName'];
+
+        $tag->fill($newData);
+        $tag->save();
+
+        return redirect()->route('front.tagDetail', ['id' => $tag['tagId']]);
+    }
+
+    public function createTag(Request $request){
+        //dd($request->all());
+        $data = $request->all();
+        $newTag['tagName'] = $data['tagName'];
+
+        if($file=$request->file('image')){
+            $name = $data['tagName'] . '.' . $file->getClientOriginalExtension();
+            $newTag['tagFile'] = $name;
+            $path = public_path() . '/images/tags/';
+            $file->move($path, $name);
+        }
+
+
+        $storedTag = new TagObj($newTag);
+        $storedTag->save();
+        return redirect()->route('front.tags');
+
+    }
+
+    public function provinces(){
+        $provinces = ProvinceObj::orderBy('provinceName', 'asc')->paginate(10);
+
+        //dd($tags->toArray());
+        return view('admin.provinces.provinces')
+        ->with('provinces', $provinces);
+    }
+
+    public function destroyProvince($id){
+        //dd($id);
+        $province = ProvinceObj::where('provinceId', '=', $id)->first();
+        $province->delete();
+        //dd($TagObj);
+        return redirect()->route('front.provinces');
+
+    }
+
+    public function createProvince(Request $request){
+        //dd($request->all());
+        $data = $request->all();
+
+        $provinceCreated = ProvinceObj::where('provinceName', '=', $data['provinceName'])->first();
+
+        if(empty($provinceCreated)){
+            $newProvince['provinceName'] = $data['provinceName'];
+            $newProvince['latitude'] = $data['inputPlaceLatitude'];
+            $newProvince['longitude'] = $data['inputPlaceLongitude'];
+            $storedProvince = new ProvinceObj($newProvince);
+            $storedProvince->save();
+        }
+        
+        return redirect()->route('front.provinces');
+
+    }
+
+    public function provinceDetail($id){
+        
+        $province = ProvinceObj::where('provinceId', '=', $id)->first();
+        //dd($tag->toArray());
+        return view('admin.provinces.detailProvince')
+        ->with('province', $province);
+
+    }
+
+    public function saveUpdatedProvince(Request $request){
+        //dd($request->all());
+        $data = $request->all();
+
+        $province = ProvinceObj::where('provinceId', '=', $data['provinceId'])->first();
+
+        $newData['provinceName'] = $data['provinceName'];
+        $newData['latitude'] = $data['inputPlaceLatitude'];
+        $newData['longitude'] = $data['inputPlaceLongitude'];
+
+        $province->fill($newData);
+        $province->save();
+
+        return redirect()->route('front.provinceDetail', ['id' => $province['provinceId']]);
+    }
     
 }

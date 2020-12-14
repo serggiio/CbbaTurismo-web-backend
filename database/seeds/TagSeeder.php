@@ -14,17 +14,21 @@ class TagSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         DB::table('tag')->truncate();
         DB::table('tag')->insert([
-            'tagName' => 'Plazas'
+            'tagName' => 'Plazas',
+            'tagFile' => 'Plazas.jpg'
         ]);
 
         DB::table('tag')->insert([
-            'tagName' => 'Hoteles'
+            'tagName' => 'Hoteles',
+            'tagFile' => 'Hoteles.jpg'
         ]);
         DB::table('tag')->insert([
-            'tagName' => 'Parques'
+            'tagName' => 'Parques',
+            'tagFile' => 'Parques.jpg'
         ]);
         DB::table('tag')->insert([
-            'tagName' => 'Lugar historico'
+            'tagName' => 'Lugar historico',
+            'tagFile' => 'Lugar historico.jpg'
         ]);
     }
 }
