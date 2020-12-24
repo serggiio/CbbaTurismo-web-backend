@@ -90,6 +90,9 @@ Route::group(['prefix' => 'touristicPlace'], function() {
 
     //images tags
     Route::get('/imageTag/{tagName}', 'TouristicPlaceController@getTagImage');
+
+    Route::post('/testMaps', 'TouristicPlaceController@testMaps');
+    Route::get('/testMaps', 'TouristicPlaceController@testMaps');
 });
 
 Route::get('/testMail', function(){

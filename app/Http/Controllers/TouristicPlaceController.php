@@ -520,14 +520,23 @@ class TouristicPlaceController extends Controller
 
 
         //distace km
-        $places = DB::select(DB::raw('SELECT touristicPlaceId, placeName, ( 6371 * ACOS( SIN( RADIANS( latitude ) ) * SIN( RADIANS( '. $data['data']['latitude'] . ' ) ) + COS( RADIANS( longitude - '. $data['data']['longitude'] .' ) ) * COS( RADIANS( latitude ) ) * COS( RADIANS( '. $data['data']['latitude'] .' ) ) ) ) AS distance
+        $places = DB::select(DB::raw('SELECT touristicPlaceId, placeName, latitude, longitude, ( 6371 * ACOS( SIN( RADIANS( latitude ) ) * SIN( RADIANS( '. $data['data']['latitude'] . ' ) ) + COS( RADIANS( longitude - '. $data['data']['longitude'] .' ) ) * COS( RADIANS( latitude ) ) * COS( RADIANS( '. $data['data']['latitude'] .' ) ) ) ) AS distance
         FROM touristicplace
         WHERE placeStatusId = 2
         HAVING distance <'.$data['data']['distance']. 
         ' ORDER BY distance ASC'));
 
-        foreach ($places as $place) {
+        $results = TouristicObj::hydrate($places);
+
+        /*foreach ($places as $place) {
             $place->distance = round($place->distance * 1000);
+            //$place['rateAvg'] = round($place->rate->avg('puntuacion'));
+        }*/
+
+        foreach ($results as $result) {
+            $result->distance = round($result->distance * 1000);
+            $result['rateAvg'] = round($result->rate->avg('puntuacion'));
+            unset($result['rate']);
         }
 
         try {
@@ -535,7 +544,7 @@ class TouristicPlaceController extends Controller
             return [
                 'code' => 'OK',
                 'get' => true,
-                'data' => $places
+                'data' => $results
             ];    
         } catch (\Throwable $th) {
             dd($th);
@@ -549,6 +558,15 @@ class TouristicPlaceController extends Controller
                 ]
             ];
         }
+    }
+
+    public function testMaps(Request $request){
+        
+        $path = storage_path() . "/json/response.json"; // ie: /var/www/laravel/app/storage/json/filename.json
+
+        $json = json_decode(file_get_contents($path), true); 
+        
+        return $json;
     }
 
 

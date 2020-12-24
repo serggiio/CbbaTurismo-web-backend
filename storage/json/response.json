@@ -1,0 +1,258 @@
+{
+    "geocoded_waypoints": [
+        {
+            "geocoder_status": "OK",
+            "place_id": "ChIJO7NBq_dz45MRBrVZrjL6aqM",
+            "types": [
+                "book_store",
+                "establishment",
+                "point_of_interest",
+                "store"
+            ]
+        },
+        {
+            "geocoder_status": "OK",
+            "place_id": "ChIJIQ0Fxxp045MRzsyhhR8RSJw",
+            "types": [
+                "street_address"
+            ]
+        }
+    ],
+    "routes": [
+        {
+            "bounds": {
+                "northeast": {
+                    "lat": -17.3781929,
+                    "lng": -66.15003969999999
+                },
+                "southwest": {
+                    "lat": -17.3931901,
+                    "lng": -66.1566902
+                }
+            },
+            "copyrights": "Map data ©2020",
+            "legs": [
+                {
+                    "distance": {
+                        "text": "2.4 km",
+                        "value": 2408
+                    },
+                    "duration": {
+                        "text": "8 mins",
+                        "value": 497
+                    },
+                    "end_address": "Av Pando 1144, Cochabamba, Bolivia",
+                    "end_location": {
+                        "lat": -17.3781929,
+                        "lng": -66.1520749
+                    },
+                    "start_address": "Calle Bolívar E 0332 entre 25 de Mayo y España, Cochabamba, Bolivia",
+                    "start_location": {
+                        "lat": -17.3931201,
+                        "lng": -66.15605789999999
+                    },
+                    "steps": [
+                        {
+                            "distance": {
+                                "text": "48 m",
+                                "value": 48
+                            },
+                            "duration": {
+                                "text": "1 min",
+                                "value": 16
+                            },
+                            "end_location": {
+                                "lat": -17.3931901,
+                                "lng": -66.1565023
+                            },
+                            "html_instructions": "Head <b>west</b> on <b>Bolivar</b> toward <b>España</b>",
+                            "polyline": {
+                                "points": "~adiBjbxrKLvA"
+                            },
+                            "start_location": {
+                                "lat": -17.3931201,
+                                "lng": -66.15605789999999
+                            },
+                            "travel_mode": "DRIVING"
+                        },
+                        {
+                            "distance": {
+                                "text": "0.1 km",
+                                "value": 105
+                            },
+                            "duration": {
+                                "text": "1 min",
+                                "value": 43
+                            },
+                            "end_location": {
+                                "lat": -17.3922601,
+                                "lng": -66.1566902
+                            },
+                            "html_instructions": "Turn <b>right</b> onto <b>España</b>",
+                            "maneuver": "turn-right",
+                            "polyline": {
+                                "points": "lbdiBbexrKiBVoAL"
+                            },
+                            "start_location": {
+                                "lat": -17.3931901,
+                                "lng": -66.1565023
+                            },
+                            "travel_mode": "DRIVING"
+                        },
+                        {
+                            "distance": {
+                                "text": "0.7 km",
+                                "value": 719
+                            },
+                            "duration": {
+                                "text": "3 mins",
+                                "value": 162
+                            },
+                            "end_location": {
+                                "lat": -17.3910392,
+                                "lng": -66.15003969999999
+                            },
+                            "html_instructions": "Turn <b>right</b> onto <b>Av Heroínas</b>",
+                            "maneuver": "turn-right",
+                            "polyline": {
+                                "points": "r|ciBhfxrKUmBEa@Ec@Ee@a@kEi@kFCOc@gEi@uEm@qF"
+                            },
+                            "start_location": {
+                                "lat": -17.3922601,
+                                "lng": -66.1566902
+                            },
+                            "travel_mode": "DRIVING"
+                        },
+                        {
+                            "distance": {
+                                "text": "0.9 km",
+                                "value": 937
+                            },
+                            "duration": {
+                                "text": "3 mins",
+                                "value": 164
+                            },
+                            "end_location": {
+                                "lat": -17.3827669,
+                                "lng": -66.1517163
+                            },
+                            "html_instructions": "Turn <b>left</b> onto <b>Av Oquendo</b>",
+                            "maneuver": "turn-left",
+                            "polyline": {
+                                "points": "~tciBv|vrKSBcFd@I@M@_ANgAPWDIBE?sBTeBTg@D}Df@sDd@YB_ALs@DeEj@oDb@}@L"
+                            },
+                            "start_location": {
+                                "lat": -17.3910392,
+                                "lng": -66.15003969999999
+                            },
+                            "travel_mode": "DRIVING"
+                        },
+                        {
+                            "distance": {
+                                "text": "0.3 km",
+                                "value": 266
+                            },
+                            "duration": {
+                                "text": "1 min",
+                                "value": 57
+                            },
+                            "end_location": {
+                                "lat": -17.3809085,
+                                "lng": -66.15187279999999
+                            },
+                            "html_instructions": "At the roundabout, take the <b>3rd</b> exit",
+                            "maneuver": "roundabout-right",
+                            "polyline": {
+                                "points": "habiBfgwrKCOEOGMGMKKKKMGAAEAGAIAKAK?K@K@IBIBMFKHIJGJGLCNCN?BWLK@OBeBF"
+                            },
+                            "start_location": {
+                                "lat": -17.3827669,
+                                "lng": -66.1517163
+                            },
+                            "travel_mode": "DRIVING"
+                        },
+                        {
+                            "distance": {
+                                "text": "86 m",
+                                "value": 86
+                            },
+                            "duration": {
+                                "text": "1 min",
+                                "value": 16
+                            },
+                            "end_location": {
+                                "lat": -17.3801741,
+                                "lng": -66.1518121
+                            },
+                            "html_instructions": "Continue onto <b>Av Del Ejercito</b>/<wbr/><b>RN 4</b>",
+                            "polyline": {
+                                "points": "tuaiBdhwrKKBs@JI@EAK?IAEACAGCIGECKE"
+                            },
+                            "start_location": {
+                                "lat": -17.3809085,
+                                "lng": -66.15187279999999
+                            },
+                            "travel_mode": "DRIVING"
+                        },
+                        {
+                            "distance": {
+                                "text": "0.2 km",
+                                "value": 199
+                            },
+                            "duration": {
+                                "text": "1 min",
+                                "value": 31
+                            },
+                            "end_location": {
+                                "lat": -17.3785247,
+                                "lng": -66.1521035
+                            },
+                            "html_instructions": "At the roundabout, take the <b>2nd</b> exit",
+                            "maneuver": "roundabout-right",
+                            "polyline": {
+                                "points": "`qaiBxgwrKGCGAEAC?C@C?C?C@C@C@CBC@ABABCDAD?B?@MJEBE@I@eALG@I@G?G@WAE?]Ag@CGAC?IC"
+                            },
+                            "start_location": {
+                                "lat": -17.3801741,
+                                "lng": -66.1518121
+                            },
+                            "travel_mode": "DRIVING"
+                        },
+                        {
+                            "distance": {
+                                "text": "48 m",
+                                "value": 48
+                            },
+                            "duration": {
+                                "text": "1 min",
+                                "value": 8
+                            },
+                            "end_location": {
+                                "lat": -17.3781929,
+                                "lng": -66.1520749
+                            },
+                            "html_instructions": "Enter the roundabout<div style=\"font-size:0.9em\">Destination will be on the right</div>",
+                            "polyline": {
+                                "points": "vfaiBriwrK?CAAACAAAAAAAAAACAAAC?AAC?A?C?A?C?A@C?A@A@C@A@A@A@ABA@"
+                            },
+                            "start_location": {
+                                "lat": -17.3785247,
+                                "lng": -66.1521035
+                            },
+                            "travel_mode": "DRIVING"
+                        }
+                    ],
+                    "traffic_speed_entry": [],
+                    "via_waypoint": []
+                }
+            ],
+            "overview_polyline": {
+                "points": "~adiBjbxrKLvAiBVoALUmBKeAg@qFm@{FmA}Km@qFSBmFf@mDh@iFn@sLvAsBRuJnA}@LCOM]SYYSOEm@AUDWJUTOXG^?BWL[DqBJ}@LQA[Ic@UUAOBMJGRMLKDaBRm@?qAGICAEGIIGW?KDGHA@"
+            },
+            "summary": "Av Heroínas and Av Oquendo",
+            "warnings": [],
+            "waypoint_order": []
+        }
+    ],
+    "status": "OK"
+}
