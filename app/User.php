@@ -10,13 +10,15 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    protected $table = 'usertable';
+    protected $primaryKey = 'userId';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'last_name', 'phone', 'user_status', 'tipo_id'
+        'statusId', 'typeId', 'name', 'lastName', 'phoneNumber', 'email', 'password', 'verificationCode'
     ];
 
     /**
@@ -25,15 +27,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+
 }

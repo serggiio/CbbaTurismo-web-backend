@@ -1,46 +1,85 @@
-      <div class="col-6">
+      <div class="col-md-6">
 
-        <!-- Image -->
-        <!-- Swiper -->
-        <div class="swiper-container1">
-            <div class="swiper-wrapper">
-            <div class="swiper-slide1" style="background-image:url(/images/travel-1.1.jpg)"></div>
-            <div class="swiper-slide1" style="background-image:url(/images/travel-1.1.jpg)"></div>
-            <div class="swiper-slide1" style="background-image:url(/images/travel-1.1.jpg)"></div>
-            <div class="swiper-slide1" style="background-image:url(/images/travel-1.1.jpg)"></div>
-            <div class="swiper-slide1" style="background-image:url(/images/travel-1.1.jpg)"></div>
+
+      <div class="card">
+        <div class="card-body">        
+        
+
+        <div id="carouselExampleControls1" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                  <img width="100%" height="400px" src="{{ asset('images/header/header.jpg') }}" alt="">
+                </div>
+                <div class="col-md-1"></div>
+              </div>
             </div>
-             <!-- Add Pagination -->
-            <div class="swiper-pagination1"></div>
-            <!-- Add Arrows -->
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
+            <div class="carousel-item">
+              <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                  <img width="100%" height="400px" src="{{ asset('images/header/header1.jpg') }}" alt="">
+                </div>
+                <div class="col-md-1"></div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                  <img width="100%" height="400px" src="{{ asset('images/header/header2.jpg') }}" alt="">
+                </div>
+                <div class="col-md-1"></div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                  <img width="100%" height="400px" src="{{ asset('images/header/header3.jpg') }}" alt="">
+                </div>
+                <div class="col-md-1"></div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                  <img width="100%" height="400px" src="{{ asset('images/header/header4.jpg') }}" alt="">
+                </div>
+                <div class="col-md-1"></div>
+              </div>
+            </div>
+          </div>
+          <a class="carousel-control-prev" href="#carouselExampleControls1" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#carouselExampleControls1" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
         </div>
-                        
+
+      </div>
+    </div>         
 
 
       </div>
-      <div class="col-6">
 
+      <div class="col-md-6">
+        <br><br><br>
         <!-- Heading -->
         <h1 class="display-3 text-center text-md-left">
-          Welcome to <span class="text-primary">Landkit</span>. <br>
-          Develop anything.
+          Cochabamba <span class="text-success">Turistica</span>. 
         </h1>
 
         <!-- Text -->
         <p class="lead text-center text-md-left text-muted mb-6 mb-lg-8">
-          Build a beautiful, modern website with flexible Bootstrap components built from scratch.
+          Conoce nuevos lugares, explora la diversa gastronomia, cultura y gente.
         </p>
 
-        <!-- Buttons -->
-        <div class="text-center text-md-left">
-          <a href="overview.html" class="btn btn-primary shadow lift mr-1">
-            View all pages <i class="fe fe-arrow-right d-none d-md-inline ml-3"></i>
-          </a>
-          <a href="docs/index.html" class="btn btn-primary-soft lift">
-            Documentation
-          </a>
-        </div>
 
       </div>

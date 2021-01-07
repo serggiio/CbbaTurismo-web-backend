@@ -15,9 +15,9 @@ Route::get('/', 'MainController@index');
 
 Route::get('/getAll', 'TouristicPlaceController@getAll');
 
+Route::post('/logouts', 'MainController@index');
 
-
-Route::group(['prefix' => 'admin'], function() {
+Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     
     //routes for web admin
     Route::get('/', [
@@ -224,3 +224,11 @@ Route::group(['prefix' => 'admin'], function() {
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+
+
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

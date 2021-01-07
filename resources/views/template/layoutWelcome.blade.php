@@ -11,7 +11,7 @@
 
     <!-- Bootstrap core CSS -->
 <link href="{{ asset('plugins/bootstrap-4.4.1/dist/css/bootstrap.min.css')}}" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-<!-- Link Swiper's CSS -->
+<!-- Link Swipers CSS -->
 <link rel="stylesheet" href="{{ asset('plugins/swiper-master/package/css/swiper.min.css')}}">
 <!-- Link font awesome -->
 <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/solid.js" integrity="sha384-+Ga2s7YBbhOD6nie0DzrZpJes+b2K1xkpKxTFFcx59QmVPaSA8c7pycsNaFwUK6l" crossorigin="anonymous"></script>
@@ -60,7 +60,7 @@
   <!-- Initialize Swiper -->
   <script>
     var swiper = new Swiper('.swiper-container', {
-      slidesPerView: 4,
+      slidesPerView: 3,
       spaceBetween: 30,
       centeredSlides: false,
       freeMode: true,
@@ -75,8 +75,10 @@
     });
 
     var swiper1 = new Swiper('.swiper-container1', {
-      spaceBetween: 30,
-      centeredSlides: true,
+      slidesPerView: 1,
+      spaceBetween: 0,
+      centeredSlides: false,
+      freeMode: true,
       autoplay: {
         delay: 2500,
         disableOnInteraction: false,
@@ -85,9 +87,11 @@
         el: '.swiper-pagination1',
         clickable: true,
       },
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
+    });
+
+    var paginationSwiper = new Swiper('.swiper-containers', {
+      pagination: {
+        el: '.swiper-paginations',
       },
     });
   </script>
