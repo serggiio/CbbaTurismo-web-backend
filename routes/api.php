@@ -80,6 +80,9 @@ Route::group(['prefix' => 'touristicPlace'], function() {
     //tags
     Route::post('/tags', 'TouristicPlaceController@getTags');
 
+    //category
+    Route::post('/categories', 'TouristicPlaceController@getCategories');
+
     //favorite
     Route::post('/checkFavorite', 'TouristicPlaceController@checkFavorite');
     Route::post('/editFavorite', 'TouristicPlaceController@editFavorite');
@@ -90,6 +93,10 @@ Route::group(['prefix' => 'touristicPlace'], function() {
 
     //images tags
     Route::get('/imageTag/{tagName}', 'TouristicPlaceController@getTagImage');
+
+    //commentary
+    Route::post('/commentsByTouristicPlaceId', 'TouristicPlaceController@getCommentsByTouristicPlace');
+    Route::post('/modifyCommentary', 'TouristicPlaceController@setCommentary');
 
     Route::post('/testMaps', 'TouristicPlaceController@testMaps');
     Route::get('/testMaps', 'TouristicPlaceController@testMaps');

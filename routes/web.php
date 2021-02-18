@@ -208,7 +208,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
         
     ]);
 
-    //create tag
+    //create province
     Route::post('/createProvince', [
 
         'as' 	=> 		'front.createProvince',
@@ -216,6 +216,50 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
         
     ]);
 
+
+    //categories
+    Route::get('/categories', [
+
+        'as' 	=> 		'front.categories',
+        'uses'	=>		'FrontController@categories'
+        
+    ]);
+
+    //create category
+    Route::post('/createCategory', [
+
+        'as' 	=> 		'front.createCategory',
+        'uses'	=>		'FrontController@createCategory'
+        
+    ]);
+
+    //edit, category
+    Route::get('/categoryDetail/{id}', [
+
+        'as' 	=> 		'front.categoryDetail',
+        'uses'	=>		'FrontController@categoryDetail'
+        
+    ]);
+
+    //save updated category
+    Route::post('/storeUpdatedCategory', [
+
+        'as' 	=> 		'front.storeUpdatedCategory',
+        'uses'	=>		'FrontController@storeUpdatedCategory'
+        
+    ]);
+
+    //delete category
+    Route::get('category/{id}/destroy', [
+        'as'	=>	'admin.category.destroy',
+        'uses'	=>	'FrontController@destroyCategory'
+    ]);
+
+    //delete commentary
+    Route::get('commentary/{id}/destroy', [
+        'as'	=>	'admin.commentary.destroy',
+        'uses'	=>	'FrontController@destroyCommentary'
+    ]);
     
 
 });

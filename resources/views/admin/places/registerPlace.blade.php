@@ -69,13 +69,23 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="inputPlaceTags">Tags</label>
-                                <select class="form-control select-tag" multiple="multiple" required="required" name="inputPlaceTags[]">
+                                <select class="form-control select-tag" multiple="multiple" required="required" name="inputPlaceTags[]" id="selectTags">
                                     @foreach($tags as $tag)
                                         <option value="{{$tag['tagId']}}">{{$tag['tagName']}}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
+
+                        <div class="row">
+                          <div class="col-md-6">
+                              <label for="inputPlaceCategories">Categorias</label>
+                              <select class="form-control select-category" multiple="multiple" name="inputPlaceCategories[]" id="selectCategories">
+
+                              </select>
+                          </div>
+                      </div>
+
 
                         <div class="form-group">
                             <label for="inputPlaceStreet">Calles</label>
@@ -84,7 +94,7 @@
 
                         <div class="form-group">
                           <label for="image">Imagen</label>
-                          <input id="image" type="file" name="image"><br>
+                          <input id="image" type="file" name="image" required><br>
                           <label for="img">Tamaño maximo 250 x 250</label>
                         </div>
 
@@ -211,6 +221,12 @@
                 search_contains: true,
                 no_results_text: "No se encontraron tags"
             });
+
+            $('.select-category').chosen({
+              placeholder_text_multiple: "seleccione categorias",
+              search_contains: true,
+              no_results_text: "No se encontraron categorias"
+          });
         </script>
 
 
@@ -295,7 +311,52 @@
             
         </script>
 
+        <script>
+          let selectedCategories;
+          $('#selectTags').change(function(){
+            selectedCategories = $(this).val();
+          });
+          //let selectElement = document.getElementById('selectTags')
+          $('#selectTags').change(function(){
+            let selectedTags = $(this).val();
+            let categoriesArray = JSON.parse('<?php echo $categories  ?>');            
+            let categorySelect = document.getElementById('selectCategories');
 
+            //console.log(Array.from(selectElement.selectedOptions));
+            //console.log(categorySelect.options.length);
+
+            //delete all option from category select
+            var select = document.getElementById("selectCategories");
+            var length = select.options.length;
+            for (i = length-1; i >= 0; i--) {
+              select.options[i] = null;
+            }       
+            $('.select-category').trigger("chosen:updated");
+            //console.log(selectedTags);
+            //console.log(categoriesArray[0]);
+
+            //fill elements with selected tags
+            for (i = 0; i < selectedTags.length; i++) {
+              //console.log('log tags ' + selectedTags[i]);
+              for (j = 0; j < categoriesArray.length; j++) {
+                if(categoriesArray[j].tagId == selectedTags[i]) {
+                  
+                  let option = document.createElement('option');
+                  option.appendChild( document.createTextNode(categoriesArray[j].categoryName) );
+                  option.value = categoriesArray[j].categoryId;
+                  categorySelect.appendChild(option);   
+
+                }
+                
+              }                          
+            }
+            $('.select-category').trigger("chosen:updated");
+            
+
+
+              
+          });
+        </script>
 
 
     </body>

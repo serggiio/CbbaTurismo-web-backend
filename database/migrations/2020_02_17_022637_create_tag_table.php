@@ -29,6 +29,7 @@ class CreateTagTable extends Migration
      */
     public function down()
     {
+        //Schema::dropIfExists('placeTag');
         Schema::dropIfExists('tag');
     }
 }

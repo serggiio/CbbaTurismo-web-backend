@@ -35,14 +35,7 @@
           <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
               <div class="btn-toolbar mb-2 mb-md-0">
-                <div class="btn-group mr-2">
-                  <button class="btn btn-sm btn-outline-secondary">Share</button>
-                  <button class="btn btn-sm btn-outline-secondary">Export</button>
-                </div>
-                <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                  <span data-feather="calendar"></span>
-                  This week
-                </button>
+                
               </div>
             </div>
   
@@ -56,10 +49,17 @@
                     <form method="POST" action="{{ action('FrontController@saveUpdatedTag') }}" style="padding-top: 5%" enctype="multipart/form-data">
                         @csrf <!-- {{ csrf_field() }} -->
 
+                        
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <img src="{{ asset('images/tags/' . $tag['tagFile']) }}" width="80%" height="80%" style="border-radius: 25px">
+
+                                  <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);">
+                                    <img src="{{ asset('images/tags/' . $tag['tagFile']) }}" width="100%" height="80%" style="border-radius: 25px; padding-left: 10%;padding-right: 10%">
+                                    <div class="container">
+                                    
+                                    </div>
+                                  </div>
                                     
                                 </div>
 

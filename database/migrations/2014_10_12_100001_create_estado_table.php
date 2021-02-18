@@ -27,6 +27,8 @@ class CreateEstadoTable extends Migration
      */
     public function down()
     {
+        //Schema::dropIfExists('touristicplace');
+        //Schema::dropIfExists('usertable');
         Schema::dropIfExists('status');
     }
 }

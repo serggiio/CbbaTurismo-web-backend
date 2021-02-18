@@ -30,5 +30,10 @@ class TagSeeder extends Seeder
             'tagName' => 'Lugar historico',
             'tagFile' => 'Lugar historico.jpg'
         ]);
+
+        DB::table('tag')->insert([
+            'tagName' => 'Restaurantes',
+            'tagFile' => 'Restaurantes.jpg'
+        ]);
     }
 }

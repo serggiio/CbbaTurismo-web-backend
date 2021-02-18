@@ -31,14 +31,7 @@
           <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
               <div class="btn-toolbar mb-2 mb-md-0">
-                <div class="btn-group mr-2">
-                  <button class="btn btn-sm btn-outline-secondary">Share</button>
-                  <button class="btn btn-sm btn-outline-secondary">Export</button>
-                </div>
-                <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                  <span data-feather="calendar"></span>
-                  This week
-                </button>
+                
               </div>
             </div>
             <a class="btn btn-light" href="{{ route('front.placeDetail', $gallery['touristicPlaceId'])}}" role="button"><i class="fas fa-arrow-circle-left"></i> Volver</a>
@@ -77,15 +70,14 @@
 
                   </form><br>
 
-                  <div class="card">
+                  <div class="card" style="border-radius: 25px; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);">
                     <div class="card-body">
                       <h5 class="card-title">Imagenes: </h5>
                       
                       <div class="row">
                         @foreach ($gallery['images'] as $item)
                           <div class="col-md-3 card">
-                            <div class="card-body" style="height: 10%">
-                              <h5 class="card-title">Imagen: </h5>
+                            <div class="card-body" style="height: 10%" style="border-radius: 25px;">
                               
                               <img width="100%" height="100%" src="{{ asset($gallery['galleryPath'] . '/' . $item['imagePath']) }}" class="">
                               
@@ -104,7 +96,7 @@
               <div class="col-md-1"></div>
           </div>
 
-
+          <br><br><br>
 
           </main>
 

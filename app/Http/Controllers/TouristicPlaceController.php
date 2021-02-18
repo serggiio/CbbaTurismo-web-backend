@@ -9,6 +9,8 @@ use App\Favorite as FavObj;
 use App\Rate as RateObj;
 use App\Gallery as GalleryObj;
 use Illuminate\Http\Request;
+use App\Category as CategoryObj;
+use App\Commentary as CommentaryObj;
 use DB;
 
 class TouristicPlaceController extends Controller
@@ -171,7 +173,7 @@ class TouristicPlaceController extends Controller
      */
     public function getImage(Request $request)
     {
-        $path = public_path() . '/images/touristicPlace/1/travel-1.jpg';
+        $path = public_path() . '/images/travel-12.jpg';
         //dd($path);
         return response()->file($path);
     }
@@ -209,6 +211,32 @@ class TouristicPlaceController extends Controller
         try {
             //$queryData = TouristicObj::where('touristicPlaceId', '=', $data['touristicPlace']['id'])->get()->first();
             $queryData = TagObj::all()->pluck('tagName');
+            
+
+
+            return [
+                'code' => 'OK',
+                'get' => true,
+                'data' => $queryData
+            ];    
+        } catch (\Throwable $th) {
+            return [
+                'code' => 'Error',
+                'get' => false,
+                'data' => $th,
+                'message' => [
+                    'es' => 'No se encontro la informacion requerida',
+                    'en' => 'The required information was not found'
+                ]
+            ];
+        }
+    }
+
+    public function getCategories()
+    {   
+        try {
+            //$queryData = TouristicObj::where('touristicPlaceId', '=', $data['touristicPlace']['id'])->get()->first();
+            $queryData = CategoryObj::all()->pluck('categoryName');
             
 
 
@@ -448,11 +476,23 @@ class TouristicPlaceController extends Controller
                 $queryData['provinceName'] = $queryData->province['provinceName'];                
                 $queryData['rateAvg'] = round($queryData->rate->avg('puntuacion'));
                 $queryData->tag;
+                $queryData->category;
                 $queryData['tagList'] = array();
+                $queryData['categoryList'] = array();
                 foreach ($queryData['tag'] as $value) {
                     $tagList[] = $value['tagName'];
                 }
+                //return $queryData['category'];
+                //dd($queryData['category']);
+                if(isset($queryData['category']) && !empty($queryData['category'][0])){
+                    //dd($queryData);
+                    foreach ($queryData['category'] as $value) {
+                        $categoryList[] = $value['categoryName'];
+                    }
+                    $queryData['categoryList'] = $categoryList;
+                }
                 $queryData['tagList'] = $tagList;
+                
 
                 $queryData['gallery']->each(function($queryData){
                     //dd($queryData['galleryId']);
@@ -462,6 +502,7 @@ class TouristicPlaceController extends Controller
 
                 //delete unnecesary data
                 unset($queryData['tag']);
+                unset($queryData['category']);
                 unset($queryData['province']);
                 unset($queryData['rate']);
                 
@@ -479,6 +520,16 @@ class TouristicPlaceController extends Controller
                     foreach($data['touristicPlace']['tag'] as $paramTags){
                         foreach($value['tagList'] as $queryTags){
                             if($paramTags == $queryTags){
+                                array_push($finalList, $value);
+                                break;
+                            }
+                        }
+                    }
+                    
+                }else if(isset($data['touristicPlace']['category']) && isset($data['touristicPlace']['category'][0])){
+                    foreach($data['touristicPlace']['category'] as $paramCategory){
+                        foreach($value['categoryList'] as $queryCategory){
+                            if($paramCategory == $queryCategory){
                                 array_push($finalList, $value);
                                 break;
                             }
@@ -518,12 +569,19 @@ class TouristicPlaceController extends Controller
     {
         $data = $request->all();
 
+        //id active status = 2
+        $whereString = 'WHERE placeStatusId = 2';
+
+        if(isset($data['data']['category'])){
+            $whereString .= ' AND c.categoryName = "' . $data['data']['category'] . '"';
+        }
 
         //distace km
-        $places = DB::select(DB::raw('SELECT touristicPlaceId, placeName, latitude, longitude, ( 6371 * ACOS( SIN( RADIANS( latitude ) ) * SIN( RADIANS( '. $data['data']['latitude'] . ' ) ) + COS( RADIANS( longitude - '. $data['data']['longitude'] .' ) ) * COS( RADIANS( latitude ) ) * COS( RADIANS( '. $data['data']['latitude'] .' ) ) ) ) AS distance
-        FROM touristicplace
-        WHERE placeStatusId = 2
-        HAVING distance <'.$data['data']['distance']. 
+        $places = DB::select(DB::raw('SELECT DISTINCT t.touristicPlaceId, placeName, latitude, longitude, ( 6371 * ACOS( SIN( RADIANS( latitude ) ) * SIN( RADIANS( '. $data['data']['latitude'] . ' ) ) + COS( RADIANS( longitude - '. $data['data']['longitude'] .' ) ) * COS( RADIANS( latitude ) ) * COS( RADIANS( '. $data['data']['latitude'] .' ) ) ) ) AS distance
+        FROM touristicplace as t 
+        INNER JOIN placecategory pc ON pc.touristicPlaceId = t.touristicPlaceId 
+        INNER JOIN category c ON c.categoryId = pc.categoryId ' . $whereString .
+        ' HAVING distance <'.$data['data']['distance']. 
         ' ORDER BY distance ASC'));
 
         $results = TouristicObj::hydrate($places);
@@ -567,6 +625,119 @@ class TouristicPlaceController extends Controller
         $json = json_decode(file_get_contents($path), true); 
         
         return $json;
+    }
+
+    public function getCommentsByTouristicPlace(Request $request){
+        
+        try {
+
+            $data = $request->all();
+        
+            $queryData = CommentaryObj::where([
+                ['touristicPlaceId', '=', $data['touristicPlace']['id']],
+                ['commentaryStatus', '=', 'Active']
+            ])->orderBy('created_at', 'desc')->get();
+
+            $queryData->each(function($queryData){
+                    
+                //$queryData->touristicPlace;
+                $queryData->user;                
+
+            });
+
+            return [
+                'code' => 'OK',
+                'get' => true,
+                'data' => $queryData
+            ]; 
+        } catch (\Throwable $th) {
+            return [
+                'code' => 'Error',
+                'get' => false,
+                'data' => $th,
+                'message' => [
+                    'es' => 'No se encontro la informacion requerida',
+                    'en' => 'The required information was not found'
+                ]
+            ];
+        }
+        
+    }
+
+    public function setCommentary(Request $request){
+        
+        try {
+
+            $data = $request->all();
+
+            if ($data['action'] == 'save') {
+
+                $data['data']['reports'] = 0;
+                $data['data']['status'] = 'Active';
+
+                $newCommentary = new CommentaryObj($data['data']);
+                $newCommentary->save();
+
+            } else if($data['action'] == 'update') {
+
+                $updatedCommentary = CommentaryObj::where([
+                    ['commentaryId', '=', $data['data']['commentaryId']],
+                    ['userId', '=', $data['data']['userId']]
+                ])->get()->first();
+
+                $updatedCommentary->fill($data['data']);
+                $updatedCommentary->save();
+
+            } else if($data['action'] == 'delete') {
+
+                CommentaryObj::where([
+                    ['commentaryId', '=', $data['data']['commentaryId']],
+                    ['userId', '=', $data['data']['userId']]
+                ])->delete();
+                
+
+            } else if($data['action'] == 'report') {
+
+                $commentary = CommentaryObj::where([
+                    ['commentaryId', '=', $data['data']['commentaryId']]
+                ])->get()->first();
+                
+                $data['data']['reports'] = $commentary['reports'] + 1;                
+                $commentary->fill($data['data']);
+                //dd($commentary['reports']);
+                $commentary->save();
+            }
+        
+            $queryData = CommentaryObj::where([
+                ['touristicPlaceId', '=', $data['data']['touristicPlaceId']],
+                ['commentaryStatus', '=', 'Active']
+            ])->orderBy('created_at', 'desc')->get();
+
+            $queryData->each(function($queryData){
+                    
+                $queryData->touristicPlace;
+                $queryData->user;                 
+
+            });
+
+            return [
+                'code' => 'OK',
+                'get' => true,
+                'data' => $queryData
+            ]; 
+
+        } catch (\Throwable $th) {
+            return [
+                'code' => 'Error',
+                'get' => false,
+                'data' => $th,
+                'message' => [
+                    'es' => 'No se encontro la informacion requerida',
+                    'en' => 'The required information was not found'
+                ]
+            ];
+        }
+        
     }
 
 

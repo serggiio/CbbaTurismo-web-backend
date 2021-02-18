@@ -74,16 +74,20 @@
                         @endif
                         <td>{{$place['statusName']}}</td>
                         <td>
-                          {{ $place['rateAvg'] }}
+                          @php                          
+                              for($x = 0; $x <= $place['rateAvg']-1; $x++){
+                                echo '<i class="fas fa-star"></i>'; 
+                              }
+                          @endphp
                         </td>
                         <td>
-                            <a class="nav-link" href="{{ route('front.placeDetail', $place['touristicPlaceId'])}}">   
-                                Editar
+                            <a class="nav-link btn btn-primary" href="{{ route('front.placeDetail', $place['touristicPlaceId'])}}" style="width: fit-content">   
+                              <i class="fas fa-edit"></i>
                             </a>
                         </td>
                         <td>
-                            <a class="nav-link" href="{{ route('admin.place.destroy', $place['touristicPlaceId'])}}" onclick="return confirm('Eliminar?')">   
-                                Eliminar
+                            <a class="nav-link btn btn-danger" href="{{ route('admin.place.destroy', $place['touristicPlaceId'])}}" onclick="return confirm('Eliminar?')" style="width: fit-content">   
+                              <i class="fas fa-trash-alt"></i>
                             </a>
                         </td>
                       </tr>

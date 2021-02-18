@@ -15,37 +15,37 @@ class ImagesSeeder extends Seeder
         DB::table('images')->truncate();
         DB::table('images')->insert([
             'galleryId' => 1,
-            'imagePath' => '/src/common/images/1',
+            'imagePath' => 'image1.jpg',
         ]);
 
         DB::table('images')->insert([
             'galleryId' => 2,
-            'imagePath' => '/src/common/images/2',
+            'imagePath' => 'image2.jpg',
         ]);
 
         DB::table('images')->insert([
             'galleryId' => 3,
-            'imagePath' => '/src/common/images/4',
+            'imagePath' => 'image3.jpg',
         ]);
 
         DB::table('images')->insert([
             'galleryId' => 3,
-            'imagePath' => '/src/common/images/5',
+            'imagePath' => 'image4.jgp',
         ]);
 
         DB::table('images')->insert([
             'galleryId' => 3,
-            'imagePath' => '/src/common/images/6',
+            'imagePath' => 'image5.jpg',
         ]);
 
         DB::table('images')->insert([
             'galleryId' => 3,
-            'imagePath' => '/src/common/images/7',
+            'imagePath' => 'image6.jpg',
         ]);
 
         DB::table('images')->insert([
             'galleryId' => 4,
-            'imagePath' => '/src/common/videos/4',
+            'imagePath' => 'image7.jpg',
         ]);
     }
 }

@@ -67,7 +67,14 @@
           <i class="fas fa-map-signs"></i>
             Provincias
           </a>
-      </li>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{{ route('front.categories')}}">
+          <i class="fas fa-angle-double-down"></i>
+            Categorias
+          </a>
+        </li>
 
       </ul>
 

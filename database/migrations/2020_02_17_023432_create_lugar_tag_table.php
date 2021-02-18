@@ -33,6 +33,6 @@ class CreateLugarTagTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lugar_tag');
+        Schema::dropIfExists('placeTag');
     }
 }

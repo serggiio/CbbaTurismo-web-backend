@@ -61,13 +61,13 @@
                         <td>{{$user['nameType']}}</td>
                         <td>{{$user['statusId']}}</td>
                         <td>
-                            <a class="nav-link" href="{{ route('front.user.detail' , $user['userId'])}}">   
-                                Editar
+                            <a class="nav-link btn btn-primary" href="{{ route('front.user.detail' , $user['userId'])}}" style="width: fit-content">   
+                              <i class="fas fa-edit"></i>
                             </a>
                         </td>
                         <td>
-                            <a class="nav-link" onclick="return confirm('Eliminar este usuario?')" href="{{ route('admin.user.destroy', $user['userId'])}}">
-                                Eliminar
+                            <a class="nav-link btn btn-danger" onclick="return confirm('Eliminar este usuario?')" href="{{ route('admin.user.destroy', $user['userId'])}}" style="width: fit-content">
+                              <i class="fas fa-trash-alt"></i>
                             </a>
                         </td>
                       </tr>

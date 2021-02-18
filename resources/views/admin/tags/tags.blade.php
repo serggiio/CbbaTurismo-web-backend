@@ -32,7 +32,7 @@
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
               <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group mr-2">
-                  <a href="#" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#galleryModal">Nuevo</a>
+                  <a href="#" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#galleryModal">Nuevo tag</a>
                 </div>
               </div>
             </div>
@@ -59,13 +59,13 @@
                         <td>{{$tag['tagName']}}</td>
                         <td>{{$tag['created_at']}}</td>
                         <td>
-                            <a class="nav-link" href="{{ route('front.tagDetail', $tag['tagId'])}}">   
-                                Editar
+                            <a class="nav-link btn btn-primary" href="{{ route('front.tagDetail', $tag['tagId'])}}" style="width: fit-content">   
+                              <i class="fas fa-edit"></i>
                             </a>
                         </td>
                         <td>
-                            <a class="nav-link" href="{{ route('admin.tag.destroy', $tag['tagId'])}}" onclick="return confirm('Eliminar?')">   
-                                Eliminar
+                            <a class="nav-link btn btn-danger" href="{{ route('admin.tag.destroy', $tag['tagId'])}}" onclick="return confirm('Eliminar?')" style="width: fit-content">   
+                              <i class="fas fa-trash-alt"></i>
                             </a>
                         </td>
                       </tr>

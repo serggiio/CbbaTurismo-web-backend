@@ -32,7 +32,7 @@
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
               <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group mr-2">
-                  <a href="#" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#galleryModal">Nuevo</a>
+                  <a href="#" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#galleryModal">Nueva provincia</a>
                 </div>
               </div>
             </div>
@@ -60,13 +60,13 @@
                         <td>{{$province['provinceName']}}</td>
                         <td>{{$province['created_at']}}</td>
                         <td>
-                            <a class="nav-link" href="{{ route('front.provinceDetail', $province['provinceId'])}}">   
-                                Editar
+                            <a class="nav-link btn btn-primary" href="{{ route('front.provinceDetail', $province['provinceId'])}}" style="width: fit-content">   
+                              <i class="fas fa-edit"></i>
                             </a>
                         </td>
                         <td>
-                            <a class="nav-link" href="{{ route('admin.province.destroy', $province['provinceId'])}}" onclick="return confirm('Se eliminaran tambien los lugares o eventos')">   
-                                Eliminar
+                            <a class="nav-link btn btn-danger" href="{{ route('admin.province.destroy', $province['provinceId'])}}" onclick="return confirm('Se eliminaran tambien los lugares o eventos')" style="width: fit-content">   
+                              <i class="fas fa-trash-alt"></i>
                             </a>
                         </td>
                       </tr>

@@ -15,6 +15,8 @@ use App\Rate as RateObj;
 use App\Gallery as GalleryObj;
 use App\Images as ImageObj;
 use App\Status as StatusObj;
+use App\Category as CategoryObj;
+use App\Commentary as CommentaryObj;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
@@ -22,7 +24,7 @@ class FrontController extends Controller
 {
     public function index()
     {
-        $touristicPlaces = TouristicObj::orderBy('created_at', 'desc')->paginate(10);
+        $touristicPlaces = TouristicObj::orderBy('touristicPlaceId', 'asc')->paginate(10);
 
         $touristicPlaces->each(function($touristicPlace){
             $touristicPlace['provinceName'] = $touristicPlace->province['provinceName'];
@@ -43,10 +45,12 @@ class FrontController extends Controller
     {
         $tags = TagObj::orderBy('tagName', 'desc')->get();
         $provinces = ProvinceObj::orderBy('provinceName', 'desc')->get();
+        $categories = CategoryObj::orderBy('categoryName', 'desc')->get();
         //dd($provinces[0]['provinceName']);
         return view('admin.places.registerPlace')
         ->with('tags', $tags)
-        ->with('provinces', $provinces);
+        ->with('provinces', $provinces)
+        ->with('categories', $categories);
 
     }
 
@@ -85,7 +89,12 @@ class FrontController extends Controller
 
         $newPlace = new TouristicObj($newData);
         $newPlace->save();
+        
         $newPlace->tag()->sync($data['inputPlaceTags']);
+        if(isset($data['inputPlaceCategories'])) {
+            $newPlace->category()->sync($data['inputPlaceCategories']);    
+        }
+        
         //dd($newPlace);
 
 
@@ -188,7 +197,7 @@ class FrontController extends Controller
     {
         
         $touristicPlace = TouristicObj::where('touristicPlaceId', '=', $id)->first();
-
+        $categories = CategoryObj::orderBy('categoryName', 'desc')->get();
         $galleryData = GalleryObj::where('touristicPlaceId', '=', $id)->first();
         
         if($galleryData){
@@ -198,10 +207,16 @@ class FrontController extends Controller
         //dd($galleryData->toArray());
 
         $touristicPlace->tag;
+        $touristicPlace->category;
         $touristicPlace->gallery;
+        $touristicPlace->commentary;
         
         $touristicPlace->gallery->each(function($galleryData){
-            $galleryData->images;
+            $galleryData->images;            
+        });
+
+        $touristicPlace->commentary->each(function($commentaryData){
+            $commentaryData->user;            
         });
 
         $tags = TagObj::orderBy('tagName', 'desc')->get();
@@ -215,7 +230,8 @@ class FrontController extends Controller
         return view('admin.places.detailPlace')
         ->with('place', $touristicPlace)
         ->with('tags', $tags)
-        ->with('provinces', $provinces);
+        ->with('provinces', $provinces)
+        ->with('categories', $categories);
 
     }
 
@@ -324,6 +340,10 @@ class FrontController extends Controller
         $touristicPlace->fill($newData);
         $touristicPlace->save();
         $touristicPlace->tag()->sync($data['inputPlaceTags']);
+
+        if(isset($data['inputPlaceCategories'])) {
+            $touristicPlace->category()->sync($data['inputPlaceCategories']);    
+        }
 
         //dd($touristicPlace->toArray());
         return redirect()->route('front.placeDetail', ['id' => $data['touristicPlaceId']]);
@@ -505,6 +525,122 @@ class FrontController extends Controller
         $province->save();
 
         return redirect()->route('front.provinceDetail', ['id' => $province['provinceId']]);
+    }
+
+    public function categories(){
+        $categories = CategoryObj::orderBy('categoryName', 'asc')->paginate(10);
+        $tags = TagObj::orderBy('tagName', 'desc')->paginate(10);
+
+        $categories->each(function($category){
+            $category->Tag['tagName'];                            
+        });
+
+        //dd($categories->toArray());
+        return view('admin.categories.categories')
+        ->with('categories', $categories)
+        ->with('tags', $tags);
+    }
+
+    public function createCategory(Request $request){
+        //dd($request->all());
+        $data = $request->all();
+
+        $categoryCreated = CategoryObj::where('categoryName', '=', $data['categoryName'])->first();
+
+        if(empty($categoryCreated)){
+
+            //$stringName = utf8_encode($data['categoryName']);
+
+            $newCategory['categoryName'] = $this->formatString($data['categoryName']);
+            $newCategory['tagId'] = $data['inputPlaceTag'];
+            $storedCategory = new CategoryObj($newCategory);
+            $storedCategory->save();
+        }
+        
+        return redirect()->route('front.categories');
+
+    }
+
+    public function formatString($string){
+
+        $string = str_replace(
+            array('á', 'à', 'ä', 'â', 'ª', 'Á', 'À', 'Â', 'Ä'),
+            array('a', 'a', 'a', 'a', 'a', 'A', 'A', 'A', 'A'),
+            $string
+        );
+    
+        $string = str_replace(
+            array('é', 'è', 'ë', 'ê', 'É', 'È', 'Ê', 'Ë'),
+            array('e', 'e', 'e', 'e', 'E', 'E', 'E', 'E'),
+            $string );
+    
+        $string = str_replace(
+            array('í', 'ì', 'ï', 'î', 'Í', 'Ì', 'Ï', 'Î'),
+            array('i', 'i', 'i', 'i', 'I', 'I', 'I', 'I'),
+            $string );
+    
+        $string = str_replace(
+            array('ó', 'ò', 'ö', 'ô', 'Ó', 'Ò', 'Ö', 'Ô'),
+            array('o', 'o', 'o', 'o', 'O', 'O', 'O', 'O'),
+            $string );
+    
+        $string = str_replace(
+            array('ú', 'ù', 'ü', 'û', 'Ú', 'Ù', 'Û', 'Ü'),
+            array('u', 'u', 'u', 'u', 'U', 'U', 'U', 'U'),
+            $string );
+    
+        $string = str_replace(
+            array('ñ', 'Ñ', 'ç', 'Ç'),
+            array('n', 'N', 'c', 'C'),
+            $string
+        );
+    
+        return $string;
+    }
+
+    public function categoryDetail($id){
+        
+        $category = CategoryObj::where('categoryId', '=', $id)->first();
+        $tags = TagObj::orderBy('tagName', 'desc')->paginate(10);
+        //dd($tag->toArray());
+
+        return view('admin.categories.detailCategory')
+        ->with('category', $category)
+        ->with('tags', $tags);
+    }
+
+    public function storeUpdatedCategory(Request $request){
+        //dd($request->all());
+        $data = $request->all();
+
+        $category = CategoryObj::where('categoryId', '=', $data['categoryId'])->first();
+
+        $newData['categoryName'] = $data['categoryName'];
+        $newData['tagId'] = $data['inputPlaceTag'];
+
+        $category->fill($newData);
+        $category->save();
+
+        return redirect()->route('front.categoryDetail', ['id' => $category['categoryId']]);
+    }
+
+    public function destroyCategory($id){
+        //dd($id);
+        $category = CategoryObj::where('categoryId', '=', $id)->first();
+        $category->delete();
+        //dd($TagObj);
+        return redirect()->route('front.categories');
+
+    }
+
+    public function destroyCommentary($id){
+        //dd($id);
+        $commentary = CommentaryObj::where('commentaryId', '=', $id)->first();
+        $touristicPlaceId = $commentary['touristicPlaceId'];
+        $commentary->delete();
+        //dd($TagObj);
+        return redirect()->route('front.placeDetail', ['id' => $touristicPlaceId]);
+
     }
     
 }

@@ -39,5 +39,7 @@ class DatabaseSeeder extends Seeder
         $this->call(FavoriteSeeder::class);
         //table placeTag
         $this->call(PlaceTagSeeder::class);
+        //table category
+        $this->call(CategorySeeder::class);
     }
 }

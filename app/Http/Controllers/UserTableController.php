@@ -71,6 +71,7 @@ class UserTableController extends Controller
 
             if($queryData){
                 $result = "badEmail";
+                $mailStatus = 'notSent';
             }else{
 
                 $userData['save']['verificationCode'] = $this->generateCode(6);

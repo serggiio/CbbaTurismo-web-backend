@@ -16,43 +16,43 @@ class GallerySeeder extends Seeder
         DB::table('gallery')->insert([
             'touristicPlaceId' => 1,
             'galleryName' => 'Galeria presentacion',
-            'galleryPath' => '/src/common/gallery/1/Galeria1',
+            'galleryPath' => 'images/places/1/galleries/1',
         ]);
 
         DB::table('gallery')->insert([
             'touristicPlaceId' => 1,
             'galleryName' => 'Galeria presentacion 2',
-            'galleryPath' => '/src/common/gallery/1/Galeria1',
+            'galleryPath' => 'images/places/1/galleries/2',
         ]);
 
         DB::table('gallery')->insert([
             'touristicPlaceId' => 1,
             'galleryName' => 'Evento 3 de noviembre',
-            'galleryPath' => '/src/common/gallery/1/Galeria1',
+            'galleryPath' => 'images/places/1/galleries/3',
         ]);
 
         DB::table('gallery')->insert([
             'touristicPlaceId' => 1,
             'galleryName' => 'Evento 4 de noviembre',
-            'galleryPath' => '/src/common/gallery/1/Galeria1',
+            'galleryPath' => 'images/places/1/galleries/4',
         ]);
 
         DB::table('gallery')->insert([
             'touristicPlaceId' => 2,
             'galleryName' => 'Galeria evento 18',
-            'galleryPath' => '/src/common/gallery/2/Galeria2',
+            'galleryPath' => 'images/places/1/galleries/5',
         ]);
 
         DB::table('gallery')->insert([
             'touristicPlaceId' => 3,
             'galleryName' => 'Galeria presentacion3',
-            'galleryPath' => '/src/common/gallery/4/Galeria4',
+            'galleryPath' => 'images/places/1/galleries/6',
         ]);
 
         DB::table('gallery')->insert([
             'touristicPlaceId' => 4,
             'galleryName' => 'Galeria presentacion4',
-            'galleryPath' => '/src/common/gallery/4/Galeria4',
+            'galleryPath' => 'images/places/1/galleries/7',
         ]);
     }
 }

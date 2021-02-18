@@ -27,7 +27,7 @@
 <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
   </head>
 
-    <body class="">
+    <body class="" onload="setDefaultCategories()">
     
         @include('admin.partials.panelFixed')
 
@@ -55,6 +55,9 @@
                         <li class="nav-item">
                           <a class="nav-link" id="gallery-tab" data-toggle="tab" href="#gallery" role="tab" aria-controls="gallery" aria-selected="false">Galerias</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="commentary-tab" data-toggle="tab" href="#commentary" role="tab" aria-controls="commentary" aria-selected="false">Comentarios</a>
+                          </li>
                       </ul>
                       <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
@@ -70,8 +73,13 @@
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <img src="{{ asset('images/places/' . $place->touristicPlaceId . '/' . $place->mainImage) }}" width="80%" height="80%" style="border-radius: 25px">
                                                     
+                                                    <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);">
+                                                        <img src="{{ asset('images/places/' . $place->touristicPlaceId . '/' . $place->mainImage) }}" width="100%" height="80%" style="border-radius: 25px; padding-left: 10%;padding-right: 10%">
+                                                        <div class="container">
+                                                        
+                                                        </div>
+                                                    </div>
                                                 </div>
 
                                                 <div class="col-md-4"><br>
@@ -110,19 +118,36 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="inputPlaceTags">Tags</label>
-                                                <select class="form-control select-tag" multiple="multiple" required="required" name="inputPlaceTags[]">
+                                                <select class="form-control select-tag" multiple="multiple" required="required" name="inputPlaceTags[]" id="selectTagsitos">                                                    
+
                                                     @foreach($tags as $tag)
                                                         @foreach ($place['tag'] as $item)
                                                             @if ($tag['tagId'] == $item['tagId'])
                                                                 <option value="{{$tag['tagId']}}" selected>{{$tag['tagName']}}</option>
-                                                            @else
-                                                                <option value="{{$tag['tagId']}}">{{$tag['tagName']}}</option>
+                                                                break;
                                                             @endif
-                                                        @endforeach
+                                                        @endforeach                                                                                                                
+                                                    @endforeach
+
+                                                    @foreach($tags as $tag)
+                                                    
+                                                        <option value="{{$tag['tagId']}}">{{$tag['tagName']}}</option>
+                                                                                                                                                                      
                                                     @endforeach
                                                 </select>
                                             </div>
                                         </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label for="inputPlaceCategories">Categorias</label>
+                                                <select class="form-control select-category" multiple="multiple" name="inputPlaceCategories[]" id="selectCategories">
+                                                    
+                                                </select>
+                                            </div>
+                                        </div>
+
+
                                         <br>
                                         <label for="placeName">Descripcion</label>
                                         <div class="card-body">
@@ -150,11 +175,13 @@
 
                             <div class="row">
                                 <div class="col-md-1"></div>
-                                <div class="col-md-10">
+                                <div class="col-md-10" style="align-items: center;">
                                     <br><br>
+                                    <div class="card" style="border-radius: 25px; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2); padding-left: 8%;padding-right: 8%; width: fit-content;">
                                     <div id="mapholder"></div><br>
+                                    </div>
                                     <div class="form-group">
-                                        
+                                        <br><br>
                                         <input class="form-control" name="inputPlaceLatitude" value="{{ $place['latitude'] }}" type="text" id="inputPlaceLatitude" readonly>
                                         <input class="form-control" name="inputPlaceLongitude" value="{{ $place['longitude'] }}" type="text" id="inputPlaceLongitude" readonly>
                                     </div>
@@ -193,7 +220,7 @@
                                             @foreach ($place['gallery'] as $gallery)
 
                                             <div class="col-md-4">
-                                                <div class="card" style="height: 80%">
+                                                <div class="card" style="height: 80%; border-radius: 25px; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);">
                                                     <div class="card-header">
                                                         
                                                         <a data-toggle="modal" data-target="#galleryDetailModal" onclick="updateData({{$gallery}})" href="" >{{ $gallery["galleryName"] }}</a>
@@ -224,6 +251,42 @@
                             @include('admin.places.detailGallery')
 
                         </div>
+
+                        <div class="tab-pane fade" id="commentary" role="tabpanel" aria-labelledby="content-tab">
+
+                            <div class="row">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-10" style="align-items: center;">
+                                    <br><br>
+                                    
+                                    @foreach ($place['commentary'] as $commentaryItem)
+                                        
+                                        <div class="row">
+                                            <div class="col-md-1">
+                                                <a class="nav-link btn btn-danger" href="{{ route('admin.commentary.destroy', $commentaryItem['commentaryId'])}}" onclick="return confirm('Eliminar este comentario?')">   
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="alert alert-primary" role="alert" style="margin-bottom: 0%">
+                                                    {{ $commentaryItem['commentaryDesc'] }}
+                                                </div> 
+                                                <div class="alert alert-dark" role="alert">
+                                                    Usuario: {{ $commentaryItem['user']['name'] . ' ' . $commentaryItem['user']['lastName']. ' ' . $commentaryItem['created_at'] }} 
+                                                </div>
+                                            </div>
+                                            
+                                        </div>                                    
+                                        <hr>                                                             
+                                    @endforeach
+                                    
+                                </div>
+                                <div class="col-md-1"></div>
+                            </div>
+
+                        </div>
+
+
                       </div>
 
                     
@@ -261,7 +324,83 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.3.1.min.js"><\/script>')</script>
 
+    
     <script>
+        $('#selectTagsitos').change(function(){
+            alert('a');
+        });
+    </script>
+    
+    <script>
+
+        function setDefaultCategories(){
+            let savedTags = JSON.parse('<?php echo $place['tag']  ?>');
+            let savedCategories = JSON.parse('<?php echo $place['category']  ?>');
+            //console.log(savedTags);
+
+            let categoriesArray = JSON.parse('<?php echo $categories  ?>'); 
+            var select = document.getElementById("selectCategories");
+            var length = select.options.length;
+            /*for (i = length-1; i >= 0; i--) {
+              select.options[i] = null;
+            }       
+            $('.select-category').trigger("chosen:updated");*/
+            //console.log(selectedTags);
+            //console.log(categoriesArray[0]);
+
+            //fill elements with selected tags
+            /*for (i = 0; i < savedTags.length; i++) {
+              //console.log('log tags ' + selectedTags[i]);
+              for (j = 0; j < categoriesArray.length; j++) {
+                if(categoriesArray[j].tagId == savedTags[i].tagId) {
+                  
+                  let option = document.createElement('option');
+                  option.appendChild( document.createTextNode(categoriesArray[j].categoryName) );
+                  option.value = categoriesArray[j].categoryId;
+
+                  for(k = 0; k < savedCategories.length; k++) {
+                    if(categoriesArray[j].categoryId == savedCategories[k].categoryId) {
+                        option.setAttribute('selected', 'selected');
+                    }
+                  }
+
+                  //option.setAttribute('selected', 'selected');
+                  select.appendChild(option);   
+
+                }
+                
+              }                          
+            }*/
+            
+            for(i = 0; i < categoriesArray.length; i++){
+                let option = document.createElement('option');
+                option.appendChild( document.createTextNode(categoriesArray[i].categoryName) );
+                option.value = categoriesArray[i].categoryId;
+                //option.setAttribute('selected', 'selected');
+                for(k = 0; k < savedCategories.length; k++) {
+                    if(categoriesArray[i].categoryId == savedCategories[k].categoryId) {
+                        option.setAttribute('selected', 'selected');
+                    }
+                  }
+                select.appendChild(option);
+            }
+
+
+
+            $('.select-category').trigger("chosen:updated");
+            //select.getElementsByTagName
+            //document.getElementById('selectCategories').getElementsByTagName('Pastas')[0].selected = 'selected';
+            
+            console.log(Array.from(select.options)[0].value);
+        }
+
+        var found = [];
+        $("select option").each(function() {
+        if($.inArray(this.value, found) != -1) $(this).remove();
+        found.push(this.value);
+        });
+
+
         var map;
         function initMap() {
             map = new google.maps.Map(document.getElementById('mapHolder'), {
@@ -292,6 +431,8 @@
         }
         
     </script>
+
+
 
 
     <script>
@@ -386,6 +527,12 @@
             placeholder_text_multiple: "seleccione tags",
             search_contains: true,
             no_results_text: "No se encontraron tags"
+        });
+
+        $('.select-category').chosen({
+            placeholder_text_multiple: "seleccione categorias",
+            search_contains: true,
+            no_results_text: "No se encontraron categorias"
         });
     </script>
 

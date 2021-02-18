@@ -40,6 +40,14 @@ class TouristicPlace extends Model
         return $this->hasMany('App\Gallery', 'touristicPlaceId', 'touristicPlaceId');
     }
 
+    public function category(){
+        return $this->belongsToMany('App\Category', 'placecategory', 'touristicPlaceId', 'categoryId');
+    }
+
+    public function commentary(){
+        return $this->hasMany('App\Commentary', 'touristicPlaceId', 'touristicPlaceId');
+    }
+
     
     
 }
