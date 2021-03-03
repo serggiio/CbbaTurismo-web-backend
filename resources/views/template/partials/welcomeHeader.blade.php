@@ -1,7 +1,7 @@
       <div class="col-md-6">
 
 
-      <div class="card">
+      <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);background-image: linear-gradient(to right top, #ffffff, #dbf5ff, #87f5ff, #00f3ec, #2fe998);">
         <div class="card-body">        
         
 

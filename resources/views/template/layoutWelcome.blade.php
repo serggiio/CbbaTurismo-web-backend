@@ -22,7 +22,7 @@
 
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
   </head>
-  <body class="">
+  <body style="">
     
 @include('template.partials.navbarFixed')
 <br><br>
@@ -62,10 +62,10 @@
     var swiper = new Swiper('.swiper-container', {
       slidesPerView: 3,
       spaceBetween: 30,
-      centeredSlides: false,
+      centeredSlides: true,
       freeMode: true,
       autoplay: {
-        delay: 2500,
+        delay: 2000,
         disableOnInteraction: false,
       },
       pagination: {

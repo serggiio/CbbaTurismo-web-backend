@@ -13,7 +13,7 @@ class ImagesSeeder extends Seeder
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         DB::table('images')->truncate();
-        DB::table('images')->insert([
+        /*DB::table('images')->insert([
             'galleryId' => 1,
             'imagePath' => 'image1.jpg',
         ]);
@@ -46,6 +46,6 @@ class ImagesSeeder extends Seeder
         DB::table('images')->insert([
             'galleryId' => 4,
             'imagePath' => 'image7.jpg',
-        ]);
+        ]);*/
     }
 }

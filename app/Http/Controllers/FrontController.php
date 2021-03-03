@@ -18,12 +18,43 @@ use App\Status as StatusObj;
 use App\Category as CategoryObj;
 use App\Commentary as CommentaryObj;
 
+use laracasts\flash\flash;
+
+use Barryvdh\DomPDF\Facade as PDF;
+
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
 class FrontController extends Controller
 {
-    public function index()
+    public function index($status = "noData")
     {
+        /*$touristicPlaces = TouristicObj::orderBy('touristicPlaceId', 'asc')->paginate(10);
+
+        $touristicPlaces->each(function($touristicPlace){
+            $touristicPlace['provinceName'] = $touristicPlace->province['provinceName'];
+            $touristicPlace['statusName'] = $touristicPlace->status['statusName'];
+            $touristicPlace['rateAvg'] = round($touristicPlace->rate->avg('puntuacion'));
+            unset($touristicPlace['province']);
+            unset($touristicPlace['status']);
+
+        });
+
+        $message = null;
+        //dd($this->statusMessage);
+        if($this->statusMessage == "success"){
+            $message = "El registro se guardó con éxito!";
+            $this->statusMessage = "noData";
+        }
+        //dd($touristicPlaces->toArray());
+        return view('admin.admin')
+        ->with('places', $touristicPlaces)
+        ->with('message', $message);*/
+        //flash("Se ha creado el articulo ". " de forma satisfactoria!",'success');
+        return $this->returnAdminView();
+
+    }
+
+    public function returnAdminView(){
         $touristicPlaces = TouristicObj::orderBy('touristicPlaceId', 'asc')->paginate(10);
 
         $touristicPlaces->each(function($touristicPlace){
@@ -35,17 +66,17 @@ class FrontController extends Controller
 
         });
 
-        //dd($touristicPlaces->toArray());
+        //dd($touristicPlaces->toArray());        
+        //flash("Se ha creado el articulo ". " de forma satisfactoria!",'success');
         return view('admin.admin')
         ->with('places', $touristicPlaces);
-
     }
 
     public function registerNewPlace()
     {
         $tags = TagObj::orderBy('tagName', 'desc')->get();
         $provinces = ProvinceObj::orderBy('provinceName', 'desc')->get();
-        $categories = CategoryObj::orderBy('categoryName', 'desc')->get();
+        $categories = CategoryObj::orderBy('categoryName', 'desc')->get();   
         //dd($provinces[0]['provinceName']);
         return view('admin.places.registerPlace')
         ->with('tags', $tags)
@@ -107,6 +138,7 @@ class FrontController extends Controller
         //dd($touristicPlaces->toArray());
         /*return view('admin.admin')
         ->with('places', $touristicPlaces);*/
+        flash('El registro de guardó con éxito!')->success();
         return redirect()->route('front.index');
     }
 
@@ -146,6 +178,12 @@ class FrontController extends Controller
         /*dd($request->file('image'));*/
         //dd($request->all());
         $data = $request->all();
+        $userCreated = UserTableObj::where('email', '=', $data['inputUserEmail'])->first();
+
+        if(isset($userCreated)){
+            flash('El correo '. $data['inputUserEmail'] . ' ya esta en uso!')->error();
+            return redirect()->route('front.newUser');
+        }
 
         $newData['statusId'] = '2';
         $newData['typeId'] = $data['inputUserType'];
@@ -156,6 +194,7 @@ class FrontController extends Controller
         $newUser = new UserTableObj($newData);
         $newUser->save();
 
+        flash('El usuario '. $newData['name']. ' ' .$newData['lastName'] . ' se creó correctamente!')->success();
         return redirect()->route('front.users');
     }
 
@@ -163,6 +202,7 @@ class FrontController extends Controller
         $user = UserTableObj::where('userId', '=', $id)->first();
         $user->delete();
         //dd($user);
+        flash('El usuario se eliminó correctamente!')->warning();
         return redirect()->route('front.users');
     }
 
@@ -180,6 +220,14 @@ class FrontController extends Controller
     public function saveUpdatedUser(Request $request){
         $data = $request->all();
         //dd($data);
+
+        $userCreated = UserTableObj::where('email', '=', $data['email'])->first();
+
+        if(isset($userCreated) && $userCreated['userId'] != $data['userId']){
+            flash('El correo '. $data['email'] . ' ya esta en uso!')->error();
+            return redirect()->route('front.user.detail', ['id' => $data['userId']]);
+        }
+
         $user = UserTableObj::where('userId', '=', $data['userId'])->first();
         $newData['statusId'] = $data['inputUserStatus'];
         $newData['typeId'] = $data['inputUserType'];
@@ -190,21 +238,21 @@ class FrontController extends Controller
         $user->fill($newData);
         $user->save();
 
+        flash('El usuario se actualizó correctamente!')->success();
         return redirect()->route('front.user.detail', ['id' => $data['userId']]);
     }
 
     public function placeDetail($id)
     {
         
-        $touristicPlace = TouristicObj::where('touristicPlaceId', '=', $id)->first();
+        /*$touristicPlace = TouristicObj::where('touristicPlaceId', '=', $id)->first();
         $categories = CategoryObj::orderBy('categoryName', 'desc')->get();
         $galleryData = GalleryObj::where('touristicPlaceId', '=', $id)->first();
         
         if($galleryData){
             $galleryData->images;
         }
-        
-        //dd($galleryData->toArray());
+                
 
         $touristicPlace->tag;
         $touristicPlace->category;
@@ -227,11 +275,65 @@ class FrontController extends Controller
         //dd($id);
         //dd($touristicPlace->toArray());
         //dd($touristicPlace['gallery'][0]['images']->toArray());//$gallery['images'][0]['imagePath']
+        //dd($touristicPlace->toArray());      */  
+
+        $viewData = $this->returnToDetailPlaceView($id);
+
         return view('admin.places.detailPlace')
+        ->with('place', $viewData['place'])
+        ->with('tags', $viewData['tags'])
+        ->with('provinces', $viewData['provinces'])
+        ->with('categories', $viewData['categories']);
+
+    }
+
+    public function returnToDetailPlaceView($id){
+        $busData = null;
+        $touristicPlace = TouristicObj::where('touristicPlaceId', '=', $id)->first();
+        $categories = CategoryObj::orderBy('categoryName', 'desc')->get();
+        $galleryData = GalleryObj::where('touristicPlaceId', '=', $id)->first();
+        
+        if($galleryData){
+            $galleryData->images;
+        }
+                
+
+        $touristicPlace->tag;
+        $touristicPlace->category;
+        $touristicPlace->gallery;
+        $touristicPlace->commentary;
+        
+        $touristicPlace->gallery->each(function($galleryData){
+            $galleryData->images;            
+        });
+
+        $touristicPlace->commentary->each(function($commentaryData){
+            $commentaryData->user;            
+        });
+
+        $tags = TagObj::orderBy('tagName', 'desc')->get();
+        $provinces = ProvinceObj::orderBy('provinceName', 'desc')->get();
+        //dd($provinces[0]['provinceName']);
+
+        //dd($touristicPlace->toArray()['tag']);
+        //dd($id);
+        //dd($touristicPlace->toArray());
+        //dd($touristicPlace['gallery'][0]['images']->toArray());//$gallery['images'][0]['imagePath']
+        //dd($touristicPlace->toArray());        
+
+        $busData['place'] = $touristicPlace;
+        $busData['tags'] = $tags;
+        $busData['provinces'] = $provinces;
+        $busData['categories'] = $categories;
+
+        /*return view('admin.places.detailPlace')
         ->with('place', $touristicPlace)
         ->with('tags', $tags)
         ->with('provinces', $provinces)
-        ->with('categories', $categories);
+        ->with('categories', $categories)
+        ->with('message', $message);*/
+
+        return $busData;
 
     }
 
@@ -241,6 +343,7 @@ class FrontController extends Controller
         $touristicPlace = TouristicObj::where('touristicPlaceId', '=', $id)->first();
         $touristicPlace->delete();
         //dd($touristicPlace);
+        flash('Se eliminó la información correctamente!')->warning();
         return redirect()->route('front.index');
 
     }
@@ -278,7 +381,7 @@ class FrontController extends Controller
             }
         }
 
-
+        flash('Se creo la galería ' . $data['galleryName'] . ' !')->success();
         return redirect()->route('front.placeDetail', ['id' => $touristicPlace->touristicPlaceId]);
     }
 
@@ -296,6 +399,7 @@ class FrontController extends Controller
         $gallery->delete();
 
         /*flash("El articulo  ". $article->title . " se ha eliminado",'success');*/
+        flash('Se eliminó correctamente la galería!')->warning();
         return redirect()->route('front.placeDetail', ['id' => $touristicPlaceId]);
     }
 
@@ -324,6 +428,8 @@ class FrontController extends Controller
         $newData['streets'] = $data['streets'];
         $newData['latitude'] = $data['inputPlaceLatitude'];
         $newData['longitude'] = $data['inputPlaceLongitude'];
+        $newData['placeStatusId'] = $data['statusRadio'];
+
         //dd($newData);
 
         $touristicPlace = TouristicObj::find($data['touristicPlaceId']); 
@@ -346,7 +452,17 @@ class FrontController extends Controller
         }
 
         //dd($touristicPlace->toArray());
+        flash('El registro de actualizó con éxito!')->success();
         return redirect()->route('front.placeDetail', ['id' => $data['touristicPlaceId']]);
+        /*$viewData = $this->returnToDetailPlaceView($data['touristicPlaceId'], true);
+        //dd($data);
+
+        return view('admin.places.detailPlace')
+        ->with('place', $viewData['place'])
+        ->with('tags', $viewData['tags'])
+        ->with('provinces', $viewData['provinces'])
+        ->with('categories', $viewData['categories'])
+        ->with('message', $viewData['message']);*/
     }
 
     public function destroyGalleryImage($id)
@@ -365,7 +481,7 @@ class FrontController extends Controller
         }
 
         
-        
+        flash('Se eliminó la imagen correctamente!')->warning();
         return redirect()->route('admin.gallery.edit', ['id' => $image['galleryId']]);
     }
 
@@ -395,7 +511,7 @@ class FrontController extends Controller
             }
         }
 
-
+        flash('La galería se actualizó correctamente!')->success();
         return redirect()->route('admin.gallery.edit', ['id' => $data['galleryId']]);
     }
 
@@ -413,6 +529,7 @@ class FrontController extends Controller
         $tag = TagObj::where('tagId', '=', $id)->first();
         $tag->delete();
         //dd($TagObj);
+        flash('Se eliminó el tag correctamente!')->warning();
         return redirect()->route('front.tags');
 
     }
@@ -431,6 +548,13 @@ class FrontController extends Controller
         $data = $request->all();
 
         $tag = TagObj::where('tagId', '=', $data['tagId'])->first();
+        $createdTag = TagObj::where('tagName', '=', $data['tagName'])->first();
+
+        if(isset($createdTag) && $createdTag['tagId'] != $tag['tagId']){
+            flash('El nombre ' . $data['tagName'] .' ya esta en uso!')->error();
+            return redirect()->route('front.tagDetail', ['id' => $tag['tagId']]);
+        }
+
 
         if($file=$request->file('image')){
             if (\File::exists(public_path(). '/images/tags/' . $tag['tagFile'])) \File::delete(public_path(). '/images/tags/' . $tag['tagFile']);
@@ -445,6 +569,7 @@ class FrontController extends Controller
         $tag->fill($newData);
         $tag->save();
 
+        flash('El tag ' . $newData['tagName'] .' se edito correctamente!')->success();
         return redirect()->route('front.tagDetail', ['id' => $tag['tagId']]);
     }
 
@@ -452,6 +577,13 @@ class FrontController extends Controller
         //dd($request->all());
         $data = $request->all();
         $newTag['tagName'] = $data['tagName'];
+
+        $createdTag = TagObj::where('tagName', '=', $data['tagName'])->first();
+
+        if(isset($createdTag)){
+            flash('El nombre ' . $data['tagName'] .' ya esta en uso!')->error();
+            return redirect()->route('front.tags');
+        }
 
         if($file=$request->file('image')){
             $name = $data['tagName'] . '.' . $file->getClientOriginalExtension();
@@ -463,6 +595,7 @@ class FrontController extends Controller
 
         $storedTag = new TagObj($newTag);
         $storedTag->save();
+        flash('Se creó el tag '. $storedTag['tagName'] . ' correctamente!')->success();
         return redirect()->route('front.tags');
 
     }
@@ -480,6 +613,7 @@ class FrontController extends Controller
         $province = ProvinceObj::where('provinceId', '=', $id)->first();
         $province->delete();
         //dd($TagObj);
+        flash('Se eliminó la provincia correctamente!')->warning();
         return redirect()->route('front.provinces');
 
     }
@@ -496,6 +630,10 @@ class FrontController extends Controller
             $newProvince['longitude'] = $data['inputPlaceLongitude'];
             $storedProvince = new ProvinceObj($newProvince);
             $storedProvince->save();
+            
+            flash('La provincia '. $newProvince['provinceName'] . ' se creó correctamente!')->success();
+        }else{
+            flash('La provincia '. $data['provinceName'] . ' ya esta en uso!')->error();
         }
         
         return redirect()->route('front.provinces');
@@ -516,6 +654,14 @@ class FrontController extends Controller
         $data = $request->all();
 
         $province = ProvinceObj::where('provinceId', '=', $data['provinceId'])->first();
+        $provinceCreated = ProvinceObj::where('provinceName', '=', $data['provinceName'])->first();
+
+        if(isset($provinceCreated) && $provinceCreated['provinceId'] != $province['provinceId']){
+            flash('La provincia '. $data['provinceName'] . ' ya esta en uso!')->error();
+            return redirect()->route('front.provinceDetail', ['id' => $data['provinceId']]);
+        }else{
+            flash('La provincia '. $data['provinceName'] . ' se actualizó correctamente!')->success();
+        }
 
         $newData['provinceName'] = $data['provinceName'];
         $newData['latitude'] = $data['inputPlaceLatitude'];
@@ -555,6 +701,10 @@ class FrontController extends Controller
             $newCategory['tagId'] = $data['inputPlaceTag'];
             $storedCategory = new CategoryObj($newCategory);
             $storedCategory->save();
+            flash('La categoría '. $newCategory['categoryName'] . ' se creó correctamente!')->success();
+
+        }else{
+            flash('La categoría '. $data['categoryName'] . ' ya esta en uso!')->error();
         }
         
         return redirect()->route('front.categories');
@@ -614,6 +764,14 @@ class FrontController extends Controller
         $data = $request->all();
 
         $category = CategoryObj::where('categoryId', '=', $data['categoryId'])->first();
+        $categoryCreated = CategoryObj::where('categoryName', '=', $data['categoryName'])->first();
+
+        if(isset($categoryCreated) && $categoryCreated['categoryId'] != $category['categoryId']){
+            flash('La categoría '. $data['categoryName'] . ' ya esta en uso!')->error();
+            return redirect()->route('front.categoryDetail', ['id' => $category['categoryId']]);
+        }else{
+            flash('La categoría '. $data['categoryName'] . ' se actualizó correctamente!')->success();
+        }
 
         $newData['categoryName'] = $data['categoryName'];
         $newData['tagId'] = $data['inputPlaceTag'];
@@ -629,6 +787,7 @@ class FrontController extends Controller
         $category = CategoryObj::where('categoryId', '=', $id)->first();
         $category->delete();
         //dd($TagObj);
+        flash('Se eliminó la categoría correctamente!')->warning();
         return redirect()->route('front.categories');
 
     }
@@ -639,8 +798,51 @@ class FrontController extends Controller
         $touristicPlaceId = $commentary['touristicPlaceId'];
         $commentary->delete();
         //dd($TagObj);
+        flash('Comentario eliminado!')->warning();
         return redirect()->route('front.placeDetail', ['id' => $touristicPlaceId]);
 
+    }
+
+    public function reports(){
+        $touristicPlaces = TouristicObj::orderBy('touristicPlaceId', 'asc')->get();
+
+        $touristicPlaces->each(function($touristicPlace){
+            $touristicPlace['provinceName'] = $touristicPlace->province['provinceName'];
+            $touristicPlace['statusName'] = $touristicPlace->status['statusName'];
+            $touristicPlace['rateAvg'] = round($touristicPlace->rate->avg('puntuacion'));
+            $touristicPlace['countCommentary'] = round($touristicPlace->commentary->count());
+            unset($touristicPlace['province']);
+            unset($touristicPlace['status']);
+            unset($touristicPlace['commentary']);
+
+        });
+
+        //dd($categories->toArray());
+        return view('admin.reports.reports')
+        ->with('touristicPlaces', $touristicPlaces->sortByDesc("rateAvg"));
+    }
+
+    public function generateReport(){
+
+        $touristicPlaces = TouristicObj::orderBy('touristicPlaceId', 'asc')->get();
+
+        $touristicPlaces->each(function($touristicPlace){
+            $touristicPlace['provinceName'] = $touristicPlace->province['provinceName'];
+            $touristicPlace['statusName'] = $touristicPlace->status['statusName'];
+            $touristicPlace['rateAvg'] = round($touristicPlace->rate->avg('puntuacion'));
+            $touristicPlace['countCommentary'] = round($touristicPlace->commentary->count());
+            unset($touristicPlace['province']);
+            unset($touristicPlace['status']);
+            unset($touristicPlace['commentary']);
+
+        });
+
+        //$touristicPlaces =  $touristicPlaces->sortBy("rateAvg");
+
+        $pdf = PDF::loadView('admin.reports.pdf.template', compact('touristicPlaces'));
+
+
+        return $pdf->stream('reporte-turismo.pdf');
     }
     
 }

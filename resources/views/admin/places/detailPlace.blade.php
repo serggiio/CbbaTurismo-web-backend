@@ -36,12 +36,13 @@
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
               <div class="btn-toolbar mb-2 mb-md-0">
                 
+                @include('flash::message')              
+
               </div>
             </div>
   
             <h2>Detalle: {{ $place['placeName'] }}</h2>
             <br>
-        
             <div class="row">
                 <div class="col-md-1"></div>
                 <div class="col-md-10">
@@ -144,6 +145,22 @@
                                                 <select class="form-control select-category" multiple="multiple" name="inputPlaceCategories[]" id="selectCategories">
                                                     
                                                 </select>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <br>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="statusRadio" id="activeRadio" value="2">
+                                                    <label class="form-check-label" for="activeRadio">
+                                                      Activo
+                                                    </label>
+                                                  </div>
+                                                  <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="statusRadio" id="inactiveRadio" value="1">
+                                                    <label class="form-check-label" for="inactiveRadio">
+                                                      Inactivo
+                                                    </label>
+                                                  </div>
                                             </div>
                                         </div>
 
@@ -392,6 +409,22 @@
             //document.getElementById('selectCategories').getElementsByTagName('Pastas')[0].selected = 'selected';
             
             console.log(Array.from(select.options)[0].value);
+
+            setStatus();
+
+        }
+
+        function setStatus(){
+            let savedStatus = JSON.parse('<?php echo $place['placeStatusId']  ?>');
+            //alert('ESTADO_ ' + savedStatus);
+            let activeRadio = document.getElementById("activeRadio");
+            let inactiveRadio = document.getElementById("inactiveRadio");
+
+            if(savedStatus == 1){
+                inactiveRadio.setAttribute("checked", "");
+            }else if(savedStatus == 2){
+                activeRadio.setAttribute("checked", "");
+            }
         }
 
         var found = [];

@@ -86,10 +86,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     ]);
 
     //edit, delete place
-    Route::get('/placeDetail/{id}', [
+    Route::get('/placeDetail/{id}',[
 
         'as' 	=> 		'front.placeDetail',
-        'uses'	=>		'FrontController@placeDetail'
+        'uses'	=>		'FrontController@placeDetail',
         
     ]);
 
@@ -259,6 +259,19 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
     Route::get('commentary/{id}/destroy', [
         'as'	=>	'admin.commentary.destroy',
         'uses'	=>	'FrontController@destroyCommentary'
+    ]);
+
+    //reports main page
+    //categories
+    Route::get('/reports', [
+        'as' 	=> 		'front.reports',
+        'uses'	=>		'FrontController@reports'
+    ]);
+
+    //generate repdf report
+    Route::get('/generateReport', [
+        'as' 	=> 		'front.generateReport',
+        'uses'	=>		'FrontController@generateReport'
     ]);
     
 

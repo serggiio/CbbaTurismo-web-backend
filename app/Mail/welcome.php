@@ -31,6 +31,6 @@ class welcome extends Mailable
     {
         return $this
             ->subject("Codigo de verificación: ")
-            ->html("<strong> " . $this->verificationCode . " </strong>");
+            ->html("<p>Gracias por registrarte, usa el siguiente codigo de verificación : <strong> " . $this->verificationCode . " </strong><p>");
     }
 }

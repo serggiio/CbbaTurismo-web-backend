@@ -35,46 +35,39 @@
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
               <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group mr-2">
-                  @include('flash::message')
+                  <a href="{{ route('front.generateReport', 'touristicPlaces')  }}" class="btn btn-sm btn-outline-secondary" >Generar PDF <i class="fas fa-file-pdf"></i></a>
                 </div>
               </div>
             </div>
-            <a href="#" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#galleryModal">Nueva categoria</a>
 
   
-            <h2>Lista de categorias registradas: </h2>
-            <small id="emailHelp" class="form-text text-muted"></small>
+            <h2>Reportes:  </h2>
+            <small id="emailHelp" class="form-text text-muted">El reporte sera generado en un archivo PDF en base a la siguiente lista: </small>
             <br>
-            <table class="table table-hover">
+            <table class="table table-hover col-md-10">
                 <thead class="thead-dark">
                   <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Categoria</th>
-                    <th scope="col">Tag</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Provincia</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Puntuación</th>
+                    <th scope="col">Comentarios</th>
                     <th scope="col">Fecha de registro</th>
-                    <th scope="col">Editar</th>
-                    <th scope="col">Eliminar</th>
                   </tr>
                 </thead>
                 <tbody>
                   
-                    @foreach($categories as $category)
+                    @foreach($touristicPlaces as $index => $touristicPlace)
                     <tr>
                         
-                        <th scope="row">{{$category['categoryId']}}</th>
-                        <td>{{$category['categoryName']}}</td>
-                        <td>{{$category['tag']['tagName']}}</td>
-                        <td>{{$category['created_at']}}</td>
-                        <td>
-                            <a class="nav-link btn btn-primary" href="{{ route('front.categoryDetail', $category['categoryId'])}}" style="width: fit-content">   
-                              <i class="fas fa-edit"></i>
-                            </a>
-                        </td>
-                        <td>
-                            <a class="nav-link btn btn-danger" href="{{ route('admin.category.destroy', $category['categoryId'])}}" onclick="return confirm('Eliminar esta categoria?')" style="width: fit-content">   
-                              <i class="fas fa-edit"></i>
-                            </a>
-                        </td>
+                        <th scope="row">{{$index +1}}</th>
+                        <td>{{$touristicPlace['placeName']}}</td>
+                        <td>{{$touristicPlace['provinceName']}}</td>
+                        <td>{{$touristicPlace['status']['statusName']}}</td>
+                        <td>{{$touristicPlace['rateAvg']}}</td>
+                        <td>{{$touristicPlace['countCommentary']}}</td>
+                        <td>{{$touristicPlace['created_at']}}</td>
                       </tr>
                     @endforeach
                     
@@ -82,16 +75,6 @@
                 </tbody>
               </table>
 
-
-            	<div class="row">
-                <div class="col-md-4"></div>
-                <div class="col-md-4">
-                  {!! $categories->render() !!}
-                </div>
-                <div class="col-md-4"></div>
-              </div>
-
-              @include('admin.categories.createCategory')
 
           </main>
 

@@ -5,11 +5,11 @@
 
 
         <div class="col-6">
-            <div class="card">
-                <div class="card-body" style=""> 
+            <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);">
+                <div class="card-body" style="background-image: linear-gradient(to right top, #ffffff, #dbf5ff, #87f5ff, #00f3ec, #2fe998);"> 
 
-            <div style="" class="jumbotron jumbotron-fluid">
-                <div style="margin-left: 10%" class="container">
+            <div style="background-image: linear-gradient(to right top, #ffffff, #dbf5ff, #87f5ff, #00f3ec, #2fe998);" class="jumbotron jumbotron-fluid">
+                <div style="margin-left: 10%;" class="container">
                   <h1 class="display-4">Descarga la aplicación <i class="fas fa-mobile-alt"></i></h1>
                   <p class="lead">Busca lugares turisticos en un solo lugar!</p>
                   <a href="{{ asset('androidApp/CbbaTurismo.apk') }}" class="btn btn-outline-success">App android</a>
@@ -25,10 +25,10 @@
 
         <div class="col-6">
 
-            <div class="card">
-                <div class="card-body" style=""> 
+            <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);">
+                <div class="card-body" style="background-image: linear-gradient(to right top, #ffffff, #dbf5ff, #87f5ff, #00f3ec, #2fe998);"> 
 
-            <div style="padding: 0%" class="jumbotron jumbotron-fluid">
+            <div style="padding: 0%; background-image: linear-gradient(to right top, #ffffff, #dbf5ff, #87f5ff, #00f3ec, #2fe998);" class="jumbotron jumbotron-fluid">
                 <div class="container">
                   
                   

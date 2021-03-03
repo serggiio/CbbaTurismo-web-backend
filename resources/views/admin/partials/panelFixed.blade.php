@@ -6,7 +6,7 @@
       <div class="col-md-5">
 
         <a class="btn btn-dark disabled" href="{{ route('logout') }}">
-          {{ Auth::user()->name }}
+          <i class="fas fa-user" style="padding-right: 5px"></i>{{ Auth::user()->name }}
         </a>
         
       </div>
@@ -73,6 +73,13 @@
           <a class="nav-link" href="{{ route('front.categories')}}">
           <i class="fas fa-angle-double-down"></i>
             Categorias
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{{ route('front.reports')}}">
+          <i class="fas fa-file-pdf"></i>
+            Reportes
           </a>
         </li>
 

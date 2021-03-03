@@ -55,8 +55,8 @@ class TouristicPlaceSeeder extends Seeder
             'mainImage' => 'mainImage.jpg',
             'mainVideo' => '/src/common/places/1/main.VGA',
             'Streets' => 'Avenida Ayacucho entre lanza y sanmartin',
-            'latitude' => 145.01223414,
-            'longitude' => 9876.45156,
+            'latitude' => -17.3783261,
+            'longitude' => -66.1571253,
             'businessHours' => '07:00 AM - 19:00 PM',
             'type' => 'place'
         ]);
@@ -71,8 +71,8 @@ class TouristicPlaceSeeder extends Seeder
             'mainImage' => 'mainImage.jpg',
             'mainVideo' => '/src/common/places/1/main.VGA',
             'Streets' => 'Avenida Ayacucho entre lanza y sanmartin',
-            'latitude' => 145.01223414,
-            'longitude' => 9876.45156,
+            'latitude' => -17.3783261,
+            'longitude' => -66.1571253,
             'businessHours' => '07:00 AM - 19:00 PM',
             'type' => 'place'
         ]);
@@ -88,8 +88,8 @@ class TouristicPlaceSeeder extends Seeder
             'mainImage' => 'mainImage.jpg',
             'mainVideo' => '/src/common/places/1/main.VGA',
             'Streets' => 'Avenida Ayacucho entre lanza y sanmartin',
-            'latitude' => 145.01223414,
-            'longitude' => 9876.45156,
+            'latitude' => -17.3783261,
+            'longitude' => -66.1571253,
             'businessHours' => '07:00 AM - 19:00 PM',
             'type' => 'event',
             'startDate' => '2020-10-02',
@@ -106,8 +106,8 @@ class TouristicPlaceSeeder extends Seeder
             'mainImage' => 'mainImage.jpg',
             'mainVideo' => '/src/common/places/1/main.VGA',
             'Streets' => 'Avenida Ayacucho entre lanza y sanmartin',
-            'latitude' => 145.01223414,
-            'longitude' => 9876.45156,
+            'latitude' => -17.3783261,
+            'longitude' => -66.1571253,
             'businessHours' => '07:00 AM - 19:00 PM',
             'type' => 'event',
             'startDate' => '2020-11-02',
