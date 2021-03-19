@@ -13,7 +13,7 @@ class CreateVideosTable extends Migration
      */
     public function up()
     {
-        Schema::create('videos', function (Blueprint $table) {
+        /*Schema::create('videos', function (Blueprint $table) {
             $table->increments('videoId');
 
             $table->integer('galleryId')->unsigned();
@@ -23,7 +23,7 @@ class CreateVideosTable extends Migration
             $table->timestamps();
 
             $table->foreign('galleryId')->references('galleryId')->on('gallery')->onDelete('cascade');
-        });
+        });*/
     }
 
     /**

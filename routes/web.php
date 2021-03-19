@@ -11,19 +11,53 @@
 |
 */
 
-Route::get('/', 'MainController@index');
+//Route::get('/', 'MainController@index');
+
+Route::get('/', [
+
+    'as' 	=> 		'welcome',
+    'uses'	=>		'MainController@index'
+    
+]);
 
 Route::get('/getAll', 'TouristicPlaceController@getAll');
 
+Route::get('logout', 'Auth\LoginController@logout');
+
 Route::post('/logouts', 'MainController@index');
 
-Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function() {
+Route::group(['prefix' => 'welcome'], function() {
+    
+    Route::get('/previewList', [
+
+        'as' 	=> 		'welcome.previewList',
+        'uses'	=>		'MainController@previewList'
+        
+    ]);
+
+    Route::get('/previewDetail/{id}', [
+
+        'as' 	=> 		'welcome.previewDetail',
+        'uses'	=>		'MainController@previewDetail'
+        
+    ]);
+
+});
+
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'Admin']], function() {
     
     //routes for web admin
     Route::get('/', [
 
         'as' 	=> 		'front.index',
         'uses'	=>		'FrontController@index'
+        
+    ]);
+
+    Route::get('/places', [
+
+        'as' 	=> 		'front.places',
+        'uses'	=>		'FrontController@listPlaces'
         
     ]);
 
@@ -289,3 +323,81 @@ Route::get('/home', 'HomeController@index')->name('home');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::group(['prefix' => 'agent', 'middleware' => ['auth', 'Agent']], function() {
+    
+    //routes for web admin
+    Route::get('/', [
+
+        'as' 	=> 		'frontAgent.index',
+        'uses'	=>		'AgentController@index'
+        
+    ]);
+
+    Route::get('/profile/{id}', [
+
+        'as' 	=> 		'frontAgent.profile',
+        'uses'	=>		'AgentController@agentProfile'
+        
+    ]);
+
+    Route::post('/updateAgent', [
+
+        'as' 	=> 		'frontAgent.updateAgent',
+        'uses'	=>		'AgentController@updateAgent'
+        
+    ]);
+
+    Route::get('/detailPlace/{id}', [
+
+        'as' 	=> 		'frontAgent.placeDetail',
+        'uses'	=>		'AgentController@placeDetail'
+        
+    ]);
+
+    Route::post('/storeUpdatedPlace', [
+
+        'as' 	=> 		'frontAgent.storeUpdatedPlace',
+        'uses'	=>		'AgentController@saveUpdatedPlace'
+        
+    ]);
+
+    Route::post('/createGallery', [
+
+        'as' 	=> 		'frontAgent.createGallery',
+        'uses'	=>		'AgentController@createGallery'
+        
+    ]);
+
+    //edit gallery
+    Route::get('gallery/{id}', [
+        'as'	=>	'frontAgent.galleryEdit',
+        'uses'	=>	'AgentController@editGallery'
+    ]);
+
+    //create image
+    Route::post('/createImage', [
+
+        'as' 	=> 		'frontAgent.createImage',
+        'uses'	=>		'AgentController@createImage'
+        
+    ]);
+
+    //delete image
+    Route::get('galleryImage/{id}/destroy', [
+        'as'	=>	'frontAgent.galleryImageDestroy',
+        'uses'	=>	'AgentController@destroyGalleryImage'
+    ]);
+    
+    //delete gallery
+    Route::get('gallery/{id}/destroy', [
+        'as'	=>	'frontAgent.galleryDestroy',
+        'uses'	=>	'AgentController@destroyGallery'
+    ]);
+
+    //delete commentary
+    Route::get('commentary/{id}/destroy', [
+        'as'	=>	'frontAgent.commentaryDestroy',
+        'uses'	=>	'AgentController@destroyCommentary'
+    ]);
+});

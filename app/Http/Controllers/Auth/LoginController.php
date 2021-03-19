@@ -29,6 +29,17 @@ class LoginController extends Controller
      */
     protected $redirectTo = 'admin';
 
+    protected function redirectTo()
+    {
+        $user = \Auth::user();
+        if($user->typeId==1){
+            return 'admin';
+        }elseif($user->typeId==3){
+            return 'agent';
+        }   
+
+}
+
     /**
      * Create a new controller instance.
      *
@@ -48,7 +59,7 @@ class LoginController extends Controller
     protected function credentials(Request $request)
     {
         $credentials = $request->only($this->username(), 'password');
-        $credentials['typeId'] = 1;
+        $credentials['typeId'] = [1, 3];
 
         //return $request->only($this->username(), 'password');
         return $credentials;

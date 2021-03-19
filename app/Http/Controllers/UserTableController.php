@@ -163,7 +163,7 @@ class UserTableController extends Controller
         $max = strlen($pattern)-1;
         for($i=0;$i < $l;$i++) $key .= $pattern{mt_rand(0,$max)};
         return $key;
-       }
+    }
 
     /**
      * Display the specified resource.

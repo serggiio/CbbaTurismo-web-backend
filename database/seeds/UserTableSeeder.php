@@ -36,7 +36,7 @@ class UserTableSeeder extends Seeder
 
         DB::table('usertable')->insert([
             'statusId' => 3,
-            'typeId' => 3,
+            'typeId' => 2,
             'name' => 'Bryan',
             'lastName' => 'Chavez',
             'phoneNumber' => '72224072',
@@ -46,12 +46,12 @@ class UserTableSeeder extends Seeder
 
         DB::table('usertable')->insert([
             'statusId' => 4,
-            'typeId' => 4,
-            'name' => 'Rosa',
-            'lastName' => 'Mela',
+            'typeId' => 3,
+            'name' => 'Juan',
+            'lastName' => 'Perez',
             'phoneNumber' => '72224073',
-            'email' => 'test3@gmail.com',
-            'password' => bcrypt('cdngmwuk3')
+            'email' => 'sergioss21er@gmail.com',
+            'password' => bcrypt('cdngmwuk')
         ]);
 
     }

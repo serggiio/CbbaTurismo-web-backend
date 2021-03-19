@@ -15,7 +15,7 @@ class TouristicPlaceSeeder extends Seeder
         DB::table('touristicPlace')->truncate();
         DB::table('touristicPlace')->insert([
             'provinceId' => 1,
-            'userId' => 1,
+            'userId' => 4,
             'placeStatusId' => 1,
             'description' => 'Descripcion para un lugar turistico',
             'history' => 'Hostoria si es que tiene',
@@ -31,7 +31,7 @@ class TouristicPlaceSeeder extends Seeder
 
         DB::table('touristicPlace')->insert([
             'provinceId' => 2,
-            'userId' => 1,
+            'userId' => 4,
             'placeStatusId' => 1,
             'description' => 'Descripcion para un lugar turistico2',
             'history' => 'Hostoria si es que tiene2',
@@ -47,7 +47,7 @@ class TouristicPlaceSeeder extends Seeder
 
         DB::table('touristicPlace')->insert([
             'provinceId' => 3,
-            'userId' => 1,
+            'userId' => null,
             'placeStatusId' => 1,
             'description' => 'Descripcion para un lugar turistico3',
             'history' => 'Hostoria si es que tiene',
@@ -63,7 +63,7 @@ class TouristicPlaceSeeder extends Seeder
 
         DB::table('touristicPlace')->insert([
             'provinceId' => 4,
-            'userId' => 1,
+            'userId' => null,
             'placeStatusId' => 1,
             'description' => 'Descripcion para un lugar turistico',
             'history' => 'Hostoria si es que tiene',
@@ -80,7 +80,7 @@ class TouristicPlaceSeeder extends Seeder
         //Eventos
         DB::table('touristicPlace')->insert([
             'provinceId' => 4,
-            'userId' => 1,
+            'userId' => null,
             'placeStatusId' => 1,
             'description' => 'Descripcion para un lugar turistico',
             'history' => 'Hostoria si es que tiene',
@@ -98,7 +98,7 @@ class TouristicPlaceSeeder extends Seeder
 
         DB::table('touristicPlace')->insert([
             'provinceId' => 4,
-            'userId' => 1,
+            'userId' => null,
             'placeStatusId' => 1,
             'description' => 'Descripcion para un lugar turistico',
             'history' => 'Hostoria si es que tiene',

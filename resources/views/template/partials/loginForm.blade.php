@@ -5,9 +5,6 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Inicio de sesión</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
         </div>
         <div class="modal-body">
           
@@ -16,7 +13,7 @@
             <div class="row justify-content-center">
                 <div class="col-md-12">
                     <div class="card">
-                        <div style="background: rgba(0, 60, 255, 0.664); color: aliceblue" class="card-header">{{ __('Formulario inicio de sesión administrador') }}</div>
+                        <div style="background: #00B5B8; color: aliceblue" class="card-header">{{ __('Formulario inicio de sesión administrador') }}</div>
         
                         <div class="card-body">
                             <form method="POST" action="{{ route('login') }}">

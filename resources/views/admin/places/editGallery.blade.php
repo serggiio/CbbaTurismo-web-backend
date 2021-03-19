@@ -1,126 +1,127 @@
-
 <!doctype html>
-<html lang="{{ app()->getLocale() }}">
+<html lang="en">
   <head>
+    <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <title>@yield('Panel de control')</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-
-
-<!-- Bootstrap core CSS -->
-<link href="{{ asset('plugins/bootstrap-4.4.1/dist/css/bootstrap.min.css')}}" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-<!-- Link Swipers CSS -->
-<link rel="stylesheet" href="{{ asset('plugins/swiper-master/package/css/swiper.min.css')}}">
-<!-- Link font awesome -->
-<script defer src="https://use.fontawesome.com/releases/v5.0.8/js/solid.js" integrity="sha384-+Ga2s7YBbhOD6nie0DzrZpJes+b2K1xkpKxTFFcx59QmVPaSA8c7pycsNaFwUK6l" crossorigin="anonymous"></script>
-<script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c" crossorigin="anonymous"></script>
-
-<meta name="theme-color" content="#563d7c">
-
-
-<link href="{{ asset('css/admin.css') }}" rel="stylesheet">
-  </head>
-
-    <body class="">
+    <!-- Bootstrap CSS -->
+    <link href="{{ asset('plugins/bootstrap-4.4.1/dist/css/bootstrap.min.css')}}" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     
-        @include('admin.partials.panelFixed')
+    <link href="{{ asset('css/newAdmin.css') }}" rel="stylesheet">
 
+    <script src="https://use.fontawesome.com/releases/v5.15.2/js/all.js" data-auto-replace-svg="nest"></script>
 
-          <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-              <div class="btn-toolbar mb-2 mb-md-0">
-                @include('flash::message')   
-              </div>
-            </div>
-            <a class="btn btn-light" href="{{ route('front.placeDetail', $gallery['touristicPlaceId'])}}" role="button"><i class="fas fa-arrow-circle-left"></i> Volver</a>
+    <title>Galería</title>
 
+  </head>
+  <body onload="changeId()">
+    
+  @include('admin.partials.fixedMenu')
   
-            <h2>Editar Galeria: </h2>
-            
+  <div class="main-content">
+    @include('flash::message')
 
+    <div class="card shadow-lg p-3 mb-5 rounded" style="background-image: linear-gradient(to top, #d9f2bc, #bfe396, #a5d470, #8ac449, #6eb512);">
+        
+        <div class="card-title"><h2 style="color: white"><i class="fas fa-images navIcon" style="font-size: 120%; color: white"></i>  {{ $gallery['galleryName'] }}</h2></div>
+        <hr>
+        <a class="btn btn-success col-md-1" href="{{ route('front.placeDetail', $gallery['touristicPlaceId'])}}" role="button"><i class="fas fa-arrow-circle-left"></i></a>
+        <div class="card-body">
+            
             <div class="row">
-              <div class="col-md-1"></div>
-              <div class="col-md-10">
-                  <form method="POST" action="{{ action('FrontController@createImage') }}" style="padding-top: 5%" enctype="multipart/form-data">
-                      @csrf <!-- {{ csrf_field() }} -->
-                      
-                      <div class="form-group">
-                        <label for="placeName">Creado: </label>
-                        <div class="col-md-7"><input class="form-control" required readonly name="created_at" type="text" id="created_at" value="{{ $gallery['created_at'] }}"></div>
-                    </div>
-                      
-                      <div class="form-group">
-                          <label for="placeName">Nombre</label>
-                          
-                          <div class="row">
-                            <div class="col-md-7"><input class="form-control" required name="galleryName" type="text" id="galleryName" value="{{ $gallery['galleryName'] }}"></div>
+                            
+              <div class="col-md-1"></div>  
+                <div class="col-md-8">
+
+                    <form method="POST" action="{{ action('FrontController@createImage') }}" style="padding-top: 5%" enctype="multipart/form-data">
+                        @csrf <!-- {{ csrf_field() }} -->
+                        
+                        <div class="form-group">
+                          <label for="placeName" style="color: white">Creado: </label>
+                          <input class="form-control" required readonly name="created_at" type="text" id="created_at" value="{{ $gallery['created_at'] }}">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="placeName" style="color: white">Nombre</label>                            
+                            <input class="form-control" required name="galleryName" type="text" id="galleryName" value="{{ $gallery['galleryName'] }}">
                             <input hidden class="form-control" required name="galleryId" type="text" id="galleryId" value="{{ $gallery['galleryId'] }}">
                             
+                        </div>
+  
+                        <div class="form-group">
+                          <label for="files" style="color: white">Agregar imagenes: </label>
+                          <input type="file" class="form-control" name="images[]" placeholder="address" multiple><br>
+                          <button type="submit" class="btn btn-success col-md-2">Actualizar</button>
+                        </div>
+  
+                    </form><br>
+  
+                    <div class="card" style="border-radius: 25px; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2); background-image: linear-gradient(to top, #d9f2bc, #c0e597, #a7d771, #8dca49, #71bc10);">
+                      <div class="card-body">
+                        <h5 class="card-title" style="color: white">Imagenes: </h5>
+                        
+                        <div class="row">
+                          @foreach ($gallery['images'] as $item)
+
+
+                            <div class="col-md-4">
+                                            
+
+                              <div class="card">
+                                  <div class="card-content">
+                                    <img style="height: 300px" class="card-img-top img-fluid" src="{{ asset($gallery['galleryPath'] . '/' . $item['imagePath']) }}"
+                                      alt="Card image cap">
+                                    <div class="card-body" style="background-image: linear-gradient(to top, #d9f2bc, #bfe396, #a5d470, #8ac449, #6eb512);">
+                                      <a href="{{route('admin.galleryImage.destroy', $item['imageId'])}}" onclick="deleteControl({{ $gallery['images'] }})" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+                                    </div>
+                                  </div>
+                                </div>
                           </div>
-                          
+                          @endforeach
+                        </div>
+                        
                       </div>
-
-                      <div class="form-group">
-                        <label for="files">Agregar imagenes: </label>
-                        <div class="col-md-7"><input type="file" class="form-control" name="images[]" placeholder="address" multiple><br></div>
-                        <div class="col-md-7"><button type="submit" class="btn btn-primary col-md-2">Actualizar</button></div>
-                      </div>
-
-                  </form><br>
-
-                  <div class="card" style="border-radius: 25px; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);">
-                    <div class="card-body">
-                      <h5 class="card-title">Imagenes: </h5>
-                      
-                      <div class="row">
-                        @foreach ($gallery['images'] as $item)
-                          <div class="col-md-3 card">
-                            <div class="card-body" style="height: 10%" style="border-radius: 25px;">
-                              
-                              <img width="100%" height="100%" src="{{ asset($gallery['galleryPath'] . '/' . $item['imagePath']) }}" class="">
-                              
-                            </div>
-                            <div class="card-footer">
-                              <a href="{{route('admin.galleryImage.destroy', $item['imageId'])}}" onclick="deleteControl({{ $gallery['images'] }})" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
-                            </div>
-                          </div>
-                        @endforeach
-                      </div>
-                      
                     </div>
-                  </div>
+                  
 
-              </div>
-              <div class="col-md-1"></div>
-          </div>
+                </div>                
+                <div class="col-md-3">                    
 
-          <br><br><br>
+                </div>
+            </div>
+            
+        </div>
 
-          </main>
+    </div>
+    
+   
+
+  </div>
 
 
+  </body>
 
-    </body>
+  <!-- Option 1: Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+  <script src="{{asset('plugins/jquery/js/jquery.js')}}"></script>
+  <!-- Maps -->
+  <script src="https://maps.google.com/maps/api/js?sensor=false&key=AIzaSyAjvZCNzSUdg6g5jrOWYodqPLORdJdhsfM"></script>
+
+  
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
 
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-  <!-- Swiper JS -->
-  <script src="{{ asset('plugins/swiper-master/package/js/swiper.min.js')}}"></script>
+    <script>$('.btn-expand-collapse').click(function(e) {
+        $('.navbar-primary').toggleClass('collapsed');
+        });
 
-  <script>
-    function deleteControl(images){
-      
-      if(images.length == 1){
-        console.log('solo UNO');
-        alert('No puedes eliminar todas las imagenes de una galeria!');
-      }else{
-        return confirm('Eliminar esta imagen?');
-      }
-    }
-  </script>
+        function changeId(){
+          document.getElementsByClassName("close").className = "btn-close";
+        }
+
+    </script>
+
 
 </html>

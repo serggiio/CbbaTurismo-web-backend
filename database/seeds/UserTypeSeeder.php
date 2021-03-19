@@ -22,11 +22,7 @@ class UserTypeSeeder extends Seeder
         ]);
 
         DB::table('usertype')->insert([
-            'nameType' => 'Pasante'
-        ]);
-
-        DB::table('usertype')->insert([
-            'nameType' => 'Moderador'
+            'nameType' => 'Agente'
         ]);
 
     }

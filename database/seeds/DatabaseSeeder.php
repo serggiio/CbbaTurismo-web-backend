@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
         //table gallery
         $this->call(GallerySeeder::class);
         //table videos
-        $this->call(VideosSeeder::class);
+        //$this->call(VideosSeeder::class);
         //table images
         $this->call(ImagesSeeder::class);
         //table commentary

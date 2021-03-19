@@ -24,6 +24,14 @@ use Barryvdh\DomPDF\Facade as PDF;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
+
+use Illuminate\Support\Facades\Mail;
+use App\Mail\InvitationEmail;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
 class FrontController extends Controller
 {
     public function index($status = "noData")
@@ -55,6 +63,7 @@ class FrontController extends Controller
     }
 
     public function returnAdminView(){
+        $user = \Auth::user();
         $touristicPlaces = TouristicObj::orderBy('touristicPlaceId', 'asc')->paginate(10);
 
         $touristicPlaces->each(function($touristicPlace){
@@ -66,10 +75,40 @@ class FrontController extends Controller
 
         });
 
+        $users = UserTableObj::orderBy('userId', 'asc')->get();
+        $tags = TagObj::orderBy('tagId', 'asc')->get();
+        $categories = CategoryObj::orderBy('categoryId', 'asc')->get();
+
         //dd($touristicPlaces->toArray());        
         //flash("Se ha creado el articulo ". " de forma satisfactoria!",'success');
         return view('admin.admin')
-        ->with('places', $touristicPlaces);
+        ->with('places', $touristicPlaces)
+        ->with('cardPlaces', $touristicPlaces->sortBy(['rateAvg', 'desc'])->slice(0, 4))
+        ->with('user', $user)
+        ->with('users', $users)
+        ->with('tags', $tags)
+        ->with('categories', $categories);
+    }
+
+    public function listPlaces()
+    {
+        $user = \Auth::user();
+        $touristicPlaces = TouristicObj::orderBy('touristicPlaceId', 'asc')->paginate(10);
+
+        $touristicPlaces->each(function($touristicPlace){
+            $touristicPlace['provinceName'] = $touristicPlace->province['provinceName'];
+            $touristicPlace['statusName'] = $touristicPlace->status['statusName'];
+            $touristicPlace['rateAvg'] = round($touristicPlace->rate->avg('puntuacion'));
+            unset($touristicPlace['province']);
+            unset($touristicPlace['status']);
+
+        });
+  
+        //dd($provinces[0]['provinceName']);
+        return view('admin.places.listPlaces')
+        ->with('places', $touristicPlaces)
+        ->with('user', $user);
+
     }
 
     public function registerNewPlace()
@@ -138,8 +177,8 @@ class FrontController extends Controller
         //dd($touristicPlaces->toArray());
         /*return view('admin.admin')
         ->with('places', $touristicPlaces);*/
-        flash('El registro de guardó con éxito!')->success();
-        return redirect()->route('front.index');
+        flash('El registro se guardó con éxito!')->success();
+        return redirect()->route('front.places');
     }
 
 
@@ -150,7 +189,9 @@ class FrontController extends Controller
 
         $userList->each(function($userList){
             $userList['nameType'] = $userList->userType['nameType'];
+            $userList['statusName'] = $userList->status['statusName'];
             unset($userList['userType']);
+            unset($userList['status']);
 
         });
 
@@ -200,6 +241,18 @@ class FrontController extends Controller
 
     public function destroyUser($id){
         $user = UserTableObj::where('userId', '=', $id)->first();
+
+        $touristicPlaces = TouristicObj::where('userId', '=', $id)->get();                
+
+        foreach($touristicPlaces as $touristicPlace){
+            
+            //dd($touristicPlace);
+            $newData['userId'] = null;
+            $touristicPlace->fill($newData);
+            $touristicPlace->save();
+        }
+
+        //dd($user);
         $user->delete();
         //dd($user);
         flash('El usuario se eliminó correctamente!')->warning();
@@ -279,6 +332,8 @@ class FrontController extends Controller
 
         $viewData = $this->returnToDetailPlaceView($id);
 
+        //dd($viewData['place']->toArray());
+
         return view('admin.places.detailPlace')
         ->with('place', $viewData['place'])
         ->with('tags', $viewData['tags'])
@@ -302,6 +357,7 @@ class FrontController extends Controller
         $touristicPlace->category;
         $touristicPlace->gallery;
         $touristicPlace->commentary;
+        $touristicPlace->user;
         
         $touristicPlace->gallery->each(function($galleryData){
             $galleryData->images;            
@@ -344,7 +400,7 @@ class FrontController extends Controller
         $touristicPlace->delete();
         //dd($touristicPlace);
         flash('Se eliminó la información correctamente!')->warning();
-        return redirect()->route('front.index');
+        return redirect()->route('front.places');
 
     }
     
@@ -405,7 +461,7 @@ class FrontController extends Controller
 
     public function editGallery($id)
     {
-        
+        //dd(phpinfo());
         $gallery = GalleryObj::where('galleryId', '=', $id)->first();
         $gallery->images;
         //dd($gallery->toArray());
@@ -419,6 +475,8 @@ class FrontController extends Controller
         $data = $request->all();
         $provinceData = json_decode($data['inputPlaceProvince']);
         //dd($data);
+
+        $this->sendInvitationEmail($data);
 
         $newData['touristicPlaceId'] = $data['touristicPlaceId'];
         $newData['provinceId'] = $provinceData->provinceId;
@@ -443,6 +501,15 @@ class FrontController extends Controller
             $file->move($path, $name);
         }
 
+        if(isset($data['agentEmail'])){
+
+            $userData = UserTableObj::where('email', '=', $data['agentEmail'])->first();
+            //si existe el usuario con el correo que se envio y el estado esta en enviar
+            if(isset($userData) && $userData['typeId'] == 3){
+                $newData['userId'] = $userData['userId'];
+            }
+        }
+
         $touristicPlace->fill($newData);
         $touristicPlace->save();
         $touristicPlace->tag()->sync($data['inputPlaceTags']);
@@ -451,8 +518,11 @@ class FrontController extends Controller
             $touristicPlace->category()->sync($data['inputPlaceCategories']);    
         }
 
+        
+        
+
         //dd($touristicPlace->toArray());
-        flash('El registro de actualizó con éxito!')->success();
+        flash('El registro se actualizó con éxito!')->success();
         return redirect()->route('front.placeDetail', ['id' => $data['touristicPlaceId']]);
         /*$viewData = $this->returnToDetailPlaceView($data['touristicPlaceId'], true);
         //dd($data);
@@ -463,6 +533,46 @@ class FrontController extends Controller
         ->with('provinces', $viewData['provinces'])
         ->with('categories', $viewData['categories'])
         ->with('message', $viewData['message']);*/
+    }
+
+    public function sendInvitationEmail($data){
+
+        if(isset($data['agentEmail'])){
+
+            $userData = UserTableObj::where('email', '=', $data['agentEmail'])->first();
+            
+            //si existe el usuario con el correo que se envio y el estado esta en enviar
+            if(isset($userData) && $data['sendRadio'] == 'sendOk' && $userData['typeId'] == 3){
+                //dd('Se enviara un correo');
+                Mail::to($data['agentEmail'])->send(new InvitationEmail($data['agentEmail'], '********'));
+            }else if(!isset($userData)){
+                //dd('send mail and create account');
+
+                $tempPassword = $this->generatePassword(8);
+
+                $newData['statusId'] = '4';
+                $newData['typeId'] = '3';
+                $newData['name'] = '';
+                $newData['lastName'] = '';
+                $newData['email'] = $data['agentEmail'];
+                $newData['password'] = bcrypt($tempPassword);
+                $newUser = new UserTableObj($newData);
+                $newUser->save();
+
+                Mail::to($data['agentEmail'])->send(new InvitationEmail($data['agentEmail'], $tempPassword));
+            }
+
+            //Mail::to($userData['save']['email'])->send(new welcome($userData['save']['verificationCode']));
+        }
+
+    }
+
+    public function generatePassword($l) {
+        $key = '';
+        $pattern = '1234567890abcdefghijklmnopqrstuvwxyz';
+        $max = strlen($pattern)-1;
+        for($i=0;$i < $l;$i++) $key .= $pattern{mt_rand(0,$max)};
+        return $key;
     }
 
     public function destroyGalleryImage($id)

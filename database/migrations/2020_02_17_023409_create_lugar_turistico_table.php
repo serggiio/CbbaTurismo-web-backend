@@ -18,7 +18,7 @@ class CreateLugarTuristicoTable extends Migration
             $table->increments('touristicPlaceId');
 
             $table->integer('provinceId')->unsigned();
-            $table->integer('userId')->unsigned();
+            $table->integer('userId')->nullable()->unsigned();
             $table->integer('placeStatusId')->nullable()->unsigned();
             $table->text('description')->nullable();
             $table->text('history')->nullable();
