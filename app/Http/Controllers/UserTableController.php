@@ -108,7 +108,7 @@ class UserTableController extends Controller
             ];
         }
         
-        
+    
     }
 
 
