@@ -93,7 +93,7 @@ class FrontController extends Controller
     public function listPlaces()
     {
         $user = \Auth::user();
-        $touristicPlaces = TouristicObj::orderBy('touristicPlaceId', 'asc')->paginate(10);
+        $touristicPlaces = TouristicObj::orderBy('touristicPlaceId', 'asc')->get();
 
         $touristicPlaces->each(function($touristicPlace){
             $touristicPlace['provinceName'] = $touristicPlace->province['provinceName'];
@@ -185,7 +185,7 @@ class FrontController extends Controller
 
     public function users()
     {
-        $userList = UserTableObj::orderBy('created_at', 'desc')->paginate(10);
+        $userList = UserTableObj::orderBy('created_at', 'desc')->get();
 
         $userList->each(function($userList){
             $userList['nameType'] = $userList->userType['nameType'];
@@ -626,7 +626,7 @@ class FrontController extends Controller
     }
 
     public function tags(){
-        $tags = TagObj::orderBy('tagName', 'desc')->paginate(10);
+        $tags = TagObj::orderBy('tagName', 'desc')->get();
 
         //dd($tags->toArray());
         return view('admin.tags.tags')
@@ -711,7 +711,7 @@ class FrontController extends Controller
     }
 
     public function provinces(){
-        $provinces = ProvinceObj::orderBy('provinceName', 'asc')->paginate(10);
+        $provinces = ProvinceObj::orderBy('provinceName', 'asc')->get();
 
         //dd($tags->toArray());
         return view('admin.provinces.provinces')
@@ -784,8 +784,8 @@ class FrontController extends Controller
     }
 
     public function categories(){
-        $categories = CategoryObj::orderBy('categoryName', 'asc')->paginate(10);
-        $tags = TagObj::orderBy('tagName', 'desc')->paginate(10);
+        $categories = CategoryObj::orderBy('categoryName', 'asc')->get();
+        $tags = TagObj::orderBy('tagName', 'desc')->get();
 
         $categories->each(function($category){
             $category->Tag['tagName'];                            

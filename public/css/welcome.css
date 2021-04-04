@@ -156,3 +156,21 @@
 .nav{
   background-color: white;
 }
+
+.loginBody {
+  background-image: linear-gradient(to bottom, #219915, #51b125, #77ca35, #9de245, #c2fb56);
+  color: white;
+}
+.loginHeader {
+  background-color: #219915;
+  color: white;
+}
+
+.contactBody {
+  background-color: #6fb94d;
+  color: white;
+}
+.contactHeader {
+  background-color: #6fb94d;
+  color: white;
+}

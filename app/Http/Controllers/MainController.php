@@ -57,10 +57,15 @@ class MainController extends Controller
         $touristicPlace['statusName'] = $touristicPlace->status['statusName'];
         $touristicPlace['rateAvg'] = round($touristicPlace->rate->avg('puntuacion'));
         $touristicPlace->gallery;
+        $touristicPlace->commentary;
 
         foreach ($touristicPlace['gallery'] as $gallery) {
             $gallery->images;
         }
+
+        $touristicPlace->commentary->each(function($commentaryData){
+            $commentaryData->user;            
+        });
 
         //dd($touristicPlace->toArray());
         return view('template.previewDetail', [

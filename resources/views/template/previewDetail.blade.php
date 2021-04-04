@@ -85,7 +85,8 @@
                                 <nav>
                                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
                                       <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true"><i class="icon-map"></i></button>
-                                      <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false"><i class="icon-picture"></i></button>                                      
+                                      <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false"><i class="icon-picture"></i></button>
+                                      <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-comments" type="button" role="tab" aria-controls="nav-comments" aria-selected="false"><i class="far fa-comments"></i></button>                                      
                                     </div>
                                 </nav>
                                 <div class="tab-content" id="nav-tabContent">
@@ -149,7 +150,25 @@
                                           </div>
 
 
-                                    </div>                                    
+                                    </div> 
+                                    
+                                    <div class="tab-pane fade show " id="nav-comments" role="tabpanel" aria-labelledby="nav-comments-tab">
+
+                                      <div class="overflow-auto" style="height: 500px; align-content: center; margin-top: 15px">
+                                        <div class="row">
+                                          <div class="col-md-2"></div>
+                                          <div class="col-md-8">
+                                            @foreach ($place['commentary'] as $commentary)
+                                              <div class="alert alert" role="alert" style="background-color: rgb(197, 197, 214); width: 80%">
+                                                {{ $commentary['commentaryDesc'] }} <hr> {{ $commentary['user']['name']. ' ' .  $commentary['user']['lastName'] . ' ' . $commentary['created_at']}}
+                                              </div>
+                                            @endforeach
+                                          </div>
+                                        </div>
+                                        
+                                      </div>
+
+                                    </div>
                                 </div>                                
                             </div>
                         </div>

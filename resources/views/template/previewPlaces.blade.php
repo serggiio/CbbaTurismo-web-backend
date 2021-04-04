@@ -35,13 +35,13 @@
 
   
 
-  <body onload="collaspseBar()">
+  <body onload="collaspseBar()" style="">
 
 @include('template.partials.lateralNav')
 
-  <div class="main-content" style="margin-top: 50px">
+  <div class="main-content" style="margin-top: 50px;">
         <div class="row">
-            <div class="col-md-12 shadow-lg bg-body rounded" style="width: fit-content; padding: 30px" >                
+            <div class="col-md-12 shadow-lg bg-body rounded" style="width: fit-content; padding: 30px;" >                
 
                 <div class="card-title"><h2 style="color: green"><i class="fas fa-house-user navIcon" style="font-size: 120%; color: green"></i>  Vista previa turismo </h2></div>
                     <hr>
