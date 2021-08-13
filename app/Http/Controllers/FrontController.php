@@ -65,7 +65,6 @@ class FrontController extends Controller
     public function returnAdminView(){
         $user = \Auth::user();
         $touristicPlaces = TouristicObj::orderBy('touristicPlaceId', 'asc')->paginate(10);
-        dd($touristicPlaces);
         $touristicPlaces->each(function($touristicPlace){
             $touristicPlace['provinceName'] = $touristicPlace->province['provinceName'];
             $touristicPlace['statusName'] = $touristicPlace->status['statusName'];
