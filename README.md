@@ -9,3 +9,7 @@
         DB_DATABASE=turismo
     php artisan key:generate
     Database location: root directory > turismo.sql
+
+Route example:
+    index: http://192.168.0.3/turismo/
+    admin: http://192.168.0.3/turismo/public/admin

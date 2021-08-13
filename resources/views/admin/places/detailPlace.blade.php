@@ -200,8 +200,8 @@
 
 
                                     <br>
-                                    <label for="placeName">Descripcion</label>
-                                    <div class="card-body">
+                                    <label for="placeName" hidden>Descripcion</label>
+                                    <div class="card-body" hidden>
                                         <div class="form-group">
                                         <textarea class="form-control textarea-inputPlaceDescription" name="inputPlaceDescription" cols="50" rows="5" id="inputPlaceDescription">{{ $place['description'] }}</textarea>
                                         </div>

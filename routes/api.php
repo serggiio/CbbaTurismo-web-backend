@@ -49,9 +49,9 @@ Route::group(['prefix' => 'users'], function() {
 
 //ROUTES FOR API/TOURISTICPLACE
 //http://localhost:8000/api/touristicPlace
-Route::group(['prefix' => 'touristicPlace'], function() {
+Route::group(['prefix' => 'touristicPlace', 'middleware' => 'cors'], function() {
     //get all data
-    Route::post('/getAll', 'TouristicPlaceController@getAll');
+    Route::middleware('cors')->post('/getAll', 'TouristicPlaceController@getAll');
     Route::get('/getAll', 'TouristicPlaceController@getAll');
     
     //get touristicPlace/events by Id

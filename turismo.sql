@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-04-2021 a las 23:54:02
+-- Tiempo de generación: 23-07-2021 a las 05:45:25
 -- Versión del servidor: 10.1.37-MariaDB
 -- Versión de PHP: 7.3.0
 
@@ -44,7 +44,7 @@ INSERT INTO `category` (`categoryId`, `tagId`, `categoryName`, `created_at`, `up
 (1, 5, 'Hamburguesas', NULL, NULL),
 (2, 5, 'Comida mexicana', NULL, NULL),
 (3, 5, 'Pastas', NULL, NULL),
-(4, 1, 'Vegetación', NULL, NULL),
+(4, 1, 'Vegetacion', NULL, '2021-04-26 06:40:55'),
 (5, 1, 'Plaza comercial', NULL, NULL),
 (6, 2, '2 estrellass', NULL, '2021-03-11 08:10:20'),
 (7, 2, '5 estrellas', NULL, NULL),
@@ -61,7 +61,8 @@ INSERT INTO `category` (`categoryId`, `tagId`, `categoryName`, `created_at`, `up
 (19, 8, 'Bar terraza', '2021-03-23 09:32:08', '2021-03-23 09:32:08'),
 (20, 9, 'Discotecas', '2021-03-23 09:33:09', '2021-03-23 09:33:09'),
 (21, 9, 'Salon de baile', '2021-03-23 09:33:31', '2021-03-23 09:33:31'),
-(22, 9, 'karaoke', '2021-03-23 09:34:10', '2021-03-23 09:34:10');
+(22, 9, 'karaoke', '2021-03-23 09:34:10', '2021-03-23 09:34:10'),
+(23, 5, 'Pollo frito', '2021-04-26 07:06:34', '2021-04-26 07:06:34');
 
 -- --------------------------------------------------------
 
@@ -292,7 +293,8 @@ INSERT INTO `placetag` (`placeTagId`, `touristicPlaceId`, `tagId`, `created_at`,
 (15, 11, 4, NULL, NULL),
 (16, 12, 1, NULL, NULL),
 (17, 12, 3, NULL, NULL),
-(18, 13, 1, NULL, NULL);
+(18, 13, 1, NULL, NULL),
+(19, 14, 5, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -391,7 +393,8 @@ INSERT INTO `tag` (`tagId`, `tagName`, `tagFile`, `created_at`, `updated_at`) VA
 (6, 'religion', 'relogion.png', '2021-03-23 08:21:36', '2021-03-23 08:21:48'),
 (7, 'Alojamientos', 'Alojamientos.JPG', '2021-03-23 08:29:10', '2021-03-23 08:29:10'),
 (8, 'bares', 'bares.png', '2021-03-23 09:30:31', '2021-03-23 09:30:31'),
-(9, 'Centro nocturno', 'Centro nocturno.jpg', '2021-03-23 09:32:53', '2021-03-23 09:32:53');
+(9, 'Centro nocturno', 'Centro nocturno.jpg', '2021-03-23 09:32:53', '2021-03-23 09:32:53'),
+(10, 'Centro educativo', 'Centro educativo.jpeg', '2021-04-26 07:05:40', '2021-04-26 07:05:40');
 
 -- --------------------------------------------------------
 
@@ -441,7 +444,8 @@ INSERT INTO `touristicplace` (`touristicPlaceId`, `provinceId`, `userId`, `place
 (10, 2, 1, 2, NULL, 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Optio debitis, odio ducimus magni at consequatur atque itaque dolorum unde, neque nam sapiente aperiam quasi quos libero molestiae, aspernatur voluptate deserunt?\r\nLorem ipsum dolor sit, amet consectetur adipisicing elit. Optio debitis, odio ducimus magni at consequatur atque itaque dolorum unde, neque nam sapiente aperiam quasi quos libero molestiae, aspernatur voluptate deserunt?\r\n\r\nLorem ipsum dolor sit, amet consectetur adipisicing elit. Optio debitis, odio ducimus magni at consequatur atque itaque dolorum unde, neque nam sapiente aperiam quasi quos libero molestiae, aspernatur voluptate deserunt?\r\n\r\n\r\nLorem ipsum dolor sit, amet consectetur adipisicing elit. Optio debitis, odio ducimus magni at consequatur atque itaque dolorum unde, neque nam sapiente aperiam quasi quos libero molestiae, aspernatur voluptate deserunt?', 'Plaza 14 de septiembre', 'mainImage.jpg', '', 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Optio debitis, odio ducimus magni at consequatur atque itaque dolorum unde, neque nam sapiente aperiam quasi quos libero molestiae, aspernatur voluptate deserunt?', -17.393773323527824, -66.15713934267255, '', 'place', NULL, NULL, '2021-03-18 09:34:02', '2021-03-18 09:34:02'),
 (11, 2, 1, 2, NULL, NULL, 'El pueblito', 'mainImage.jpg', '', NULL, -17.375024656025975, -66.1419345818037, '', 'place', NULL, NULL, '2021-03-18 09:38:53', '2021-03-18 09:38:53'),
 (12, 2, 1, 2, NULL, NULL, 'Jardin Botanico', 'mainImage.jpg', '', NULL, -17.37853657809384, -66.14175070745593, '', 'place', NULL, NULL, '2021-03-18 09:45:12', '2021-03-18 09:45:12'),
-(13, 2, 1, 2, NULL, NULL, 'Catedral metropolitana', 'mainImage.jpg', '', NULL, -17.394334041510756, -66.1564308470325, '', 'place', NULL, NULL, '2021-03-18 09:48:29', '2021-03-18 09:48:29');
+(13, 2, 1, 2, NULL, NULL, 'Catedral metropolitana', 'mainImage.jpg', '', NULL, -17.394334041510756, -66.1564308470325, '', 'place', NULL, NULL, '2021-03-18 09:48:29', '2021-03-18 09:48:29'),
+(14, 2, 5, 2, NULL, NULL, 'Panchita', 'mainImage.png', '', 'Avenia amertiva y villarroel', -17.37250058695166, -66.15968436362516, '', 'place', NULL, NULL, '2021-04-26 07:02:14', '2021-04-26 07:04:38');
 
 -- --------------------------------------------------------
 
@@ -494,8 +498,10 @@ INSERT INTO `usertable` (`userId`, `statusId`, `typeId`, `name`, `lastName`, `ph
 (1, 2, 1, 'Sergiooa', 'Fernandez', '72224078', 'sergiocep2010@gmail.com', NULL, '$2y$10$jD4zL/69D54I7SFKCPXxGuJTkRZOH/zuIzYbnFXVWvULESmFtWt9i', NULL, NULL, NULL, '2021-03-11 05:53:28'),
 (2, 2, 2, 'Usuario', 'Prueba', '72224071', 'test1@gmail.com', NULL, '$2y$10$xIHd407t/cRHSKx6eLyAzejr4fj4nieFTs.HjKS3vN46bxBZ5wuTS', NULL, NULL, NULL, '2021-03-23 09:25:53'),
 (4, 2, 3, 'Juan', 'Perez', '72224073', 'sergioss21er@gmail.comm', NULL, '$2y$10$jD4zL/69D54I7SFKCPXxGuJTkRZOH/zuIzYbnFXVWvULESmFtWt9i', NULL, NULL, NULL, '2021-03-23 09:15:05'),
-(5, 4, 3, '', '', NULL, 'sergioss21er@gmail.com', NULL, '$2y$10$jZ1vg2qaOHugN8lnlW7ZK.qU4WwgyXLVQLEQYZONetdo.ewIhqYW6', NULL, NULL, '2021-03-23 19:24:10', '2021-03-23 19:24:10'),
-(6, 1, 1, 'juan', 'perez', NULL, 'sergioss21err@gmail.com', NULL, '$2y$10$PpCsUSOM0Kbc5W4qp169GeKUFq.kq2KkTk5W/5TEytFys8OsiW.TC', '0xf5qs', NULL, '2021-04-04 21:52:47', '2021-04-04 21:52:47');
+(5, 4, 3, '', '', NULL, 'sergioss21errr@gmail.com', NULL, '$2y$10$jD4zL/69D54I7SFKCPXxGuJTkRZOH/zuIzYbnFXVWvULESmFtWt9i', NULL, NULL, '2021-03-23 19:24:10', '2021-03-23 19:24:10'),
+(6, 1, 1, 'juan', 'perez', NULL, 'sergioss21err@gmail.com', NULL, '$2y$10$PpCsUSOM0Kbc5W4qp169GeKUFq.kq2KkTk5W/5TEytFys8OsiW.TC', '0xf5qs', NULL, '2021-04-04 21:52:47', '2021-04-04 21:52:47'),
+(7, 2, 2, 'test', 'test', NULL, 'sergioss21er@gmail.com', NULL, '$2y$10$mDdHeu4p3aQ2AqTHcveHD.6YYgI4eb/AFREjGg1aSSPsUteFGO9TS', NULL, NULL, '2021-04-04 22:07:56', '2021-04-04 22:08:14'),
+(8, 4, 2, 'juan', 'perez', NULL, 'jprezjuan@maill.com', NULL, '$2y$10$yT2KX0b8Zb7gqkz/hRCjt./d.GKipghJIZ4mTjrDWSU8R2ZGgMSYG', 'wk9vc1', NULL, '2021-04-26 06:47:41', '2021-04-26 06:47:41');
 
 -- --------------------------------------------------------
 
@@ -672,7 +678,7 @@ ALTER TABLE `usertype`
 -- AUTO_INCREMENT de la tabla `category`
 --
 ALTER TABLE `category`
-  MODIFY `categoryId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `categoryId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de la tabla `commentary`
@@ -720,7 +726,7 @@ ALTER TABLE `placecategory`
 -- AUTO_INCREMENT de la tabla `placetag`
 --
 ALTER TABLE `placetag`
-  MODIFY `placeTagId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `placeTagId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `province`
@@ -744,7 +750,7 @@ ALTER TABLE `status`
 -- AUTO_INCREMENT de la tabla `tag`
 --
 ALTER TABLE `tag`
-  MODIFY `tagId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `tagId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `test_models`
@@ -756,7 +762,7 @@ ALTER TABLE `test_models`
 -- AUTO_INCREMENT de la tabla `touristicplace`
 --
 ALTER TABLE `touristicplace`
-  MODIFY `touristicPlaceId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `touristicPlaceId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
@@ -768,7 +774,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `usertable`
 --
 ALTER TABLE `usertable`
-  MODIFY `userId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `userId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `usertype`

@@ -550,10 +550,10 @@ class FrontController extends Controller
 
                 $tempPassword = $this->generatePassword(8);
 
-                $newData['statusId'] = '4';
+                $newData['statusId'] = '2';
                 $newData['typeId'] = '3';
-                $newData['name'] = '';
-                $newData['lastName'] = '';
+                $newData['name'] = 'Agent';
+                $newData['lastName'] = 'Agent';
                 $newData['email'] = $data['agentEmail'];
                 $newData['password'] = bcrypt($tempPassword);
                 $newUser = new UserTableObj($newData);
