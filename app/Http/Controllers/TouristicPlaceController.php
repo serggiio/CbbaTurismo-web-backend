@@ -589,7 +589,7 @@ class TouristicPlaceController extends Controller
         FROM heroku_edc5b8a3a7532d6.touristicplace as t 
         INNER JOIN heroku_edc5b8a3a7532d6.placecategory pc ON pc.touristicPlaceId = t.touristicPlaceId 
         INNER JOIN heroku_edc5b8a3a7532d6.category c  ON c.categoryId = pc.categoryId 
-        WHERE t.placeStatusId = 2 HAVING distance <50 ORDER BY distance ASC'));
+        WHERE t.placeStatusId = 2 ORDER BY distance ASC'));
 
         $results = TouristicObj::hydrate($places);
 
