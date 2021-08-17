@@ -571,9 +571,11 @@ class TouristicPlaceController extends Controller
 
         //id active status = 2
         $whereString = 'WHERE placeStatusId = 2';
+        $joinCategory = ' INNER JOIN placecategory pc ON pc.touristicPlaceId = t.touristicPlaceId 
+            INNER JOIN category c ON c.categoryId = pc.categoryId ';
 
         if(isset($data['data']['category'])){
-            $whereString .= ' AND c.categoryName = "' . $data['data']['category'] . '"';
+            $whereString .= $joinCategory . ' AND c.categoryName = "' . $data['data']['category'] . '"';
         }
 
         //distace km
@@ -581,9 +583,7 @@ class TouristicPlaceController extends Controller
         SELECT * FROM
         (
             SELECT DISTINCT t.touristicPlaceId, placeName, latitude, longitude, ( 6371 * ACOS( SIN( RADIANS( latitude ) ) * SIN( RADIANS( '. $data['data']['latitude'] . ' ) ) + COS( RADIANS( longitude - '. $data['data']['longitude'] .' ) ) * COS( RADIANS( latitude ) ) * COS( RADIANS( '. $data['data']['latitude'] .' ) ) ) ) AS distance
-            FROM touristicplace as t 
-            INNER JOIN placecategory pc ON pc.touristicPlaceId = t.touristicPlaceId 
-            INNER JOIN category c ON c.categoryId = pc.categoryId ' . $whereString . 
+            FROM touristicplace as t ' . $whereString . 
             ' ORDER BY distance ASC )
         as dt
         WHERE dt.distance <' .$data['data']['distance']
