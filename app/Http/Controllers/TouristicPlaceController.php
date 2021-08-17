@@ -577,19 +577,17 @@ class TouristicPlaceController extends Controller
         }
 
         //distace km
-        /*$places = DB::select(DB::raw('SELECT DISTINCT t.touristicPlaceId, placeName, latitude, longitude, ( 6371 * ACOS( SIN( RADIANS( latitude ) ) * SIN( RADIANS( '. $data['data']['latitude'] . ' ) ) + COS( RADIANS( longitude - '. $data['data']['longitude'] .' ) ) * COS( RADIANS( latitude ) ) * COS( RADIANS( '. $data['data']['latitude'] .' ) ) ) ) AS distance
-        FROM touristicplace as t 
-        INNER JOIN placecategory pc ON pc.touristicPlaceId = t.touristicPlaceId 
-        INNER JOIN category c ON c.categoryId = pc.categoryId ' . $whereString .
-        ' HAVING distance <'.$data['data']['distance']. 
-        ' ORDER BY distance ASC'));*/
-
-        $places = DB::select(DB::raw('SELECT DISTINCT t.touristicPlaceId, placeName, latitude, longitude, 
-        ( 6371 * ACOS( SIN( RADIANS( latitude ) ) * SIN( RADIANS( -17.382504428234 ) ) + COS( RADIANS( longitude - -66.177797380932 ) ) * COS( RADIANS( latitude ) ) * COS( RADIANS( -17.382504428234 ) ) ) ) AS distance 
-        FROM heroku_edc5b8a3a7532d6.touristicplace as t 
-        INNER JOIN heroku_edc5b8a3a7532d6.placecategory pc ON pc.touristicPlaceId = t.touristicPlaceId 
-        INNER JOIN heroku_edc5b8a3a7532d6.category c  ON c.categoryId = pc.categoryId 
-        WHERE t.placeStatusId = 2 ORDER BY distance ASC'));
+        $places = DB::select(DB::raw('
+        SELECT * FROM
+        (
+            SELECT DISTINCT t.touristicPlaceId, placeName, latitude, longitude, ( 6371 * ACOS( SIN( RADIANS( latitude ) ) * SIN( RADIANS( '. $data['data']['latitude'] . ' ) ) + COS( RADIANS( longitude - '. $data['data']['longitude'] .' ) ) * COS( RADIANS( latitude ) ) * COS( RADIANS( '. $data['data']['latitude'] .' ) ) ) ) AS distance
+            FROM touristicplace as t 
+            INNER JOIN placecategory pc ON pc.touristicPlaceId = t.touristicPlaceId 
+            INNER JOIN category c ON c.categoryId = pc.categoryId ' . $whereString . 
+            ' ORDER BY distance ASC )
+        as dt
+        WHERE dt.distance <' .$data['data']['distance']
+        ));
 
         $results = TouristicObj::hydrate($places);
 
