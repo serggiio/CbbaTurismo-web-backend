@@ -647,7 +647,7 @@ class FrontController extends Controller
         
         $tag = TagObj::where('tagId', '=', $id)->first();
         //dd($tag->toArray());
-        return view('admin.tags.detailtag')
+        return view('admin.tags.detail.detailtag')
         ->with('tag', $tag);
 
     }
