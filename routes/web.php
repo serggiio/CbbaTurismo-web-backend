@@ -307,7 +307,75 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'Admin']], function(
         'as' 	=> 		'front.generateReport',
         'uses'	=>		'FrontController@generateReport'
     ]);
+
+    //create product
+    Route::post('/createProduct', [
+        'as' 	=> 		'front.createProduct',
+        'uses'	=>		'FrontController@createProduct'
+        
+    ]);
+
+    //delete product
+    Route::get('product/{id}/destroy', [
+        'as'	=>	'admin.product.destroy',
+        'uses'	=>	'FrontController@destroyProduct'
+    ]);
     
+    //edit product
+    Route::get('product/{id}', [
+        'as'	=>	'admin.product.edit',
+        'uses'	=>	'FrontController@editProduct'
+    ]);
+
+    // update edited product
+    Route::post('/storeUpdatedProduct', [
+
+        'as' 	=> 		'front.storeUpdatedProduct',
+        'uses'	=>		'FrontController@storeUpdatedProduct'
+        
+    ]);
+
+    //Actions module
+    Route::get('/actions', [
+
+        'as' 	=> 		'front.actions',
+        'uses'	=>		'FrontController@actions'
+        
+    ]);
+
+    Route::get('/approveRequest/{id}', [
+
+        'as' 	=> 		'front.actionApprove',
+        'uses'	=>		'FrontController@actionApprove'
+        
+    ]);
+
+    Route::get('/rejectRequest/{id}', [
+
+        'as' 	=> 		'front.actionReject',
+        'uses'	=>		'FrontController@actionReject'
+        
+    ]);
+
+    Route::get('actionPlace/{id}/destroy', [
+        'as'	=>	'admin.actionPlace.destroy',
+        'uses'	=>	'FrontController@actionDestroyPlace'
+    ]);
+
+    //edit user
+    Route::get('/action/{id}', [
+
+        'as' 	=> 		'front.action.detail',
+        'uses'	=>		'FrontController@actionDetail'
+        
+    ]);
+
+    Route::get('/approvePlace/{id}', [
+
+        'as' 	=> 		'front.actionPlaceApprove',
+        'uses'	=>		'FrontController@actionPlaceApprove'
+        
+    ]);
 
 });
 
@@ -323,6 +391,15 @@ Route::get('/home', 'HomeController@index')->name('home');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::post('/agentContact', [
+
+    'as' 	=> 		'welcome.agentContact',
+    'uses'	=>		'AgentController@agentContact'
+    
+]);
+
+Route::get('/agentContact', 'AgentController@agentContact');
 
 Route::group(['prefix' => 'agent', 'middleware' => ['auth', 'Agent']], function() {
     
@@ -399,5 +476,53 @@ Route::group(['prefix' => 'agent', 'middleware' => ['auth', 'Agent']], function(
     Route::get('commentary/{id}/destroy', [
         'as'	=>	'frontAgent.commentaryDestroy',
         'uses'	=>	'AgentController@destroyCommentary'
+    ]);
+
+    //create product
+    Route::post('/createProduct', [
+        'as' 	=> 		'agent.createProduct',
+        'uses'	=>		'AgentController@createProduct'
+        
+    ]);
+
+    //delete product
+    Route::get('product/{id}/destroy', [
+        'as'	=>	'agent.product.destroy',
+        'uses'	=>	'AgentController@destroyProduct'
+    ]);
+    
+    //edit product
+    Route::get('product/{id}', [
+        'as'	=>	'agent.product.edit',
+        'uses'	=>	'AgentController@editProduct'
+    ]);
+
+    // update edited product
+    Route::post('/storeUpdatedProduct', [
+
+        'as' 	=> 		'agent.storeUpdatedProduct',
+        'uses'	=>		'AgentController@storeUpdatedProduct'
+        
+    ]);
+
+    //Agent request
+    Route::get('/request', [
+
+        'as' 	=> 		'frontAgent.request',
+        'uses'	=>		'AgentController@request'
+        
+    ]);
+
+    Route::post('/agentRequest', [
+
+        'as' 	=> 		'agent.agentRequest',
+        'uses'	=>		'AgentController@agentRequest'
+        
+    ]);
+
+    //delete request
+    Route::get('request/{id}/destroy', [
+        'as'	=>	'agent.request.destroy',
+        'uses'	=>	'AgentController@destroyRequest'
     ]);
 });

@@ -26,7 +26,7 @@
         
     </style>
   </head>
-  <body>
+  <body onload="hideEventDate()">
     
 
 @include('admin.partials.fixedMenu')
@@ -50,10 +50,23 @@
                   </div>
 
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="inputPlaceType" id="inputPlaceType" value="place" checked>
+                    <input class="form-check-input" type="radio" name="inputPlaceType" id="inputPlaceType" value="place" checked onclick="handleRadio(this);">
                     <label class="form-check-label" for="Radios1">Lugar turistico</label><br>
-                    <input class="form-check-input" type="radio" name="inputPlaceType" id="inputPlaceType" value="event">
+                    <input class="form-check-input" type="radio" name="inputPlaceType" id="inputPlaceType" value="event" onclick="handleRadio(this);">
                     <label class="form-check-label" for="Radios2">Evento</label>
+                  </div>
+                  <br>
+                  <div class="form-group" id="eventDates">
+                    <div class="form-group">
+                      <label for="startDate"> Fecha de inicio</label>
+                      <input class="form-control" type="date" id="startDate" name="startDate"
+                            value="{{ date("Y-m-d") }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="endDate"> Fecha fin</label>
+                      <input class="form-control" type="date" id="endDate" name="endDate"
+                            value="{{ date("Y-m-d") }}">
+                    </div>
                   </div>
 
                   <div class="row">
@@ -209,6 +222,21 @@
 
             //$('.paginate_button').addClass('btn btn-outline-success');
         } );
+    </script>
+
+    <script>
+      var dates = document.getElementById("eventDates");
+      function hideEventDate(){
+        dates.style.display = 'none';
+      }
+      
+      function handleRadio(radioData){
+        if(radioData.value == 'event'){
+          dates.style.display = 'block';
+        }else if(radioData.value == 'place'){
+          dates.style.display = 'none';
+        }
+      }
     </script>
 
     <script>

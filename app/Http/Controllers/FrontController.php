@@ -17,8 +17,11 @@ use App\Images as ImageObj;
 use App\Status as StatusObj;
 use App\Category as CategoryObj;
 use App\Commentary as CommentaryObj;
+use App\Product as ProductObj;
+use App\Action as ActionObj;
 
 use laracasts\flash\flash;
+use Request as RequestObj;
 
 use Barryvdh\DomPDF\Facade as PDF;
 
@@ -27,6 +30,7 @@ use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\InvitationEmail;
+use App\Mail\ConfirmationEmail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -156,6 +160,11 @@ class FrontController extends Controller
         $newData['longitude'] = (!is_null($data['inputPlaceLongitude'])) ? $data['inputPlaceLongitude']: 0.0;
         $newData['type'] = $data['inputPlaceType'];
 
+        if($data['inputPlaceType'] == 'event'){
+            $newData['startDate'] = $data['startDate'];
+            $newData['endDate'] = $data['endDate'];
+        }
+
         $newPlace = new TouristicObj($newData);
         $newPlace->save();
         
@@ -171,8 +180,8 @@ class FrontController extends Controller
         $file->move($path, $name);
 
 
-
-
+        $user = \Auth::user();
+        $this->saveLogAction($user['userId'], 'Registro', 'Lugar Turistico', '', json_encode($newPlace));
         //dd($touristicPlaces->toArray());
         /*return view('admin.admin')
         ->with('places', $touristicPlaces);*/
@@ -233,6 +242,10 @@ class FrontController extends Controller
         $newData['password'] = bcrypt($data['inputUserPassword']);
         $newUser = new UserTableObj($newData);
         $newUser->save();
+        $newUser->userType;
+
+        $user = \Auth::user();
+        $this->saveLogAction($user['userId'], 'Registro', 'Usuario', '', json_encode($newUser));
 
         flash('El usuario '. $newData['name']. ' ' .$newData['lastName'] . ' se creó correctamente!')->success();
         return redirect()->route('front.users');
@@ -240,6 +253,9 @@ class FrontController extends Controller
 
     public function destroyUser($id){
         $user = UserTableObj::where('userId', '=', $id)->first();
+        $user->userType;
+        $authUser = \Auth::user();
+        $this->saveLogAction($authUser['userId'], 'Eliminar', 'Usuario', json_encode($user), '');
 
         $touristicPlaces = TouristicObj::where('userId', '=', $id)->get();                
 
@@ -273,6 +289,8 @@ class FrontController extends Controller
         $data = $request->all();
         //dd($data);
 
+        $oldUser = UserTableObj::where('email', '=', $data['email'])->first();
+        $oldUser->userType;
         $userCreated = UserTableObj::where('email', '=', $data['email'])->first();
 
         if(isset($userCreated) && $userCreated['userId'] != $data['userId']){
@@ -283,12 +301,16 @@ class FrontController extends Controller
         $user = UserTableObj::where('userId', '=', $data['userId'])->first();
         $newData['statusId'] = $data['inputUserStatus'];
         $newData['typeId'] = $data['inputUserType'];
-        $newData['name'] = $data['name'];
-        $newData['lastName'] = $data['lastName'];
+        $newData['name'] = $data['name'] ? $data['name'] : $user['name'];
+        $newData['lastName'] = $data['lastName'] ? $data['lastName'] : $user['lastName'];
         $newData['email'] = $data['email'];
 
         $user->fill($newData);
         $user->save();
+        $user->userType;
+
+        $authUser = \Auth::user();
+        $this->saveLogAction($authUser['userId'], 'Edición', 'Usuario', json_encode($oldUser), json_encode($user));
 
         flash('El usuario se actualizó correctamente!')->success();
         return redirect()->route('front.user.detail', ['id' => $data['userId']]);
@@ -357,6 +379,7 @@ class FrontController extends Controller
         $touristicPlace->gallery;
         $touristicPlace->commentary;
         $touristicPlace->user;
+        $touristicPlace->product;
         
         $touristicPlace->gallery->each(function($galleryData){
             $galleryData->images;            
@@ -436,6 +459,11 @@ class FrontController extends Controller
             }
         }
 
+        $logGallery = GalleryObj::find($newGallery->galleryId);
+        $logGallery->images;
+        $user = \Auth::user();
+        $this->saveLogAction($user['userId'], 'Registro', 'Galería', '', json_encode($logGallery));
+
         flash('Se creo la galería ' . $data['galleryName'] . ' !')->success();
         return redirect()->route('front.placeDetail', ['id' => $touristicPlace->touristicPlaceId]);
     }
@@ -485,10 +513,23 @@ class FrontController extends Controller
         $newData['streets'] = $data['streets'];
         $newData['latitude'] = $data['inputPlaceLatitude'];
         $newData['longitude'] = $data['inputPlaceLongitude'];
-        $newData['placeStatusId'] = $data['statusRadio'];
+        $newData['placeStatusId'] = isset($data['statusRadio']) ? $data['statusRadio'] : 4;
+        $newData['type'] = $data['inputPlaceType'];
 
+        if($newData['type'] == 'event'){
+            $newData['startDate'] = $data['startDate'];
+            $newData['endDate'] = $data['endDate'];
+            if($data['startDate'] > $data['endDate']) {
+                flash('El valor de las fechas no tienen el formato correcto!')->warning();
+                return redirect()->route('front.placeDetail', ['id' => $data['touristicPlaceId']]);
+            }
+        }else{
+            $newData['startDate'] = null;
+            $newData['endDate'] = null;
+        }
         //dd($newData);
 
+        $oldData = TouristicObj::find($data['touristicPlaceId']);
         $touristicPlace = TouristicObj::find($data['touristicPlaceId']); 
 
         if($file=$request->file('image')){
@@ -511,6 +552,7 @@ class FrontController extends Controller
 
         $touristicPlace->fill($newData);
         $touristicPlace->save();
+        $updatedPlace = $touristicPlace; 
         $touristicPlace->tag()->sync($data['inputPlaceTags']);
 
         if(isset($data['inputPlaceCategories'])) {
@@ -518,8 +560,8 @@ class FrontController extends Controller
         }
 
         
-        
-
+        $user = \Auth::user();
+        $this->saveLogAction($user['userId'], 'Edición', 'Lugar Turistico', json_encode($oldData), json_encode($updatedPlace));
         //dd($touristicPlace->toArray());
         flash('El registro se actualizó con éxito!')->success();
         return redirect()->route('front.placeDetail', ['id' => $data['touristicPlaceId']]);
@@ -576,6 +618,11 @@ class FrontController extends Controller
 
     public function destroyGalleryImage($id)
     {
+
+        $logImage = ImageObj::where('imageId', '=', $id)->first();
+        $logImage->gallery->TouristicPlace;
+        $user = \Auth::user();
+        $this->saveLogAction($user['userId'], 'Eliminar', 'Galería - Imagen', json_encode($logImage), '');
         
         $image = ImageObj::where('imageId', '=', $id)->first();
 
@@ -588,7 +635,6 @@ class FrontController extends Controller
             //dd($gallery->toArray());
             $image->delete();
         }
-
         
         flash('Se eliminó la imagen correctamente!')->warning();
         return redirect()->route('admin.gallery.edit', ['id' => $image['galleryId']]);
@@ -598,6 +644,9 @@ class FrontController extends Controller
     {
         $data=$request->all();
         //dd($data);
+        $oldGallery = GalleryObj::where('galleryId', '=', $data['galleryId'])->first();
+        $oldGallery->images;
+        $images = '';
         $gallery = GalleryObj::where('galleryId', '=', $data['galleryId'])->first();
 
         $newData['galleryName'] = $data['galleryName'];
@@ -607,6 +656,7 @@ class FrontController extends Controller
 
         if($files=$request->file('images')){
             //dd($files);
+            $images = '- Imagenes';
             foreach($files as $file){
                 $name = $file->getClientOriginalName(). $gallery['galleryId'] . time() . '.' . $file->getClientOriginalExtension();
                 $path = public_path(). '/' . $gallery['galleryPath'] . '/';
@@ -619,6 +669,11 @@ class FrontController extends Controller
                 
             }
         }
+
+        $newGallery = $gallery;
+        $newGallery->images;
+        $user = \Auth::user();
+        $this->saveLogAction($user['userId'], 'Edición', 'Galería' . $images, json_encode($oldGallery), json_encode($newGallery));
 
         flash('La galería se actualizó correctamente!')->success();
         return redirect()->route('admin.gallery.edit', ['id' => $data['galleryId']]);
@@ -636,6 +691,9 @@ class FrontController extends Controller
     public function destroyTag($id){
         //dd($id);
         $tag = TagObj::where('tagId', '=', $id)->first();
+        $user = \Auth::user();
+        $this->saveLogAction($user['userId'], 'Eliminar', 'Tag', json_encode($tag), '');
+
         $tag->delete();
         //dd($TagObj);
         flash('Se eliminó el tag correctamente!')->warning();
@@ -656,6 +714,7 @@ class FrontController extends Controller
         //dd($request->all());
         $data = $request->all();
 
+        $oldTag = TagObj::where('tagId', '=', $data['tagId'])->first();
         $tag = TagObj::where('tagId', '=', $data['tagId'])->first();
         $createdTag = TagObj::where('tagName', '=', $data['tagName'])->first();
 
@@ -677,6 +736,9 @@ class FrontController extends Controller
 
         $tag->fill($newData);
         $tag->save();
+
+        $user = \Auth::user();
+        $this->saveLogAction($user['userId'], 'Edición', 'Tag', json_encode($oldTag), json_encode($tag));
 
         flash('El tag ' . $newData['tagName'] .' se edito correctamente!')->success();
         return redirect()->route('front.tagDetail', ['id' => $tag['tagId']]);
@@ -701,9 +763,12 @@ class FrontController extends Controller
             $file->move($path, $name);
         }
 
-
         $storedTag = new TagObj($newTag);
         $storedTag->save();
+        
+        $user = \Auth::user();
+        $this->saveLogAction($user['userId'], 'Registro', 'Tag', '', json_encode($storedTag));
+
         flash('Se creó el tag '. $storedTag['tagName'] . ' correctamente!')->success();
         return redirect()->route('front.tags');
 
@@ -720,6 +785,9 @@ class FrontController extends Controller
     public function destroyProvince($id){
         //dd($id);
         $province = ProvinceObj::where('provinceId', '=', $id)->first();
+        $province->touristicPlace;        
+        $user = \Auth::user();
+        $this->saveLogAction($user['userId'], 'Eliminar', 'Provincia', json_encode($province), '');
         $province->delete();
         //dd($TagObj);
         flash('Se eliminó la provincia correctamente!')->warning();
@@ -744,6 +812,9 @@ class FrontController extends Controller
         }else{
             flash('La provincia '. $data['provinceName'] . ' ya esta en uso!')->error();
         }
+
+        $user = \Auth::user();
+        $this->saveLogAction($user['userId'], 'Registro', 'Provincia', '', json_encode($storedProvince));
         
         return redirect()->route('front.provinces');
 
@@ -762,6 +833,7 @@ class FrontController extends Controller
         //dd($request->all());
         $data = $request->all();
 
+        $oldProvince = ProvinceObj::where('provinceId', '=', $data['provinceId'])->first();
         $province = ProvinceObj::where('provinceId', '=', $data['provinceId'])->first();
         $provinceCreated = ProvinceObj::where('provinceName', '=', $data['provinceName'])->first();
 
@@ -778,6 +850,9 @@ class FrontController extends Controller
 
         $province->fill($newData);
         $province->save();
+
+        $user = \Auth::user();
+        $this->saveLogAction($user['userId'], 'Edición', 'Provincia', json_encode($oldProvince), json_encode($province));
 
         return redirect()->route('front.provinceDetail', ['id' => $province['provinceId']]);
     }
@@ -815,6 +890,10 @@ class FrontController extends Controller
         }else{
             flash('La categoría '. $data['categoryName'] . ' ya esta en uso!')->error();
         }
+
+        $user = \Auth::user();
+        $storedCategory->Tag;
+        $this->saveLogAction($user['userId'], 'Registro', 'Categoría', '', json_encode($storedCategory));
         
         return redirect()->route('front.categories');
 
@@ -872,6 +951,8 @@ class FrontController extends Controller
         //dd($request->all());
         $data = $request->all();
 
+        $oldCategory = CategoryObj::where('categoryId', '=', $data['categoryId'])->first();
+        $oldCategory->Tag;
         $category = CategoryObj::where('categoryId', '=', $data['categoryId'])->first();
         $categoryCreated = CategoryObj::where('categoryName', '=', $data['categoryName'])->first();
 
@@ -887,6 +968,10 @@ class FrontController extends Controller
 
         $category->fill($newData);
         $category->save();
+        
+        $category->Tag;
+        $user = \Auth::user();
+        $this->saveLogAction($user['userId'], 'Edición', 'Categoría', json_encode($oldCategory), json_encode($category));
 
         return redirect()->route('front.categoryDetail', ['id' => $category['categoryId']]);
     }
@@ -894,6 +979,9 @@ class FrontController extends Controller
     public function destroyCategory($id){
         //dd($id);
         $category = CategoryObj::where('categoryId', '=', $id)->first();
+        $category->Tag;
+        $user = \Auth::user();
+        $this->saveLogAction($user['userId'], 'Eliminar', 'Categoría', json_encode($category), '');
         $category->delete();
         //dd($TagObj);
         flash('Se eliminó la categoría correctamente!')->warning();
@@ -903,10 +991,17 @@ class FrontController extends Controller
 
     public function destroyCommentary($id){
         //dd($id);
+        $logCommentary = CommentaryObj::where('commentaryId', '=', $id)->first();
+        $logCommentary->user;
+        $logCommentary->touristicPlace;
+        $user = \Auth::user();
+        $this->saveLogAction($user['userId'], 'Eliminar', 'Comentario', json_encode($logCommentary), '');
+
         $commentary = CommentaryObj::where('commentaryId', '=', $id)->first();
         $touristicPlaceId = $commentary['touristicPlaceId'];
         $commentary->delete();
         //dd($TagObj);
+
         flash('Comentario eliminado!')->warning();
         return redirect()->route('front.placeDetail', ['id' => $touristicPlaceId]);
 
@@ -952,6 +1047,279 @@ class FrontController extends Controller
 
 
         return $pdf->stream('reporte-turismo.pdf');
+    }
+
+    public function editProduct($id)
+    {
+        //dd(phpinfo());
+        $product = ProductObj::where('productId', '=', $id)->first();
+        //dd($product->toArray());
+
+        return view('admin.places.editProduct')
+        ->with('product', $product);
+    }
+
+    public function storeUpdatedProduct(Request $request){
+
+        $data = $request->all();
+        //dd($data);
+
+        $newData['productId'] = $data['productId'];
+        $newData['productName'] = $data['productName'];
+        $newData['productDescription'] = $data['productDescription'];
+
+        //dd($newData);
+
+        $oldProduct = ProductObj::find($data['productId']);
+        $oldProduct->touristicPlace;
+        $product = ProductObj::find($data['productId']); 
+        $newProduct = $product;
+        $newProduct->touristicPlace;
+
+        if($file=$request->file('image')){
+            if (\File::exists(public_path(). '/images/places/' . $product['touristicPlaceId'] . '/products/' .$product['productIcon'])) \File::delete(public_path(). '/images/places/' . $product['touristicPlaceId'] . '/products/' .$product['productIcon']);
+            //dd(\Storage::exists(public_path(). '/images/places/' . $product['touristicPlaceId'] . '/products/' .$product['productIcon']));
+            //dd(public_path(). '/images/places/' . $product['touristicPlaceId'] . '/products/' .$product['productIcon']);
+            $name = $product['productId'] . '.' . $file->getClientOriginalExtension();
+            $newData['productIcon'] = $name;
+            $path = public_path() . '/images/places/' . $product['touristicPlaceId'] . '/products/';
+            $file->move($path, $name);
+        }
+
+        $product->fill($newData);
+        $product->save();
+        
+        $user = \Auth::user();
+        $this->saveLogAction($user['userId'], 'Edición', 'Producto', json_encode($oldProduct), json_encode($newProduct));
+        
+        //dd($touristicPlace->toArray());
+        flash('El registro se actualizó con éxito!')->success();
+        return redirect()->route('admin.product.edit', ['id' => $data['productId']]);
+
+    }
+
+    public function createProduct(Request $request)
+    {
+        $data=$request->all();
+        $touristicPlace = json_decode($data['inputPlace']);
+
+        //dd($data);//galerries/1/
+        $newData['touristicPlaceId'] = $touristicPlace->touristicPlaceId;
+        $newData['productName'] = $data['productName'];
+        $newData['productDescription'] = $data['productDescription'];
+        $newData['productIcon'] = 'temp';
+        $newProduct = new ProductObj($newData);
+        $newProduct->save();
+
+
+        if($file=$request->file('image')){
+            //dd($files);
+            $name = $newProduct['productId'] . '.' . $file->getClientOriginalExtension();
+            $path = public_path() . '/images/places/' . $touristicPlace->touristicPlaceId . '/products/';
+            $file->move($path,$name);
+            
+            $newData['productIcon'] = $name;
+            $newProduct1 = ProductObj::find($newProduct->productId); 
+            $newProduct1->fill($newData);
+            $newProduct1->save();
+        }
+
+        $newProduct->touristicPlace;
+        $user = \Auth::user();
+        $this->saveLogAction($user['userId'], 'Registro', 'Producto', '', json_encode($newProduct));
+
+        flash('Se creo El producto ' . $newProduct['productName'] . ' !')->success();
+        return redirect()->route('front.placeDetail', ['id' => $touristicPlace->touristicPlaceId]);
+    }
+
+    public function destroyProduct($id)
+    {
+        $logProduct = ProductObj::where('productId', '=', $id)->first();
+        $logProduct->touristicPlace;
+        $user = \Auth::user();
+        $this->saveLogAction($user['userId'], 'Eliminar', 'Producto', json_encode($logProduct), '');
+        //dd($id);
+        $product = ProductObj::where('productId', '=', $id)->first();
+        $touristicPlaceId = $product['touristicPlaceId'];
+        //dd(\File::exists(public_path(). '/images/places/10/products/3.jpg'));
+        //dd(\Storage::delete(public_path(). '/images/places/10/products/3.jpg'));
+        if (\File::exists(public_path(). '/images/places/' . $product['touristicPlaceId'] . '/products/' .$product['productIcon'])) \File::delete(public_path(). '/images/places/' . $product['touristicPlaceId'] . '/products/' .$product['productIcon']);
+        $product->delete();
+        flash('Se eliminó correctamente el producto!')->warning();
+        return redirect()->route('front.placeDetail', ['id' => $touristicPlaceId]);
+    }
+
+    //Actions module
+    public function actions()
+    {
+        $userList = UserTableObj::where('statusId', '=', 4)
+                                ->orderBy('created_at', 'desc')
+                                ->get();
+        $actionList = ActionObj::orderBy('created_at', 'desc')->get();
+        $actionList->each(function($action){
+            $action->user->userType;
+        });
+        //dd($actionList->toArray());
+        $userList->each(function($userList){
+            $userList->touristicPlace->each(function($touristicPlace){
+                $touristicPlace->status;
+            });
+        });
+        //dd($userList->toArray());
+
+        $tourismList = TouristicObj::where('placeStatusId', '=', 4)
+                                ->orderBy('created_at', 'desc')
+                                ->get();
+        $tourismList->each(function($tourismList){
+            $tourismList->user;
+            $tourismList->status;
+        });                                
+
+        //dd($tourismList->toArray());
+        return view('admin.actions.actions')
+        ->with('users', $userList)
+        ->with('places', $tourismList)
+        ->with('actions', $actionList);
+
+    }
+
+    public function actionApprove($id)
+    {
+        //TODO: send email approve
+
+        $selectedUser = UserTableObj::find($id);
+        $selectedUser->touristicPlace;
+
+        //dd($selectedUser->toArray());
+        $updatedData['statusId'] = 2;
+        $tempPassword = $this->generatePassword(8);
+        $updatedData['password'] = bcrypt($tempPassword);
+     
+        //dd($tempPassword);
+        $selectedUser->fill($updatedData);
+        $selectedUser->save();
+
+        $selectedUser['touristicPlace']->each(function($touristicPlace){
+            $updatedPlace['placeStatusId'] = 2;
+            $tempData = TouristicObj::find($touristicPlace['touristicPlaceId']);
+            $tempData->fill($updatedPlace);
+            $tempData->save();
+        });
+
+        //Send confirmation email
+        Mail::to($selectedUser['email'])->send(new ConfirmationEmail('approve', $selectedUser['email'], $tempPassword));
+        //dd($selectedUser->toArray());
+
+        $userList = UserTableObj::where('statusId', '=', 4)
+                                ->orderBy('created_at', 'desc')
+                                ->get();
+        $userList->each(function($userList){
+            $userList->touristicPlace->each(function($touristicPlace){
+                $touristicPlace->status;
+            });
+        });
+
+        $actionList = ActionObj::orderBy('created_at', 'desc')->get();
+        $actionList->each(function($action){
+            $action->user->userType;
+        });
+
+        $user = \Auth::user();
+        $this->saveLogAction($user['userId'], 'Aprobacion', 'Usuario - Turismo', '', json_encode($selectedUser));
+
+        flash('El registro y los datos asociados fueron aprobados!')->success();
+        return view('admin.actions.actions')
+        ->with('users', $userList)
+        ->with('actions', $actionList);
+
+    }
+
+    public function actionReject($id)
+    {
+        $selectedUser = UserTableObj::find($id);
+        $selectedUser->touristicPlace;        
+
+        $user = \Auth::user();
+        $this->saveLogAction($user['userId'], 'Aprobacion', 'Usuario - Turismo', json_encode($selectedUser), '');
+
+        $selectedUser['touristicPlace']->each(function($touristicPlace){
+            $touristicPlace->delete();
+        });
+
+        Mail::to($selectedUser['email'])->send(new ConfirmationEmail('reject', $selectedUser['email'], null));
+        $selectedUser->delete();
+
+        $userList = UserTableObj::where('statusId', '=', 4)
+                                ->orderBy('created_at', 'desc')
+                                ->get();
+
+        $userList->each(function($userList){
+            $userList->touristicPlace->each(function($touristicPlace){
+                $touristicPlace->status;
+            });
+        });
+
+        $user = \Auth::user();
+        $this->saveLogAction($user['userId'], 'Aprobacion', 'Usuario - Turismo', json_encode($selectedUser), '');
+
+        flash('Se elimino el registro y los datos asociados!')->warning();
+        return view('admin.actions.actions')
+        ->with('users', $userList);
+
+    }
+
+    public function actionDestroyPlace($id)
+    {
+        $touristicPlace = TouristicObj::where('touristicPlaceId', '=', $id)->first();
+        $touristicPlace->delete();
+        //dd($touristicPlace);
+        flash('Se eliminó la información correctamente!')->warning();
+        return redirect()->route('front.actions');
+
+    }
+
+    public function saveLogAction($userId , $actionName, $table = '', $old = null, $new = null) {
+        $newData['userId'] = $userId;
+        $newData['actionName'] = $actionName;
+        $newData['table'] = $table;
+        $newData['oldData'] = $old;
+        $newData['newData'] = $new;
+        $newData['ip'] = $this->getIp();
+        $newAction = new ActionObj($newData);
+        $newAction->save();
+    }
+
+    public function actionDetail($id){
+        $actionList = ActionObj::where('actionId', '=', $id)->first();
+        
+        $actionList->each(function($action){
+            $action->user->userType;
+        });
+        //dd($action->toArray());
+        return view('admin.actions.detailAction')
+        ->with('action', $actionList);
+    }
+
+    public function getIp(){
+        foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key){
+            if (array_key_exists($key, $_SERVER) === true){
+                foreach (explode(',', $_SERVER[$key]) as $ip){
+                    $ip = trim($ip); // just to be safe
+                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false){
+                        return $ip;
+                    }
+                }
+            }
+        }
+        return request()->ip(); // it will return server ip when no client ip found
+    }
+
+    public function actionPlaceApprove($id) {
+        $placeData = TouristicObj::where('touristicPlaceId', '=', $id)->first();
+        $placeData['placeStatusId'] = 2;
+        $placeData->save();
+        flash('El registro se aprobó correctamente!')->success();
+        return redirect()->route('front.actions');
     }
     
 }

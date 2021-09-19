@@ -47,7 +47,9 @@ class TouristicPlace extends Model
     public function commentary(){
         return $this->hasMany('App\Commentary', 'touristicPlaceId', 'touristicPlaceId');
     }
-
+    public function product(){
+        return $this->hasMany('App\Product', 'touristicPlaceId', 'touristicPlaceId');
+    }
     
     
 }

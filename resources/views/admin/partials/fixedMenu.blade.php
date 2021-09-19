@@ -8,9 +8,10 @@
         <a href="{{route('front.provinces')}}"><i class="fas fa-flag navIcon"></i><span class="nav-label btn navButton">Provincias</span></a>
         <a href="{{route('front.categories')}}"><i class="fas fa-bookmark navIcon"></i><span class="nav-label btn navButton">Categorías</span></a>
         <a href="{{ route('front.users')}}"><i class="fas fa-users navIcon"></i><span class="nav-label btn navButton">Usuarios</span></a>
+        <a href="{{ route('front.actions')}}"><i class="fas fa-clipboard-list navIcon"></i><span class="nav-label btn navButton">Acciones</span></a>
         <a href="{{ route('logout') }}"><i class="fas fa-power-off navIcon"></i><span class="nav-label btn navButton" onclick="event.preventDefault();
           document.getElementById('logout-form').submit();">Cerrar sesión</span></a>
-          <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
             @csrf
         </form>
       </li>

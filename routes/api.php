@@ -58,11 +58,8 @@ Route::group(['prefix' => 'touristicPlace', 'middleware' => 'cors'], function() 
     Route::post('/getById', 'TouristicPlaceController@getTouristicPlaceById');
     Route::get('/getById', 'TouristicPlaceController@getTouristicPlaceById');
 
-    //get event data for slider limit 5
-    Route::post('/events', 'TouristicPlaceController@store');
-
     //get todays events
-    Route::post('/nowEvents', 'TouristicPlaceController@store');
+    Route::get('/events', 'TouristicPlaceController@getAllEvents');
 
     //get data for map 
     Route::post('/mapData', 'TouristicPlaceController@store');
@@ -100,6 +97,9 @@ Route::group(['prefix' => 'touristicPlace', 'middleware' => 'cors'], function() 
 
     Route::post('/testMaps', 'TouristicPlaceController@testMaps');
     Route::get('/testMaps', 'TouristicPlaceController@testMaps');
+
+    //images products
+    Route::get('/productImg/{id}', 'TouristicPlaceController@getProductImage');
 });
 
 Route::get('/testMail', function(){

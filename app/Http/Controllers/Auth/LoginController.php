@@ -60,6 +60,7 @@ class LoginController extends Controller
     {
         $credentials = $request->only($this->username(), 'password');
         $credentials['typeId'] = [1, 3];
+        $credentials['statusId'] = [2];
 
         //return $request->only($this->username(), 'password');
         return $credentials;

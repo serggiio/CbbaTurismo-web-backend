@@ -42,7 +42,10 @@
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="comment-tab" data-bs-toggle="tab" data-bs-target="#comment" type="button" role="tab" aria-controls="comment" aria-selected="false"><i class="far fa-comments" style="font-size: 170%"></i></button>
-                      </li>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="product-tab" data-bs-toggle="tab" data-bs-target="#product" type="button" role="tab" aria-controls="product" aria-selected="false"><i class="fas fa-utensils" style="font-size: 170%"></i></button>
+                    </li>
                   </ul>
                   <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -77,7 +80,28 @@
                                         <label for="placeName">Nombre</label>
                                         <input class="form-control" required name="placeName" type="text" id="placeName" value="{{ $place['placeName'] }}">
                                         <input class="form-control" required name="touristicPlaceId" type="text" id="touristicPlaceId" value="{{ $place['touristicPlaceId'] }}" hidden>
-                                    </div>                                                                                                    
+                                    </div>  
+                                    
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="inputPlaceType" id="radioPlace" value="place" onclick="handleRadio(this);">
+                                        <label class="form-check-label" for="Radios1">Lugar turistico</label><br>
+                                        <input class="form-check-input" type="radio" name="inputPlaceType" id="radioEvent" value="event" onclick="handleRadio(this);">
+                                        <label class="form-check-label" for="Radios2">Evento</label>
+                                    </div>
+                                    <br>
+
+                                    <div class="form-group" id="eventDates">
+                                        <div class="form-group">
+                                          <label for="startDate"> Fecha de inicio</label>
+                                          <input class="form-control" type="date" id="startDate" name="startDate"
+                                                value="{{ date("Y-m-d") }}">
+                                        </div>
+                                        <div class="form-group">
+                                          <label for="endDate"> Fecha fin</label>
+                                          <input class="form-control" type="date" id="endDate" name="endDate"
+                                                value="{{ date("Y-m-d") }}">
+                                        </div>
+                                    </div>
 
                                     <div class="form-group">
                                         <label for="streets">Calles</label>
@@ -145,7 +169,6 @@
                                               </div>
                                         </div>
                                     </div>
-                                    <hr>
 
                                     <div class="accordion accordion-flush" id="accordionFlushExample">
                                         <div class="accordion-item" hidden>
@@ -295,6 +318,33 @@
                             </div>
                             <div class="col-md-1"></div>
                         </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="product" role="tabpanel" aria-labelledby="product-tab">
+
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="row" style="align-items: center;">
+                                <br><br>
+                                @foreach ($place['product'] as $product)                                    
+                                    <div class="card flex-row col-md-6">                                        
+                                        <img src="{{ asset('images/places/' . $place->touristicPlaceId . '/products/' . $product->productIcon) }}" height="200px" width="25%">
+                                        <div class="card-body">
+                                            <a style="padding: 0" class="btn btn-outline-info" href="{{route('agent.product.edit', [$product->productId])}}">Editar</a>   
+                                            <a style="padding: 0" class="btn btn-outline-warning" onclick="return confirm('Eliminar este producto??')" href="{{route('agent.product.destroy', [$product->productId])}}">Eliminar</a>
+                                            <h4 class="card-title h4 h4-sm">{{$product['productName']}}</h4>
+                                            <h6 class="h6 h6-sm">{{$product['created_at']}}</h6>
+                                            <p class="card-text">{{$product['productDescription']}}</p>
+                                        </div>
+                                    </div> 
+                                @endforeach
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalProduct">
+                            Crea un producto!
+                        </button>
+                        @include('agent.agentCreateProduct')
 
                     </div>
                   </div>
@@ -367,7 +417,34 @@
         console.log(Array.from(select.options)[0].value);
 
         setStatus();
+        hideEventDate();
 
+    }
+
+    function hideEventDate(){
+        let dates = document.getElementById("eventDates");
+        let actualType = '<?php echo $place['type']  ?>';
+        if(actualType == 'place'){
+            dates.style.display = 'none';
+            document.getElementById("radioPlace").checked = true;
+            document.getElementById("radioEvent").checked = false;
+        }else{
+            document.getElementById("radioPlace").checked = false;
+            document.getElementById("radioEvent").checked = true;
+            document.getElementById("startDate").setAttribute('value','<?php echo $place['startDate']?>' ||  '<?php echo date("Y-m-d")?>');
+            document.getElementById("endDate").setAttribute('value','<?php echo $place['endDate']?>' ||  '<?php echo date("Y-m-d")?>');
+
+
+        }
+    }
+
+    function handleRadio(radioData){
+        var dates = document.getElementById("eventDates");
+        if(radioData.value == 'event'){
+          dates.style.display = 'block';
+        }else if(radioData.value == 'place'){
+          dates.style.display = 'none';
+        }
     }
 
     function setStatus(){

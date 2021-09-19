@@ -17,6 +17,8 @@ use App\Images as ImageObj;
 use App\Status as StatusObj;
 use App\Category as CategoryObj;
 use App\Commentary as CommentaryObj;
+use App\Product as ProductObj;
+use App\Action as ActionObj;
 
 use laracasts\flash\flash;
 
@@ -26,7 +28,10 @@ class AgentController extends Controller
     public function index()
     {
         $user = \Auth::user();
-        $touristicPlaces = TouristicObj::where('userId', '=', $user['userId'])->get();
+        $touristicPlaces = TouristicObj::where([
+            ['userId', '=', $user['userId']],
+            ['placeStatusId', '<>', 4]
+        ])->get();
         //dd($touristicPlaces);
         $touristicPlaces->each(function($touristicPlace){
             $touristicPlace['provinceName'] = $touristicPlace->province['provinceName'];
@@ -67,6 +72,7 @@ class AgentController extends Controller
     {
         $data = $request->all();
         //dd($data);
+        $oldUser = UserTableObj::where('userId', '=', $data['inputId'])->first();
         $user = UserTableObj::where('userId', '=', $data['inputId'])->first();
 
         $userEmail = UserTableObj::where([
@@ -86,6 +92,8 @@ class AgentController extends Controller
 
         $user->fill($userData);
         $user->save();
+
+        $this->saveLogAction('Edición', 'Usuario agente', json_encode($oldUser), json_encode($user));
 
         flash('Se actualizo el perfil de usuario!')->success();
         return redirect()->route('frontAgent.profile', ['id' => $user['userId']]);
@@ -108,6 +116,7 @@ class AgentController extends Controller
         $touristicPlace->gallery;
         $touristicPlace->commentary;
         $touristicPlace->user;
+        $touristicPlace->product;
         
         $touristicPlace->gallery->each(function($galleryData){
             $galleryData->images;            
@@ -134,7 +143,7 @@ class AgentController extends Controller
 
         $data = $request->all();
         $provinceData = json_decode($data['inputPlaceProvince']);
-        //dd('otro metodo');
+        //dd($data);
 
         $newData['touristicPlaceId'] = $data['touristicPlaceId'];
         $newData['provinceId'] = $provinceData->provinceId;
@@ -145,9 +154,22 @@ class AgentController extends Controller
         $newData['latitude'] = $data['inputPlaceLatitude'];
         $newData['longitude'] = $data['inputPlaceLongitude'];
         $newData['placeStatusId'] = $data['statusRadio'];
+        $newData['type'] = $data['inputPlaceType'];
 
+        if($newData['type'] == 'event'){
+            $newData['startDate'] = $data['startDate'];
+            $newData['endDate'] = $data['endDate'];
+            if($data['startDate'] > $data['endDate']) {
+                flash('El valor de las fechas no tienen el formato correcto!')->warning();
+                return redirect()->route('frontAgent.placeDetail', ['id' => $data['touristicPlaceId']]);
+            }
+        }else{
+            $newData['startDate'] = null;
+            $newData['endDate'] = null;
+        }
         //dd($newData);
 
+        $oldTouristicPlace = TouristicObj::find($data['touristicPlaceId']); 
         $touristicPlace = TouristicObj::find($data['touristicPlaceId']); 
 
         if($file=$request->file('image')){
@@ -168,7 +190,7 @@ class AgentController extends Controller
         }
 
         
-        
+        $this->saveLogAction('Edición', 'Usuario agente', json_encode($oldTouristicPlace), json_encode($touristicPlace));
 
         //dd($touristicPlace->toArray());
         flash('El registro se actualizó con éxito!')->success();
@@ -217,6 +239,10 @@ class AgentController extends Controller
             }
         }
 
+        $newGallery1->images;
+
+        $this->saveLogAction('Registro', 'Agente - galería', '', json_encode($newGallery1));
+
         flash('Se creo la galería ' . $data['galleryName'] . ' !')->success();
         return redirect()->route('frontAgent.placeDetail', ['id' => $newGallery1['touristicPlaceId']]);
     }
@@ -238,6 +264,7 @@ class AgentController extends Controller
     {
         $data=$request->all();
         //dd($data);
+        $oldGallery = GalleryObj::where('galleryId', '=', $data['galleryId'])->first();
         $gallery = GalleryObj::where('galleryId', '=', $data['galleryId'])->first();
 
         $newData['galleryName'] = $data['galleryName'];
@@ -260,6 +287,11 @@ class AgentController extends Controller
             }
         }
 
+        $oldGallery->images;
+        $gallery->images;
+
+        $this->saveLogAction('Edición', 'Agente - galería', json_encode($oldGallery), json_encode($gallery));
+
         flash('La galería se actualizó correctamente!')->success();
         return redirect()->route('frontAgent.galleryEdit', ['id' => $data['galleryId']]);
     }
@@ -267,8 +299,7 @@ class AgentController extends Controller
     public function destroyGalleryImage($id)
     {
         
-        $image = ImageObj::where('imageId', '=', $id)->first();
-
+        $image = ImageObj::where('imageId', '=', $id)->first();        
         $images = ImageObj::where('galleryId', '=', $image['galleryId'])->get();
 
         if(count($images->toArray()) > 1){
@@ -276,10 +307,11 @@ class AgentController extends Controller
             //dd(\File::exists(public_path(). '/' . $gallery['galleryPath'] . '/' . $image['imagePath']));
             if (\File::exists(public_path(). '/' . $gallery['galleryPath'] . '/' . $image['imagePath'])) \File::delete(public_path(). '/' . $gallery['galleryPath'] . '/' . $image['imagePath']);
             //dd($gallery->toArray());
+            $image->gallery;
+            $this->saveLogAction('Eliminar', 'Agente - galería - Imagen', json_encode($image), '');
             $image->delete();
-        }
+        }        
 
-        
         flash('Se eliminó la imagen correctamente!')->warning();
         return redirect()->route('frontAgent.galleryEdit', ['id' => $image['galleryId']]);
     }
@@ -294,6 +326,7 @@ class AgentController extends Controller
 
         if (\File::exists(public_path(). '/' .$gallery['galleryPath'])) \File::deleteDirectory(public_path(). '/' .$gallery['galleryPath']);
         $gallery->images;
+        $this->saveLogAction('Eliminar', 'Agente - galería', json_encode($gallery), '');
         //dd($gallery->toArray());
         $gallery->delete();
 
@@ -306,10 +339,239 @@ class AgentController extends Controller
         //dd($id);
         $commentary = CommentaryObj::where('commentaryId', '=', $id)->first();
         $touristicPlaceId = $commentary['touristicPlaceId'];
+        $this->saveLogAction('Eliminar', 'Agente - comentario', json_encode($commentary), '');
         $commentary->delete();
         //dd($TagObj);
         flash('Comentario eliminado!')->warning();
         return redirect()->route('frontAgent.placeDetail', ['id' => $touristicPlaceId]);
 
+    }
+
+    public function editProduct($id)
+    {
+        //dd(phpinfo());
+        $product = ProductObj::where('productId', '=', $id)->first();
+        $user = \Auth::user();
+        //dd($product->toArray());
+
+        return view('agent.agentEditProduct')
+        ->with('user', $user)
+        ->with('product', $product);
+    }
+
+    public function storeUpdatedProduct(Request $request){
+
+        $data = $request->all();
+        //dd($data);
+
+        $newData['productId'] = $data['productId'];
+        $newData['productName'] = $data['productName'];
+        $newData['productDescription'] = $data['productDescription'];
+
+        //dd($newData);
+
+        $oldProduct = ProductObj::find($data['productId']); 
+        $product = ProductObj::find($data['productId']); 
+
+        if($file=$request->file('image')){
+            if (\File::exists(public_path(). '/images/places/' . $product['touristicPlaceId'] . '/products/' .$product['productIcon'])) \File::delete(public_path(). '/images/places/' . $product['touristicPlaceId'] . '/products/' .$product['productIcon']);
+            //dd(\Storage::exists(public_path(). '/images/places/' . $product['touristicPlaceId'] . '/products/' .$product['productIcon']));
+            //dd(public_path(). '/images/places/' . $product['touristicPlaceId'] . '/products/' .$product['productIcon']);
+            $name = $product['productId'] . '.' . $file->getClientOriginalExtension();
+            $newData['productIcon'] = $name;
+            $path = public_path() . '/images/places/' . $product['touristicPlaceId'] . '/products/';
+            $file->move($path, $name);
+        }
+
+        $product->fill($newData);
+        $product->save();
+
+        $this->saveLogAction('Edición', 'Agente - producto', json_encode($oldProduct), json_encode($product));
+        //dd($touristicPlace->toArray());
+        flash('El registro se actualizó con éxito!')->success();
+        return redirect()->route('agent.product.edit', ['id' => $data['productId']]);
+
+    }
+
+    public function createProduct(Request $request)
+    {
+        $data=$request->all();
+        $touristicPlace = json_decode($data['inputPlace']);
+
+        //dd($data);//galerries/1/
+        $newData['touristicPlaceId'] = $touristicPlace->touristicPlaceId;
+        $newData['productName'] = $data['productName'];
+        $newData['productDescription'] = $data['productDescription'];
+        $newData['productIcon'] = 'temp';
+        $newProduct = new ProductObj($newData);
+        $newProduct->save();
+
+
+        if($file=$request->file('image')){
+            //dd($files);
+            $name = $newProduct['productId'] . '.' . $file->getClientOriginalExtension();
+            $path = public_path() . '/images/places/' . $touristicPlace->touristicPlaceId . '/products/';
+            $file->move($path,$name);
+            
+            $newData['productIcon'] = $name;
+            $newProduct1 = ProductObj::find($newProduct->productId); 
+            $newProduct1->fill($newData);
+            $newProduct1->save();
+        }
+
+        $this->saveLogAction('Edición', 'Agente - producto', '', json_encode($newProduct1));
+        flash('Se creo El producto ' . $newProduct['productName'] . ' !')->success();
+        return redirect()->route('frontAgent.placeDetail', ['id' => $touristicPlace->touristicPlaceId]);
+    }
+
+    public function destroyProduct($id)
+    {
+        //dd($id);
+        $product = ProductObj::where('productId', '=', $id)->first();
+        $touristicPlaceId = $product['touristicPlaceId'];
+        //dd(\File::exists(public_path(). '/images/places/10/products/3.jpg'));
+        //dd(\Storage::delete(public_path(). '/images/places/10/products/3.jpg'));
+        if (\File::exists(public_path(). '/images/places/' . $product['touristicPlaceId'] . '/products/' .$product['productIcon'])) \File::delete(public_path(). '/images/places/' . $product['touristicPlaceId'] . '/products/' .$product['productIcon']);
+        $this->saveLogAction('Eliminar', 'Agente - producto', '', json_encode($product));
+        $product->delete();
+        flash('Se eliminó correctamente el producto!')->warning();
+        return redirect()->route('frontAgent.placeDetail', ['id' => $touristicPlaceId]);
+    }
+
+    public function agentContact(Request $request)
+    {
+        $data = $request->all();
+
+        //dd($data);
+        if(!$data) return view('template.resultContact');
+        $user = UserTableObj::where('email', '=', $data['email'])->first();
+        $dataInfo;
+        if($user){
+            if($user['typeId'] == 1){
+                //user admin, throw error
+                //dd('Error: El correo proporcionado ya pertenece a un usuario con otro tipo de cuenta');
+                $dataInfo['type'] = 'Error';
+                $dataInfo['user'] = $user;;
+            }else {
+                //user agent or turist, create or update account //agente typeId = 3
+                //dd('El usuario no es administrador');
+                $user['typeId'] = 3;
+                $user->save();
+
+                $dataInfo['type'] = 'Success';
+                $dataInfo['action'] = 'update';
+                $dataInfo['user'] = $user->toArray();
+            }
+        }else {
+            //dd('No existe cuenta con ese correo, creando una');
+            //agent status review = 4, typeId = 3     
+            $newAgent['statusId'] = 4;
+            $newAgent['typeId'] = 3;
+            $newAgent['name'] = '';
+            $newAgent['lastName'] = '';
+            $newAgent['phoneNumber'] = $data['phoneNumber'];
+            $newAgent['email'] = $data['email'];
+            $newAgent['password'] = '';
+            $agent = new UserTableObj($newAgent);
+            $agent->save();
+
+            $dataInfo['type'] = 'Success';
+            $dataInfo['action'] = 'create';
+            $dataInfo['user'] = $agent->toArray();
+
+        }
+
+        if($data['placeName'] && $dataInfo['type'] != 'Error'){
+            //dd('crear lugar turistico');//status = 4 review // defailt province = 1
+            $newTouristicObj['provinceId'] = 1;
+            $newTouristicObj['userId'] = $dataInfo['user']['userId'];
+            $newTouristicObj['placeStatusId'] = 4;
+            $newTouristicObj['placeName'] = $data['placeName'];
+            $newTouristicObj['mainImage'] = '';
+            $newTouristicObj['latitude'] = 0;
+            $newTouristicObj['longitude'] = 0;
+            $newTouristicObj['type'] = 'place'; //TODO select on contact form place/event
+            $place = new TouristicObj($newTouristicObj);
+            $place->save();
+            $place->tag()->sync($data['inputPlaceTags']);
+
+            $dataInfo['type'] = 'Success';
+            $dataInfo['actionPlace'] = 'create';
+            $dataInfo['touristicPlace'] = $place->toArray();
+
+        }
+        //dd($dataInfo);
+        return view('template.resultContact')
+        ->with('data', $dataInfo);
+
+    }
+
+    public function saveLogAction($actionName, $table = '', $old = null, $new = null) {
+        $user = \Auth::user();
+        $newData['userId'] = $user['userId'];
+        $newData['actionName'] = $actionName;
+        $newData['table'] = $table;
+        $newData['oldData'] = $old;
+        $newData['newData'] = $new;
+        $newData['ip'] = $this->getIp();
+        $newAction = new ActionObj($newData);
+        $newAction->save();
+    }
+
+    public function getIp(){
+        foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key){
+            if (array_key_exists($key, $_SERVER) === true){
+                foreach (explode(',', $_SERVER[$key]) as $ip){
+                    $ip = trim($ip); // just to be safe
+                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false){
+                        return $ip;
+                    }
+                }
+            }
+        }
+        return request()->ip(); // it will return server ip when no client ip found
+    }
+
+    public function request(){
+        $user = \Auth::user();
+        $touristicPlaces = TouristicObj::where([
+            ['placeStatusId', '=', 4],
+            ['userId', '=', $user['userId']]
+        ])->get();
+        $tags = TagObj::orderBy('tagName', 'desc')->get();
+        //dd($touristicPlaces->toArray());
+        return view('agent.agentRequest')
+        ->with('places', $touristicPlaces)
+        ->with('tags', $tags)
+        ->with('user', $user);
+    }
+
+    public function agentRequest(Request $request){
+        $data = $request->all();
+        $user = \Auth::user();
+
+        $newTouristicObj['provinceId'] = 1;
+        $newTouristicObj['userId'] = $user['userId'];
+        $newTouristicObj['placeStatusId'] = 4;
+        $newTouristicObj['placeName'] = $data['placeName'];
+        $newTouristicObj['mainImage'] = '';
+        $newTouristicObj['latitude'] = 0;
+        $newTouristicObj['longitude'] = 0;
+        $newTouristicObj['type'] = 'place'; //TODO select on contact form place/event
+        $place = new TouristicObj($newTouristicObj);
+        $place->save();
+        $place->tag()->sync($data['inputPlaceTags']);
+        $this->saveLogAction('Registro', 'Turismo - solicitud', '', json_encode($place));
+        
+        flash('La solicitud '. $place['palceName'] . ' se envio correctamente!')->success();
+        return redirect()->route('frontAgent.request');
+    }
+
+    public function destroyRequest($id){
+        //dd($id);
+        $touristicPlace = TouristicObj::where('touristicPlaceId', '=', $id)->first();
+        $touristicPlace->delete();
+        flash('La solicitud se elimino correctamente!')->warning();
+        return redirect()->route('frontAgent.request');
     }
 }

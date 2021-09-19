@@ -11,6 +11,7 @@ use App\Gallery as GalleryObj;
 use Illuminate\Http\Request;
 use App\Category as CategoryObj;
 use App\Commentary as CommentaryObj;
+use App\Product as ProductObj;
 use DB;
 
 class TouristicPlaceController extends Controller
@@ -129,6 +130,7 @@ class TouristicPlaceController extends Controller
             $queryData['rateAvg'] = round($queryData->rate->avg('puntuacion'));
             $queryData->tag;
             $queryData->gallery;
+            $queryData->product;
             $queryData['tagList'] = array();
             foreach ($queryData['tag'] as $value) {
                 $tagList[] = $value['tagName'];
@@ -745,6 +747,46 @@ class TouristicPlaceController extends Controller
             ];
         }
         
+    }
+
+    public function getProductImage($id)
+    {
+        $product = ProductObj::where('productId', '=', $id)->first();        
+        $path = '';
+        if(!isset($product)){
+            $path = public_path(). '/images/notFound.png'; 
+        }else {
+            //dd($product->toArray());
+            $path = public_path(). '/images/places/' . $product['touristicPlaceId'] . '/products/' .$product['productIcon'];
+        }
+        //dd($path);
+        return response()->file($path);
+    }
+
+    public function getAllEvents(){
+        try {
+
+            $events = TouristicObj::where([
+                ['placeStatusId', '=', 2],
+                ['type', '=', 'event']
+            ])->orderBy('startDate', 'desc')->get();
+
+            return [
+                'code' => 'OK',
+                'get' => true,
+                'data' => $events
+            ]; 
+        } catch (\Throwable $th) {
+            return [
+                'code' => 'Error',
+                'get' => false,
+                'data' => $th,
+                'message' => [
+                    'es' => 'No se encontro la informacion requerida',
+                    'en' => 'The required information was not found'
+                ]
+            ];
+        }
     }
 
 

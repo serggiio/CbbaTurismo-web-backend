@@ -116,10 +116,10 @@
 }
 
 .contactBody {
-    background-color: #6fb94d;
+    background-image: linear-gradient(to bottom, #3b6922, #4d8024, #629824, #79b121, #93c91a);
     color: white;
 }
 .contactHeader {
-    background-color: #6fb94d;
+    background-color: #364130;
     color: white;
 }
