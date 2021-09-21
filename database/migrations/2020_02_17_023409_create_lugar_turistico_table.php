@@ -32,6 +32,7 @@ class CreateLugarTuristicoTable extends Migration
             $table->string('type');
             $table->date('startDate')->nullable();
             $table->date('endDate')->nullable();
+            $table->text('qrCode')->nullable();
             $table->timestamps();
 
             $table->foreign('provinceId')->references('provinceId')->on('province')->onDelete('cascade');

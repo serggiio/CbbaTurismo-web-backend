@@ -32,6 +32,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\InvitationEmail;
 use App\Mail\ConfirmationEmail;
 
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -361,6 +363,21 @@ class FrontController extends Controller
         ->with('provinces', $viewData['provinces'])
         ->with('categories', $viewData['categories']);
 
+    }
+
+    public function generateQr($id){
+        //dd($id);
+        
+        $qrObj = [
+            'qrId' => $id
+        ];
+
+        $touristicPlace = TouristicObj::where('touristicPlaceId', '=', $id)->first();
+        $touristicPlace['qrCode'] = base64_encode(QrCode::format('png')->size(100)->generate(json_encode($qrObj)));
+        $touristicPlace->save();
+        
+        flash('El QR se genero correctamente!')->success();
+        return redirect()->route('front.placeDetail', ['id' => $id]);
     }
 
     public function returnToDetailPlaceView($id){

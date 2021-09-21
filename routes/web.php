@@ -377,6 +377,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'Admin']], function(
         
     ]);
 
+    Route::get('/generateQr/{id}', [
+
+        'as' 	=> 		'front.generateQr',
+        'uses'	=>		'FrontController@generateQr'
+        
+    ]);
+
 });
 
 //Auth::routes();

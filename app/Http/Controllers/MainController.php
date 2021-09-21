@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\TouristicPlace as TouristicObj;
 use App\Images as ImageObj;
 use App\Tag as TagObj;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class MainController extends Controller
 {

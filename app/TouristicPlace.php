@@ -9,7 +9,7 @@ class TouristicPlace extends Model
     protected $table = 'touristicplace';
     protected $primaryKey = 'touristicPlaceId';
     protected $fillable = [
-        'provinceId', 'userId', 'placeStatusId', 'description', 'history', 'placeName', 'mainImage', 'mainVideo', 'streets', 'latitude', 'longitude', 'businessHours', 'type', 'startDate', 'endDate'
+        'provinceId', 'userId', 'placeStatusId', 'description', 'history', 'placeName', 'mainImage', 'mainVideo', 'streets', 'latitude', 'longitude', 'businessHours', 'type', 'startDate', 'endDate', 'qrCode'
     ];
 
     public function province(){

@@ -69,20 +69,41 @@
 
                                     <div class="form-group">
                                         <div class="row">
-                                            <div class="col-md-4">
-                                                
-                                                <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);">
-                                                    <img src="{{ asset('images/places/' . $place->touristicPlaceId . '/' . $place->mainImage) }}" width="100%" height="80%" style="border-radius: 25px; padding-left: 10%;padding-right: 10%" onerror="this.src='{{ asset('images/notFound.png') }}'">
-                                                    <div class="container">
-                                                    
+                                            <div class="col-md-6">
+                                                <div class="form-group">                                                
+                                                    <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);">
+                                                        <img src="{{ asset('images/places/' . $place->touristicPlaceId . '/' . $place->mainImage) }}" width="100%" height="250px" style="border-radius: 25px; padding-left: 10%;padding-right: 10%" onerror="this.src='{{ asset('images/notFound.png') }}'">
+                                                        <div class="container">
+                                                        
+                                                        </div>
                                                     </div>
                                                 </div>
+    
+                                                <div class="form-group"><br>
+                                                    <label for="mainImage">Cambiar imagen principal</label>
+                                                    <input class="form-control" id="image" type="file" name="image"><br>
+                                                </div>
                                             </div>
+                                            <div class="col-md-1"></div>
+                                            <div class="col-md-5">
+                                                @if (isset($place['qrCode']))
+                                                    <div class="form-group">                                                
+                                                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2); margin: auto">
+                                                            <div class="form-group" style="text-align: center">
+                                                                <img src="data:image/png;base64,{{ $place['qrCode'] }}"  style="padding: 10%; height: fit-content; width: fit-content" onerror="this.src='{{ asset('images/notFound.png') }}'">
+        
+                                                                <a class="btn btn-info" download="turismoQr.png" href="data:image/png;base64,{{ $place['qrCode'] }}">Descargar <i class="fas fa-download"></i></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                                            <div class="col-md-4"><br>
-                                                <label for="mainImage">Cambiar imagen</label>
-                                                <input id="image" type="file" name="image"><br>
+                                                @endif
+    
+                                                <div class="form-group" style="text-align: center;"><br>
+                                                    <a class="btn btn-success" href="{{ route('front.generateQr', $place['touristicPlaceId'])}}" onclick="return confirm('Generar nuevo código QR?')">Generar QR <i class="fas fa-redo-alt"></i></a>
+                                                </div>
                                             </div>
+                                            
                                         </div>
                                         
                                     </div>
@@ -291,7 +312,7 @@
                                                     <a href="{{route('admin.gallery.destroy', $gallery->galleryId)}}" onclick="return confirm('Eliminar esta galeria?')" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
                                                   </div>
                                                 </div>
-                                              </div>
+                                            </div>
                                         </div>
 
                                         @endforeach
