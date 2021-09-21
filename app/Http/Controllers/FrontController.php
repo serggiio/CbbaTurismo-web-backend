@@ -366,7 +366,7 @@ class FrontController extends Controller
     }
 
     public function generateQr($id){
-        dd(phpinfo());
+        //dd(phpinfo());
         
         $qrObj = [
             'qrId' => $id
