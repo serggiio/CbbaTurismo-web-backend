@@ -23,7 +23,7 @@ class TouristicPlaceController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**
