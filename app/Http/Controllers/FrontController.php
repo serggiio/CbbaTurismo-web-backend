@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\InvitationEmail;
 use App\Mail\ConfirmationEmail;
+use Illuminate\Support\Facades\Http;
 
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -367,10 +368,11 @@ class FrontController extends Controller
 
     public function generateQr($id){
         //dd(phpinfo());
-        
-        $qrObj = [
-            'qrId' => $id
-        ];
+        $response = Http::post('https://tourism-service.herokuapp.com/processQr', [
+            'id' => $id
+        ]);
+
+        dd($response);
 
         $touristicPlace = TouristicObj::where('touristicPlaceId', '=', $id)->first();
         $touristicPlace['qrCode'] = base64_encode(QrCode::format('png')->size(100)->generate(json_encode($qrObj)));
