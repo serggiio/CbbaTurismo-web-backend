@@ -90,7 +90,7 @@
                                                     <div class="form-group">                                                
                                                         <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2); margin: auto">
                                                             <div class="form-group" style="text-align: center">
-                                                                <img src="data:image/png;base64,{{ $place['qrCode'] }}"  style="padding: 10%; height: fit-content; width: fit-content" onerror="this.src='{{ asset('images/notFound.png') }}'">
+                                                                <img src="{{ $place['qrCode'] }}"  style="padding: 10%; height: fit-content; width: fit-content" onerror="this.src='{{ asset('images/notFound.png') }}'">
         
                                                                 <a class="btn btn-info" download="turismoQr.png" href="data:image/png;base64,{{ $place['qrCode'] }}">Descargar <i class="fas fa-download"></i></a>
                                                             </div>
