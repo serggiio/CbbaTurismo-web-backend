@@ -92,7 +92,7 @@
                                                             <div class="form-group" style="text-align: center">
                                                                 <img src="{{ $place['qrCode'] }}"  style="padding: 10%; height: fit-content; width: fit-content" onerror="this.src='{{ asset('images/notFound.png') }}'">
         
-                                                                <a class="btn btn-info" download="turismoQr.png" href="data:image/png;base64,{{ $place['qrCode'] }}">Descargar <i class="fas fa-download"></i></a>
+                                                                <a class="btn btn-info" download="turismoQr.png" href="{{ $place['qrCode'] }}"><i class="fas fa-download"></i></a>
                                                             </div>
                                                         </div>
                                                     </div>
