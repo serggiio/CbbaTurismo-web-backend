@@ -292,7 +292,9 @@ class FrontController extends Controller
         //dd($data);
 
         $oldUser = UserTableObj::where('email', '=', $data['email'])->first();
-        $oldUser->userType;
+        if(isset($oldUser)) {
+            $oldUser->userType;
+        }
         $userCreated = UserTableObj::where('email', '=', $data['email'])->first();
 
         if(isset($userCreated) && $userCreated['userId'] != $data['userId']){
