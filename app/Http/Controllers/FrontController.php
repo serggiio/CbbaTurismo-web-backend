@@ -532,6 +532,9 @@ class FrontController extends Controller
         $newData['touristicPlaceId'] = $data['touristicPlaceId'];
         $newData['provinceId'] = $provinceData->provinceId;
         $newData['history'] = $data['inputPlacehistory'];
+        $newData['web'] = $data['web'];
+        $newData['contact'] = $data['contact'];
+        $newData['businessHours'] = $data['businessHours'];
         $newData['description'] = $data['inputPlaceDescription'];
         $newData['placeName'] = $data['placeName'];
         $newData['streets'] = $data['streets'];

@@ -80,7 +80,7 @@
                                                 </div>
     
                                                 <div class="form-group"><br>
-                                                    <label for="mainImage">Cambiar imagen principal</label>
+                                                    <label for="mainImage"><i class="far fa-image" style="margin-right: 5px;font-size: large"></i>Cambiar imagen principal</label>
                                                     <input class="form-control" id="image" type="file" name="image"><br>
                                                 </div>
                                             </div>
@@ -109,27 +109,27 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="placeName">Nombre</label>
+                                        <label for="placeName"><i class="fas fa-address-card" style="margin-right: 5px;font-size: large"></i>Nombre</label>
                                         <input class="form-control" required name="placeName" type="text" id="placeName" value="{{ $place['placeName'] }}">
                                         <input class="form-control" required name="touristicPlaceId" type="text" id="touristicPlaceId" value="{{ $place['touristicPlaceId'] }}" hidden>
                                     </div>
 
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="inputPlaceType" id="radioPlace" value="place" onclick="handleRadio(this);">
-                                        <label class="form-check-label" for="Radios1">Lugar turistico</label><br>
+                                        <label class="form-check-label" for="Radios1"><i class="fas fa-tree" style="margin-right: 5px;font-size: large"></i>Lugar turistico</label><br>
                                         <input class="form-check-input" type="radio" name="inputPlaceType" id="radioEvent" value="event" onclick="handleRadio(this);">
-                                        <label class="form-check-label" for="Radios2">Evento</label>
+                                        <label class="form-check-label" for="Radios2"><i class="fas fa-calendar-week" style="margin-right: 5px;font-size: large"></i>Evento</label>
                                     </div>
                                     <br>
 
                                     <div class="form-group" id="eventDates">
                                         <div class="form-group">
-                                          <label for="startDate"> Fecha de inicio</label>
+                                          <label for="startDate"><i class="far fa-clock" style="margin-right: 5px;font-size: large"></i> Fecha de inicio</label>
                                           <input class="form-control" type="date" id="startDate" name="startDate"
                                                 value="{{ date("Y-m-d") }}">
                                         </div>
                                         <div class="form-group">
-                                          <label for="endDate"> Fecha fin</label>
+                                          <label for="endDate"><i class="far fa-clock" style="margin-right: 5px;font-size: large"></i> Fecha fin</label>
                                           <input class="form-control" type="date" id="endDate" name="endDate"
                                                 value="{{ date("Y-m-d") }}">
                                         </div>
@@ -140,7 +140,7 @@
                                         <div class="row">
                                             <div class="col-md-6">
 
-                                                <label for="agentEmail">Agente</label>
+                                                <label for="agentEmail"><i class="fas fa-user" style="margin-right: 5px;font-size: large"></i>Agente</label>
                                                 @if (isset($place['userId']))
                                                     <input class="form-control" type="email" name="agentEmail" type="text" id="agentEmail" value="{{ $place['user']['email'] }}">
                                                 @else
@@ -159,13 +159,13 @@
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio" name="sendRadio" id="sendOk" value="sendOk">
                                                     <label class="form-check-label" for="sendOk">
-                                                        Enviar invitación
+                                                        <i class="fas fa-envelope-open-text" style="margin-right: 5px;font-size: large"></i>Enviar invitación
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio" name="sendRadio" id="sendNoOk" value="sendNoOk" checked>
                                                     <label class="form-check-label" for="sendNoOk">
-                                                        No enviar invitación
+                                                        <i class="fas fa-times-circle" style="margin-right: 5px;font-size: large"></i>No enviar invitación
                                                     </label>
                                                 </div>
 
@@ -177,14 +177,29 @@
                                     
 
                                     <div class="form-group">
-                                        <label for="streets">Calles</label>
+                                        <label for="streets"><i class="fas fa-road" style="margin-right: 5px;font-size: large"></i>Calles</label>
                                         <input class="form-control" name="streets" type="text" id="streets" value="{{ $place['streets'] }}">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="web"><i class="fas fa-globe" style="margin-right: 5px;font-size: large"></i>Página web</label>
+                                        <input class="form-control" name="web" type="text" id="web" value="{{ $place['web'] }}">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="contact"><i class="fas fa-phone-square-alt" style="margin-right: 5px;font-size: large"></i>Contacto</label>
+                                        <input class="form-control" name="contact" type="text" id="contact" value="{{ $place['contact'] }}">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="businessHours"><i class="fas fa-hourglass-half" style="margin-right: 5px;font-size: large"></i>Horario de atención</label>
+                                        <input class="form-control" name="businessHours" type="text" id="businessHours" value="{{ $place['businessHours'] }}">
                                     </div>
 
 
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label for="inputPlaceProvince">Provincia</label>
+                                            <label for="inputPlaceProvince"><i class="fas fa-city" style="margin-right: 5px;font-size: large"></i>Provincia</label>
                                             <select onchange="selectListener()" class="form-control select-province" required="" id="inputPlaceProvince" name="inputPlaceProvince">
                                                 @foreach($provinces as $province)
                                                 @if ($province['provinceId'] == $place['provinceId'])
@@ -197,7 +212,7 @@
                                             </select>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="inputPlaceTags">Tags</label>
+                                            <label for="inputPlaceTags"><i class="fas fa-tags" style="margin-right: 5px;font-size: large"></i>Tags</label>
                                             <select class="form-control select-tag" multiple="multiple" required="required" name="inputPlaceTags[]" id="selectTagsitos">                                                    
 
                                                 @foreach($tags as $tag)
@@ -220,7 +235,7 @@
 
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label for="inputPlaceCategories">Categorias</label>
+                                            <label for="inputPlaceCategories"><i class="fas fa-tags" style="margin-right: 5px;font-size: large"></i>Categorias</label>
                                             <select class="form-control select-category" multiple="multiple" name="inputPlaceCategories[]" id="selectCategories">
                                                 
                                             </select>
@@ -231,13 +246,13 @@
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="statusRadio" id="activeRadio" value="2">
                                                 <label class="form-check-label" for="activeRadio">
-                                                  Activo
+                                                    <i class="fas fa-toggle-on" style="margin-right: 5px;font-size: large"></i>Activo
                                                 </label>
                                               </div>
                                               <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="statusRadio" id="inactiveRadio" value="1">
                                                 <label class="form-check-label" for="inactiveRadio">
-                                                  Inactivo
+                                                    <i class="fas fa-toggle-off" style="margin-right: 5px;font-size: large"></i>Inactivo
                                                 </label>
                                               </div>
                                         </div>
@@ -252,7 +267,7 @@
                                         </div>
                                     </div>
                                 
-                                    <label for="placeName">Historia</label>
+                                    <label for="placeName"><i class="fas fa-scroll" style="margin-right: 5px;font-size: large"></i>Historia</label>
                                     <div class="card-body">
                                         <div class="form-group">
                                         <textarea class="form-control textarea-inputPlacehistory" name="inputPlacehistory" cols="50" rows="5" id="inputPlacehistory">{{ $place['history'] }}</textarea>

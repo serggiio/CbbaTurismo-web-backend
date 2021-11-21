@@ -29,6 +29,8 @@ class CreateLugarTuristicoTable extends Migration
             $table->double('latitude');
             $table->double('longitude');
             $table->string('businessHours')->nullable();
+            $table->string('web')->nullable();
+            $table->string('contact')->nullable();
             $table->string('type');
             $table->date('startDate')->nullable();
             $table->date('endDate')->nullable();
