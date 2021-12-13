@@ -279,6 +279,9 @@ class UserTableController extends Controller
             
 
             $userData = UserTableObj::find($user['id']); 
+            if(isset($user['data']['password'])){
+                $user['data']['password'] = bcrypt($user['data']['password']);
+            }
             $userData->fill($user['data']);
             $userData->save();
             return [
