@@ -45,6 +45,9 @@ Route::group(['prefix' => 'users'], function() {
     //update user data
     Route::post('/update', 'UserTableController@update');
 
+    //Reset password for user
+    Route::post('/resetPassword', 'UserTableController@resetPassword');
+
 });
 
 //ROUTES FOR API/TOURISTICPLACE

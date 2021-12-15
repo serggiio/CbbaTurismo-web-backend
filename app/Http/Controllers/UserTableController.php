@@ -10,6 +10,7 @@ use Hash;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\welcome;
+use App\Mail\ResetPassword;
 
 
 
@@ -293,6 +294,47 @@ class UserTableController extends Controller
             return [
                 'code' => 'Error',
                 'get' => false,
+                'data' => $th,
+                'message' => [
+                    'es' => 'No se actualizo la informacion',
+                    'en' => 'Data not updated'
+                ]
+            ];
+        }
+        
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $user = $request->all();
+        try {
+            
+
+            $userData = UserTableObj::find($user['id']); 
+            $responseObj = [
+                'code' => 'OK',
+                'update' => true,
+                'sendMail' => true,
+                'data' => 'Actualizacion con exito'
+            ];
+            if(isset($userData)){
+                $newPassword = $this->generateCode(6);
+                $userData['password'] = bcrypt($newPassword);
+                $responseObj['data'] = $newPassword;
+                Mail::to($userData['email'])->send(new ResetPassword($newPassword));
+                $userData->save();
+            }else {
+                $responseObj['code'] = 'ERROR';
+                $responseObj['update'] = false;
+                $responseObj['sendMail'] = false;
+                $responseObj['data'] = 'Usuario no encontrado';
+            }
+
+            return $responseObj;    
+        } catch (\Throwable $th) {
+            return [
+                'code' => 'Error',
+                'update' => false,
                 'data' => $th,
                 'message' => [
                     'es' => 'No se actualizo la informacion',
