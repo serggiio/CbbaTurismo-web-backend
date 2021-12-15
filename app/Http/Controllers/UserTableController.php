@@ -310,7 +310,10 @@ class UserTableController extends Controller
         try {
             
 
-            $userData = UserTableObj::find($user['id']); 
+            //$userData = UserTableObj::find($user['email']); 
+            $userData = UserTableObj::where([
+                ["email", "=", $user['email']]
+            ])->get()->first();
             $responseObj = [
                 'code' => 'OK',
                 'update' => true,
