@@ -406,6 +406,33 @@ Route::post('/agentContact', [
     
 ]);
 
+Route::post('/resetPassword', [
+
+    'as' 	=> 		'welcome.resetPassword',
+    'uses'	=>		'AgentController@resetPassword'
+    
+]);
+
+Route::get('/setPassword/{code}', [
+
+    'uses'	=>		'AgentController@setPassword'
+    
+]);
+
+Route::get('/setResetPassword/{code}', [
+
+    'as' 	=> 		'frontAgent.setResetPassword',
+    'uses'	=>		'AgentController@setResetPassword'
+    
+]);
+
+Route::post('/updateResetPassword', [
+
+    'as' 	=> 		'welcome.updateResetPassword',
+    'uses'	=>		'AgentController@updateResetPassword'
+    
+]);
+
 Route::get('/agentContact', 'AgentController@agentContact');
 
 Route::group(['prefix' => 'agent', 'middleware' => ['auth', 'Agent']], function() {

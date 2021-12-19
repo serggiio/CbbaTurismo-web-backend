@@ -20,6 +20,9 @@ use App\Commentary as CommentaryObj;
 use App\Product as ProductObj;
 use App\Action as ActionObj;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AgentResetPassword;
+
 use laracasts\flash\flash;
 
 class AgentController extends Controller
@@ -529,7 +532,7 @@ class AgentController extends Controller
                 }
             }
         }
-        return request()->ip(); // it will return server ip when no client ip found
+        return request()->ip();
     }
 
     public function request(){
@@ -573,5 +576,155 @@ class AgentController extends Controller
         $touristicPlace->delete();
         flash('La solicitud se elimino correctamente!')->warning();
         return redirect()->route('frontAgent.request');
+    }
+
+    public function generateCode($l) {
+        $key = '';
+        $pattern = '1234567890abcdefghijklmnopqrstuvwxyz';
+        $max = strlen($pattern)-1;
+        for($i=0;$i < $l;$i++) $key .= $pattern[mt_rand(0,$max)];
+        return $key;
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $data = $request->all();
+        //dd($data);
+        //dd($request->root());
+
+        try {
+            
+
+            //$userData = UserTableObj::find($user['email']); 
+            $currentPath = $request->root();
+            //dd($currentPath);
+            $userData = UserTableObj::where([
+                ["email", "=", $data['email']]
+            ])->get()->first();
+            $responseObj = [
+                'type' => 'OK_RESET'
+            ];
+            if(isset($userData)){
+                $resetCode = $this->generateCode(6);
+                $userData['remember_token'] = $resetCode;
+                //dd($userData['email']);
+                Mail::to($userData['email'])->send(new AgentResetPassword($resetCode, $currentPath, "setPassword"));
+                $userData->save();
+            }else {
+                $responseObj['type'] = 'ERROR_RESET';
+            }
+            return view('template.resultContact')
+            ->with('data', $responseObj);
+
+        } catch (\Throwable $th) {
+            $responseObj = [
+                'type' => 'ERROR_RESET'
+            ];
+            return view('template.resultContact')
+            ->with('data', $responseObj);
+        }        
+    }
+
+    public function setPassword($code)
+    {
+        //dd($code);
+
+        try {
+            //dd($currentPath);
+            $userData = UserTableObj::where([
+                ["remember_token", "=", $code]
+            ])->get()->first();
+            $responseObj = [
+                'type' => 'DONE_RESET'
+            ];
+            if(isset($userData)){
+                $resetCode = $this->generateCode(10);
+                $userData['remember_token'] = $resetCode;
+                $userData->save();
+                return redirect()->route('frontAgent.setResetPassword', ['code' => $resetCode]);
+            }else {
+                $responseObj['type'] = 'ERROR_PROCESS_RESET';
+            }
+            return view('template.resultContact')
+            ->with('data', $responseObj);
+
+        } catch (\Throwable $th) {
+            $responseObj = [
+                'type' => 'ERROR_RESET'
+            ];
+            return view('template.resultContact')
+            ->with('data', $responseObj);
+        }
+        
+    }
+
+    public function setResetPassword($code)
+    {
+
+        try {
+            //dd($currentPath);
+            $userData = UserTableObj::where([
+                ["remember_token", "=", $code]
+            ])->get()->first();
+            $responseObj = [
+                'type' => 'DONE_RESET'
+            ];
+            if(isset($userData)){
+                $resData['user'] = $userData;
+                return view('template.setResetPassword')
+                ->with('data', $resData);
+            }else {
+                $responseObj['type'] = 'ERROR_PROCESS_RESET';
+            }
+            return view('template.resultContact')
+            ->with('data', $responseObj);
+
+        } catch (\Throwable $th) {
+            $responseObj = [
+                'type' => 'ERROR_RESET'
+            ];
+            return view('template.resultContact')
+            ->with('data', $responseObj);
+        }
+        
+    }
+
+    public function updateResetPassword(Request $request) {
+        $data = $request->all();
+        //dd($data);
+        try {
+            $userData = UserTableObj::where([
+                ["email", "=", $data['email']],
+                ["remember_token", "=", $data['token']]
+            ])->get()->first();
+
+            $responseObj = [
+                'type' => 'DONE_RESET'
+            ];
+            if(isset($userData)){
+                $resData['user'] = $userData;
+                if($data['password'] != $data['repeatPassword']) {                                        
+                    $resData['message'] = "Las contraseñas no coinciden.";
+                    return redirect()->route('frontAgent.setResetPassword', ['code' => $data['token']]);
+                }else{
+                    $userData['password'] = bcrypt($data['password']);
+                    $userData['remember_token'] = null;
+                    $userData->save();
+                    return view('template.resultContact')
+                    ->with('data', $responseObj);
+                }                
+            }else {
+                $responseObj['type'] = 'ERROR_PROCESS_RESET';
+            }
+            return view('template.resultContact')
+            ->with('data', $responseObj);
+
+        } catch (\Throwable $th) {
+            $responseObj = [
+                'type' => 'ERROR_RESET'
+            ];
+            return view('template.resultContact')
+            ->with('data', $responseObj);
+        }
     }
 }

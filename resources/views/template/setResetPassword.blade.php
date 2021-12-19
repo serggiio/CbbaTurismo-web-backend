@@ -25,7 +25,7 @@
 
     <script src="https://use.fontawesome.com/releases/v5.15.2/js/all.js" data-auto-replace-svg="nest"></script>
 
-    <title>Contacto</title>
+    <title>Reiniciar contraseña</title>
 
     <style>
         
@@ -42,41 +42,56 @@
               <div class="card-body">
                 <div class="media d-flex">
                   <div class="align-self-center">
-                    <i class="fas fa-check-circle white font-large-2 float-left"></i>
+                    <i class="fas fa-key white font-large-2 float-left"></i>
                   </div>
                   <div class="media-body white text-right">
                     <div class="card-body">
-                      @if (empty($data))
-                        <h5 class="card-title">Contacto</h5>
-                        <p class="card-text">Llena el formulario de contacto para registrar tu comercio!</p>
+                      @if (isset($data['message']))
+                        <div class="alert alert-danger" role="alert">
+                          {{ $data['message'] }}
+                        </div>
+                      @endif
+                      @if (isset($data['user']))
+                      <form method="POST" action="{{ route('welcome.updateResetPassword') }}" style="border: 2px solid white;border-radius: 4px; padding: 15px">
+                        {{ csrf_field() }}
+
+                        <div class="form-group row">
+                            <label style="color: white" for="email" class="col-md-4 col-form-label text-md-right"><i class="fas fa-at"></i> {{ __('Correo electronico') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="email" readonly value="{{ $data['user']['email'] }}" type="email" class="form-control @error('email') is-invalid @enderror" name="email" required autocomplete="email" autofocus>
+                                <input id="token" hidden value="{{ $data['user']['remember_token'] }}" type="text" name="token">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                          <label style="color: white" for="email" class="col-md-4 col-form-label text-md-right"><i class="fas fa-unlock-alt"></i> {{ __('Nueva contraseña') }}</label>
+
+                          <div class="col-md-6">
+                              <input id="password" type="password" name="password" required>
+                          </div>
+                        </div>
+
+                        <div class="form-group row">
+                          <label style="color: white" for="email" class="col-md-4 col-form-label text-md-right"><i class="fas fa-lock"></i> {{ __('Repita la contraseña contraseña') }}</label>
+
+                          <div class="col-md-6">
+                            <input id="repeatPassword" type="password" name="repeatPassword" required>
+                          </div>
+                        </div>
+
+                        <div class="form-group row mb-0">
+                            <div class="col-md-8 offset-md-4">
+                                <button type="submit" class="btn btn-secondary" style="color: white">
+                                  <i class="fas fa-save"></i> {{ __('Guardar') }}
+                                </button>
+                            </div>
+                        </div>
+                      </form>
                       @else
-                        @if ($data['type'] == 'Error')
                           <h5 class="card-title">Ocurrio un eror con la información proporcionada.</h5>
-                          <p class="card-text">El correo electronico proporcionado pertenece a otro tipo de cuenta.</p>
+                          <p class="card-text">Ocurrio un problema al reiniciar la contraseña.</p>
                           <p>Porfavor revisa la informacion y vuelve a intentarlo.</p>                            
-                        @elseif ($data['type'] == 'OK_RESET')
-                          <h5 class="card-title">Envío completo.</h5>
-                          <p class="card-text">Se envió los pasos para reiniciar tu contraseña.</p>
-                          <p>Porfavor revisa tu correo electronico.</p>
-                        @elseif ($data['type'] == 'DONE_RESET')
-                          <h5 class="card-title">Actualización completa.</h5>
-                          <p class="card-text">Se cambio tu contraseña correctamente.</p>
-                          <p>Porfavor inicia sesión para continuar.</p>
-                        @elseif ($data['type'] == 'ERROR_RESET')
-                          <h5 class="card-title">Ocurrio un eror con la información proporcionada.</h5>
-                          <p class="card-text">El correo electronico proporcionado puede ser incorrecto.</p>
-                          <p>Porfavor revisa la informacion y vuelve a intentarlo.</p>
-                        @elseif ($data['type'] == 'ERROR_PROCESS_RESET')
-                          <h5 class="card-title">Ocurrio un eror con la información proporcionada.</h5>
-                          <p class="card-text">La url puede haber expirado o ya fue usada.</p><br>
-                          <p>La url compartida solo puede ser usada una única vez.</p>
-                          <p>Porfavor revisa la informacion y vuelve a intentarlo.</p>
-                        @else
-                          <h5 class="card-title">Registro completo.</h5>
-                          <p class="card-text">La informacion proporcionada para el correo: {{ $data['user']['email'] }} se creo correctamente.</p>
-                          <p>Una ves aprobada la solicitud se enviara un correo de confirmación!</p>
-                        @endif
-                        
                       @endif
                       
                       <hr>

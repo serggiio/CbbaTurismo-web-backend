@@ -4,7 +4,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header loginHeader">
-            <h5 class="modal-title" id="exampleModalLongTitle">{{ __('Inicio de sesión') }}</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle"><i class="fas fa-user"></i> {{ __('Inicio de sesión') }}</h5>
             </button>
           </div>
         <div class="modal-body loginBody">
@@ -20,7 +20,7 @@
                                   @csrf
           
                                   <div class="form-group row">
-                                      <label style="color: white" for="email" class="col-md-4 col-form-label text-md-right">{{ __('Correo electronico') }}</label>
+                                      <label style="color: white" for="email" class="col-md-4 col-form-label text-md-right"><i class="fas fa-at"></i> {{ __('Correo electronico') }}</label>
           
                                       <div class="col-md-6">
                                           <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
@@ -34,7 +34,7 @@
                                   </div>
           
                                   <div class="form-group row">
-                                      <label style="color: white" for="password" class="col-md-4 col-form-label text-md-right">{{ __('Contraseña') }}</label>
+                                      <label style="color: white" for="password" class="col-md-4 col-form-label text-md-right"><i class="fas fa-key"></i> {{ __('Contraseña') }}</label>
           
                                       <div class="col-md-6">
                                           <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
@@ -51,8 +51,8 @@
           
                                   <div class="form-group row mb-0">
                                       <div class="col-md-8 offset-md-4">
-                                          <button type="submit" class="btn previewButton">
-                                              {{ __('Login') }}
+                                          <button type="submit" class="btn btn-secondary" style="color: white">
+                                            <i class="fas fa-door-open"></i> {{ __('Login') }}
                                           </button>
                                       </div>
                                   </div>
@@ -60,6 +60,9 @@
                           </div>
                       </div>
                   </div>
+                  <hr>
+                  <a style="width: fit-content" data-bs-toggle="modal" data-bs-target="#resetPasswordModal" class="btn btn-secondary"><i class="fas fa-unlock-alt"></i> Olvide mi contraseña</a>
+                  @include('template.partials.resetPassword')
               </div>
           </div>
             @endif
