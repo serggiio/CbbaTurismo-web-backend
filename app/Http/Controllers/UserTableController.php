@@ -11,6 +11,7 @@ use Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\welcome;
 use App\Mail\ResetPassword;
+use App\Mail\AgentResetPassword;
 
 
 
@@ -311,6 +312,7 @@ class UserTableController extends Controller
             
 
             //$userData = UserTableObj::find($user['email']); 
+            $currentPath = $request->root();
             $userData = UserTableObj::where([
                 ["email", "=", $user['email']]
             ])->get()->first();
@@ -321,10 +323,10 @@ class UserTableController extends Controller
                 'data' => 'Actualizacion con exito'
             ];
             if(isset($userData)){
-                $newPassword = $this->generateCode(6);
-                $userData['password'] = bcrypt($newPassword);
-                $responseObj['data'] = $newPassword;
-                Mail::to($userData['email'])->send(new ResetPassword($newPassword));
+                $resetCode = $this->generateCode(6);
+                $userData['remember_token'] = $resetCode;
+                //Mail::to($userData['email'])->send(new ResetPassword($newPassword));
+                Mail::to($userData['email'])->send(new AgentResetPassword($resetCode, $currentPath, "setPassword"));
                 $userData->save();
             }else {
                 $responseObj['code'] = 'ERROR';
