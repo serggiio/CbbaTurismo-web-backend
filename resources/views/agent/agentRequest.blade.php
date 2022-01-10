@@ -31,7 +31,7 @@
           <div class="col-md-2">
             <div class="card  bg-success" >
               <div class="card-content">
-                <a href="{{ route('front.users')}}" data-bs-toggle="modal" data-bs-target="#requestModal">
+                <a data-bs-toggle="modal" data-bs-target="#requestModal">
                   <div class="card-body">
                     <div class="media d-flex">
                       <div class="align-self-center">

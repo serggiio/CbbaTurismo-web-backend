@@ -277,14 +277,22 @@ class FrontController extends Controller
     }
 
     public function userDetail($id){
-        $user = UserTableObj::where('userId', '=', $id)->first();
-        //dd($user);
-        $userTypes = UserTypeObj::orderBy('nameType', 'desc')->get();
-        $userStatus = StatusObj::orderBy('statusName', 'desc')->get();
-        return view('admin.users.detailUser')
-        ->with('user', $user)
-        ->with('types', $userTypes)
-        ->with('status', $userStatus);
+        try {
+            $user = UserTableObj::where('userId', '=', $id)->first();
+            //dd($user);
+            if(isset($user)) {
+                $userTypes = UserTypeObj::orderBy('nameType', 'desc')->get();
+                $userStatus = StatusObj::orderBy('statusName', 'desc')->get();
+                return view('admin.users.detailUser')
+                ->with('user', $user)
+                ->with('types', $userTypes)
+                ->with('status', $userStatus);
+            }else {
+                abort(404);
+            }
+        } catch (\Throwable $th) {
+            abort(404);
+        }
     }
 
     public function saveUpdatedUser(Request $request){
@@ -322,48 +330,20 @@ class FrontController extends Controller
 
     public function placeDetail($id)
     {
-        
-        /*$touristicPlace = TouristicObj::where('touristicPlaceId', '=', $id)->first();
-        $categories = CategoryObj::orderBy('categoryName', 'desc')->get();
-        $galleryData = GalleryObj::where('touristicPlaceId', '=', $id)->first();
-        
-        if($galleryData){
-            $galleryData->images;
+        try {
+            $viewData = $this->returnToDetailPlaceView($id);
+
+            //dd($viewData['place']->toArray());
+
+            return view('admin.places.detailPlace')
+            ->with('place', $viewData['place'])
+            ->with('tags', $viewData['tags'])
+            ->with('provinces', $viewData['provinces'])
+            ->with('categories', $viewData['categories']);
+        } catch (\Throwable $th) {
+            abort(404);
         }
-                
-
-        $touristicPlace->tag;
-        $touristicPlace->category;
-        $touristicPlace->gallery;
-        $touristicPlace->commentary;
         
-        $touristicPlace->gallery->each(function($galleryData){
-            $galleryData->images;            
-        });
-
-        $touristicPlace->commentary->each(function($commentaryData){
-            $commentaryData->user;            
-        });
-
-        $tags = TagObj::orderBy('tagName', 'desc')->get();
-        $provinces = ProvinceObj::orderBy('provinceName', 'desc')->get();
-        //dd($provinces[0]['provinceName']);
-
-        //dd($touristicPlace->toArray()['tag']);
-        //dd($id);
-        //dd($touristicPlace->toArray());
-        //dd($touristicPlace['gallery'][0]['images']->toArray());//$gallery['images'][0]['imagePath']
-        //dd($touristicPlace->toArray());      */  
-
-        $viewData = $this->returnToDetailPlaceView($id);
-
-        //dd($viewData['place']->toArray());
-
-        return view('admin.places.detailPlace')
-        ->with('place', $viewData['place'])
-        ->with('tags', $viewData['tags'])
-        ->with('provinces', $viewData['provinces'])
-        ->with('categories', $viewData['categories']);
 
     }
 
@@ -512,13 +492,17 @@ class FrontController extends Controller
 
     public function editGallery($id)
     {
-        //dd(phpinfo());
-        $gallery = GalleryObj::where('galleryId', '=', $id)->first();
-        $gallery->images;
-        //dd($gallery->toArray());
+        try {
+            //dd(phpinfo());
+            $gallery = GalleryObj::where('galleryId', '=', $id)->first();
+            $gallery->images;
+            //dd($gallery->toArray());
 
-        return view('admin.places.editGallery')
-        ->with('gallery', $gallery);
+            return view('admin.places.editGallery')
+            ->with('gallery', $gallery);
+        } catch (\Throwable $th) {
+            abort(404);
+        }
     }
 
     public function saveUpdatedPlace(Request $request){
@@ -717,23 +701,39 @@ class FrontController extends Controller
 
     public function destroyTag($id){
         //dd($id);
-        $tag = TagObj::where('tagId', '=', $id)->first();
-        $user = \Auth::user();
-        $this->saveLogAction($user['userId'], 'Eliminar', 'Tag', json_encode($tag), '');
-
-        $tag->delete();
-        //dd($TagObj);
-        flash('Se eliminó el tag correctamente!')->warning();
-        return redirect()->route('front.tags');
+        try {
+            $tag = TagObj::where('tagId', '=', $id)->first();
+            $user = \Auth::user();
+            $this->saveLogAction($user['userId'], 'Eliminar', 'Tag', json_encode($tag), '');
+    
+            if(isset($tag)) {
+                $tag->delete();
+                //dd($TagObj);
+                flash('Se eliminó el tag correctamente!')->warning();
+                return redirect()->route('front.tags');
+            }else {
+                abort(404);
+            }
+        } catch (\Throwable $th) {
+            abort(404);
+        }
 
     }
 
     public function tagDetail($id){
         
-        $tag = TagObj::where('tagId', '=', $id)->first();
-        //dd($tag->toArray());
-        return view('admin.tags.detail.detailtag')
-        ->with('tag', $tag);
+        try {
+            $tag = TagObj::where('tagId', '=', $id)->first();
+            //dd($tag->toArray());
+            if(isset($tag)){
+                return view('admin.tags.detail.detailtag')
+                ->with('tag', $tag); 
+            }else{
+                abort(404);
+            }
+        } catch (\Throwable $th) {
+            abort(404);
+        }
 
     }
 
@@ -849,10 +849,18 @@ class FrontController extends Controller
 
     public function provinceDetail($id){
         
-        $province = ProvinceObj::where('provinceId', '=', $id)->first();
-        //dd($tag->toArray());
-        return view('admin.provinces.detailProvince')
-        ->with('province', $province);
+        try {
+            $province = ProvinceObj::where('provinceId', '=', $id)->first();
+            //dd($tag->toArray());
+            if(isset($province)) {
+                return view('admin.provinces.detailProvince')
+                ->with('province', $province);
+            }else {
+                abort(404);
+            }            
+        } catch (\Throwable $th) {
+            abort(404);
+        }
 
     }
 
@@ -965,13 +973,20 @@ class FrontController extends Controller
 
     public function categoryDetail($id){
         
-        $category = CategoryObj::where('categoryId', '=', $id)->first();
-        $tags = TagObj::orderBy('tagName', 'desc')->paginate(10);
-        //dd($tag->toArray());
-
-        return view('admin.categories.detailCategory')
-        ->with('category', $category)
-        ->with('tags', $tags);
+        try {
+            $category = CategoryObj::where('categoryId', '=', $id)->first();
+            $tags = TagObj::orderBy('tagName', 'desc')->paginate(10);
+            //dd($tag->toArray());
+            if(isset($category)) {
+                return view('admin.categories.detailCategory')
+                ->with('category', $category)
+                ->with('tags', $tags);
+            }else {
+                abort(404);
+            }            
+        } catch (\Throwable $th) {
+            abort(404);
+        }
     }
 
     public function storeUpdatedCategory(Request $request){
@@ -1078,12 +1093,19 @@ class FrontController extends Controller
 
     public function editProduct($id)
     {
-        //dd(phpinfo());
-        $product = ProductObj::where('productId', '=', $id)->first();
-        //dd($product->toArray());
-
-        return view('admin.places.editProduct')
-        ->with('product', $product);
+        try {
+            //dd(phpinfo());
+            $product = ProductObj::where('productId', '=', $id)->first();
+            //dd($product->toArray());
+            if(isset($product)) {
+                return view('admin.places.editProduct')
+                ->with('product', $product);
+            }else {
+                abort(404);
+            }
+        } catch (\Throwable $th) {
+            abort(404);
+        }
     }
 
     public function storeUpdatedProduct(Request $request){
@@ -1317,14 +1339,21 @@ class FrontController extends Controller
     }
 
     public function actionDetail($id){
-        $actionList = ActionObj::where('actionId', '=', $id)->first();
-        
-        $actionList->each(function($action){
-            $action->user->userType;
-        });
-        //dd($action->toArray());
-        return view('admin.actions.detailAction')
-        ->with('action', $actionList);
+        try {
+            $actionList = ActionObj::where('actionId', '=', $id)->first();
+            if(isset($actionList)){
+                $actionList->each(function($action){
+                    $action->user->userType;
+                });
+                //dd($action->toArray());
+                return view('admin.actions.detailAction')
+                ->with('action', $actionList);
+            }else{
+                abort(404);                
+            }
+        } catch (\Throwable $th) {
+            abort(404);
+        }
     }
 
     public function getIp(){

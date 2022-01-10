@@ -103,42 +103,54 @@ class AgentController extends Controller
     }
 
     public function placeDetail($id){
-        $user = \Auth::user();
+        try {
+            $user = \Auth::user();
 
-        $touristicPlace = TouristicObj::where('touristicPlaceId', '=', $id)->first();
-        $categories = CategoryObj::orderBy('categoryName', 'desc')->get();
-        $galleryData = GalleryObj::where('touristicPlaceId', '=', $id)->first();
-        
-        if($galleryData){
-            $galleryData->images;
-        }
+            $touristicPlace = TouristicObj::where([
+                ['touristicPlaceId', '=', $id],
+                ['userId', '=', $user['userId']]
+            ])->first();
+
+            if(isset($touristicPlace)){
+                $categories = CategoryObj::orderBy('categoryName', 'desc')->get();
+                $galleryData = GalleryObj::where('touristicPlaceId', '=', $id)->first();
                 
-
-        $touristicPlace->tag;
-        $touristicPlace->category;
-        $touristicPlace->gallery;
-        $touristicPlace->commentary;
-        $touristicPlace->user;
-        $touristicPlace->product;
+                if($galleryData){
+                    $galleryData->images;
+                }
+                        
         
-        $touristicPlace->gallery->each(function($galleryData){
-            $galleryData->images;            
-        });
-
-        $touristicPlace->commentary->each(function($commentaryData){
-            $commentaryData->user;            
-        });
-
-        $tags = TagObj::orderBy('tagName', 'desc')->get();
-        $provinces = ProvinceObj::orderBy('provinceName', 'desc')->get();
-
-
-        return view('agent.agentDetailPlace')
-        ->with('place', $touristicPlace)
-        ->with('tags', $tags)
-        ->with('provinces', $provinces)
-        ->with('categories', $categories)
-        ->with('user', $user);
+                $touristicPlace->tag;
+                $touristicPlace->category;
+                $touristicPlace->gallery;
+                $touristicPlace->commentary;
+                $touristicPlace->user;
+                $touristicPlace->product;
+                
+                $touristicPlace->gallery->each(function($galleryData){
+                    $galleryData->images;            
+                });
+        
+                $touristicPlace->commentary->each(function($commentaryData){
+                    $commentaryData->user;            
+                });
+        
+                $tags = TagObj::orderBy('tagName', 'desc')->get();
+                $provinces = ProvinceObj::orderBy('provinceName', 'desc')->get();
+        
+        
+                return view('agent.agentDetailPlace')
+                ->with('place', $touristicPlace)
+                ->with('tags', $tags)
+                ->with('provinces', $provinces)
+                ->with('categories', $categories)
+                ->with('user', $user);
+            }else {
+                abort(404);
+            }
+        } catch (\Throwable $th) {
+            abort(404);
+        }
     }
 
     public function saveUpdatedPlace(Request $request)
@@ -252,15 +264,25 @@ class AgentController extends Controller
 
     public function editGallery($id)
     {
-        $user = \Auth::user();
-        //dd(phpinfo());
-        $gallery = GalleryObj::where('galleryId', '=', $id)->first();
-        $gallery->images;
-        //dd($gallery->toArray());
-
-        return view('agent.agentEditGallery')
-        ->with('gallery', $gallery)
-        ->with('user', $user);
+        try {
+            $user = \Auth::user();
+            //dd(phpinfo());
+            $gallery = GalleryObj::where('galleryId', '=', $id)->first();
+            $gallery->images;
+            $gallery->touristicPlace;
+            //dd($gallery['touristicPlace']['userId'] . ' '. $user['userId']);
+            if($gallery['touristicPlace']['userId'] == $user['userId']){
+                //dd($gallery->toArray());
+        
+                return view('agent.agentEditGallery')
+                ->with('gallery', $gallery)
+                ->with('user', $user);
+            }else {
+                abort(404);
+            }
+        } catch (\Throwable $th) {
+            abort(404);
+        }
     }
 
     public function createImage(Request $request)
@@ -302,64 +324,101 @@ class AgentController extends Controller
     public function destroyGalleryImage($id)
     {
         
-        $image = ImageObj::where('imageId', '=', $id)->first();        
-        $images = ImageObj::where('galleryId', '=', $image['galleryId'])->get();
-
-        if(count($images->toArray()) > 1){
+        try {
+            $image = ImageObj::where('imageId', '=', $id)->first();        
+            $images = ImageObj::where('galleryId', '=', $image['galleryId'])->get();
             $gallery = GalleryObj::where('galleryId', '=', $image['galleryId'])->first();
-            //dd(\File::exists(public_path(). '/' . $gallery['galleryPath'] . '/' . $image['imagePath']));
-            if (\File::exists(public_path(). '/' . $gallery['galleryPath'] . '/' . $image['imagePath'])) \File::delete(public_path(). '/' . $gallery['galleryPath'] . '/' . $image['imagePath']);
-            //dd($gallery->toArray());
-            $image->gallery;
-            $this->saveLogAction('Eliminar', 'Agente - galería - Imagen', json_encode($image), '');
-            $image->delete();
-        }        
-
-        flash('Se eliminó la imagen correctamente!')->warning();
-        return redirect()->route('frontAgent.galleryEdit', ['id' => $image['galleryId']]);
+            $gallery->touristicPlace;
+            $user = \Auth::user();
+            if($gallery['touristicPlace']['userId'] == $user['userId']) {
+                if(count($images->toArray()) > 1){
+                    $gallery = GalleryObj::where('galleryId', '=', $image['galleryId'])->first();
+                    //dd(\File::exists(public_path(). '/' . $gallery['galleryPath'] . '/' . $image['imagePath']));
+                    if (\File::exists(public_path(). '/' . $gallery['galleryPath'] . '/' . $image['imagePath'])) \File::delete(public_path(). '/' . $gallery['galleryPath'] . '/' . $image['imagePath']);
+                    //dd($gallery->toArray());
+                    $image->gallery;
+                    $this->saveLogAction('Eliminar', 'Agente - galería - Imagen', json_encode($image), '');
+                    $image->delete();
+                }        
+        
+                flash('Se eliminó la imagen correctamente!')->warning();
+                return redirect()->route('frontAgent.galleryEdit', ['id' => $image['galleryId']]);
+            }else {
+                abort(404);
+            }
+        } catch (\Throwable $th) {
+            abort(404);
+        }
     }
 
     public function destroyGallery($id)
     {
-        //dd($id);
-        $gallery = GalleryObj::where('galleryId', '=', $id)->first();
-        $touristicPlaceId = $gallery['touristicPlaceId'];
-        //dd(public_path(). '/' .$gallery['galleryPath']);
+        try {
+            //dd($id);
+            $user = \Auth::user();
+            $gallery = GalleryObj::where('galleryId', '=', $id)->first();
+            $gallery->touristicPlace;
+            $touristicPlaceId = $gallery['touristicPlaceId'];
+            //dd(public_path(). '/' .$gallery['galleryPath']);
+            if($gallery['touristicPlace']['userId'] == $user['userId']){
+                if (\File::exists(public_path(). '/' .$gallery['galleryPath'])) \File::deleteDirectory(public_path(). '/' .$gallery['galleryPath']);
+                $gallery->images;
+                $this->saveLogAction('Eliminar', 'Agente - galería', json_encode($gallery), '');
+                //dd($gallery->toArray());
+                $gallery->delete();
+    
+                /*flash("El articulo  ". $article->title . " se ha eliminado",'success');*/
+                flash('Se eliminó correctamente la galería!')->warning();
+                return redirect()->route('frontAgent.placeDetail', ['id' => $touristicPlaceId]);
+            }else {
+                abort(404);
+            }
 
-
-        if (\File::exists(public_path(). '/' .$gallery['galleryPath'])) \File::deleteDirectory(public_path(). '/' .$gallery['galleryPath']);
-        $gallery->images;
-        $this->saveLogAction('Eliminar', 'Agente - galería', json_encode($gallery), '');
-        //dd($gallery->toArray());
-        $gallery->delete();
-
-        /*flash("El articulo  ". $article->title . " se ha eliminado",'success');*/
-        flash('Se eliminó correctamente la galería!')->warning();
-        return redirect()->route('frontAgent.placeDetail', ['id' => $touristicPlaceId]);
+        } catch (\Throwable $th) {
+            abort(404);
+        }
     }
 
     public function destroyCommentary($id){
         //dd($id);
-        $commentary = CommentaryObj::where('commentaryId', '=', $id)->first();
-        $touristicPlaceId = $commentary['touristicPlaceId'];
-        $this->saveLogAction('Eliminar', 'Agente - comentario', json_encode($commentary), '');
-        $commentary->delete();
-        //dd($TagObj);
-        flash('Comentario eliminado!')->warning();
-        return redirect()->route('frontAgent.placeDetail', ['id' => $touristicPlaceId]);
+        try {
+            $user = \Auth::user();
+            $commentary = CommentaryObj::where('commentaryId', '=', $id)->first();
+            $commentary->touristicPlace;
+            if($commentary['touristicPlace']['userId'] == $user['userId']) {
+                $touristicPlaceId = $commentary['touristicPlaceId'];
+                $this->saveLogAction('Eliminar', 'Agente - comentario', json_encode($commentary), '');
+                $commentary->delete();
+                //dd($TagObj);
+                flash('Comentario eliminado!')->warning();
+                return redirect()->route('frontAgent.placeDetail', ['id' => $touristicPlaceId]);
+            }else {
+                abort(404);
+            }
+        } catch (\Throwable $th) {
+            abort(404);
+        }
 
     }
 
     public function editProduct($id)
     {
-        //dd(phpinfo());
-        $product = ProductObj::where('productId', '=', $id)->first();
-        $user = \Auth::user();
-        //dd($product->toArray());
-
-        return view('agent.agentEditProduct')
-        ->with('user', $user)
-        ->with('product', $product);
+        try {
+            //dd(phpinfo());
+            $product = ProductObj::where('productId', '=', $id)->first();
+            $product->touristicPlace;
+            $user = \Auth::user();
+            //dd($product->toArray());
+            if($product['touristicPlace']['userId'] == $user['userId']) {
+                return view('agent.agentEditProduct')
+                ->with('user', $user)
+                ->with('product', $product);
+            }else {
+                abort(404);
+            }
+        } catch (\Throwable $th) {
+            abort(404);
+        }
     }
 
     public function storeUpdatedProduct(Request $request){
@@ -430,15 +489,25 @@ class AgentController extends Controller
     public function destroyProduct($id)
     {
         //dd($id);
-        $product = ProductObj::where('productId', '=', $id)->first();
-        $touristicPlaceId = $product['touristicPlaceId'];
-        //dd(\File::exists(public_path(). '/images/places/10/products/3.jpg'));
-        //dd(\Storage::delete(public_path(). '/images/places/10/products/3.jpg'));
-        if (\File::exists(public_path(). '/images/places/' . $product['touristicPlaceId'] . '/products/' .$product['productIcon'])) \File::delete(public_path(). '/images/places/' . $product['touristicPlaceId'] . '/products/' .$product['productIcon']);
-        $this->saveLogAction('Eliminar', 'Agente - producto', '', json_encode($product));
-        $product->delete();
-        flash('Se eliminó correctamente el producto!')->warning();
-        return redirect()->route('frontAgent.placeDetail', ['id' => $touristicPlaceId]);
+        try {
+            $product = ProductObj::where('productId', '=', $id)->first();
+            $product->touristicPlace;
+            $touristicPlaceId = $product['touristicPlaceId'];
+            $user = \Auth::user();
+            if($product['touristicPlace']['userId'] == $user['userId']) {
+                //dd(\File::exists(public_path(). '/images/places/10/products/3.jpg'));
+                //dd(\Storage::delete(public_path(). '/images/places/10/products/3.jpg'));
+                if (\File::exists(public_path(). '/images/places/' . $product['touristicPlaceId'] . '/products/' .$product['productIcon'])) \File::delete(public_path(). '/images/places/' . $product['touristicPlaceId'] . '/products/' .$product['productIcon']);
+                $this->saveLogAction('Eliminar', 'Agente - producto', '', json_encode($product));
+                $product->delete();
+                flash('Se eliminó correctamente el producto!')->warning();
+                return redirect()->route('frontAgent.placeDetail', ['id' => $touristicPlaceId]);
+            }else {
+                abort(404);
+            }
+        } catch (\Throwable $th) {
+            abort(404);
+        }
     }
 
     public function agentContact(Request $request)
@@ -571,11 +640,24 @@ class AgentController extends Controller
     }
 
     public function destroyRequest($id){
-        //dd($id);
-        $touristicPlace = TouristicObj::where('touristicPlaceId', '=', $id)->first();
-        $touristicPlace->delete();
-        flash('La solicitud se elimino correctamente!')->warning();
-        return redirect()->route('frontAgent.request');
+        try {
+            //dd($id);
+            //$touristicPlace = TouristicObj::where('touristicPlaceId', '=', $id)->first();
+            $user = \Auth::user();
+            $touristicPlace = TouristicObj::where([
+                ['touristicPlaceId', '=', $id],
+                ['userId', '=', $user['userId']]
+            ])->first();
+            if(isset($touristicPlace)) {
+                $touristicPlace->delete();
+                flash('La solicitud se elimino correctamente!')->warning();
+                return redirect()->route('frontAgent.request');
+            }else {
+                abort(404);
+            }
+        } catch (\Throwable $th) {
+            abort(404);
+        }
     }
 
     public function generateCode($l) {

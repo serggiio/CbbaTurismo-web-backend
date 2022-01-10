@@ -74,7 +74,7 @@
     </div>
     
     <div class="card shadow-lg p-3 mb-5 bg-body rounded">
-        <div class="card-title"><h2 style="color: green"><i class="fas fa-eye navIcon" style="font-size: 120%; color: green"></i>  Vista rápida</h2></div>
+        <div class="card-title"><h2 style="color: green"><i class="fas fa-eye navIcon" style="font-size: 120%; color: green"></i>  Registros disponibles</h2></div>
         <hr>
         <div class="card-body">
             <div class="row">

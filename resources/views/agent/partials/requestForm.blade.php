@@ -5,8 +5,8 @@
     <h4 class="modal-title" id="myModalLabel1">Nueva solicitud</h4>
     </div>
     <div class="modal-body requestBody">      
-    <p>El estado se registrara como en revision.</p>
-    <p>Un administrador revisara y aprobara la solicitud.</p>
+    <p>El estado se registrara como en revision. <i class="fas fa-exclamation-circle"></i></p>
+    <p>Un administrador revisara y aprobara la solicitud. <i class="fas fa-exclamation-circle"></i></p>
     <hr>
     <p>
       <form method="POST" action="{{ action('AgentController@agentRequest') }}" style="padding-top: 5%" enctype="multipart/form-data">
