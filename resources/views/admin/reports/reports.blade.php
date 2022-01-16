@@ -35,7 +35,7 @@
       <div class="col-md-3">
           <div class="card  bg-dark shadow-lg  bg-body rounded" >
               <div class="card-content">
-              <a href="{{ route('front.generateReport', 'touristicPlaces')  }}">
+              <a href="https://tourism-service.herokuapp.com/downloadPDF?id={{ $pdfCode }}">
                   <div class="card-body">
                   <div class="media d-flex">
                       <div class="align-self-center">
@@ -43,7 +43,7 @@
                       </div>
                       <div class="media-body white text-center">
                       <h3>PDF</h3>
-                      <span>Generar reporte</span>
+                      <span>Descargar reporte</span>
                       </div>
                   </div>
                   </div>

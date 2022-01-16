@@ -1050,7 +1050,7 @@ class FrontController extends Controller
 
     public function reports(){
         $touristicPlaces = TouristicObj::orderBy('touristicPlaceId', 'asc')->get();
-
+        $pdfCode = $this->generatePassword(8);
         $touristicPlaces->each(function($touristicPlace){
             $touristicPlace['provinceName'] = $touristicPlace->province['provinceName'];
             $touristicPlace['statusName'] = $touristicPlace->status['statusName'];
@@ -1062,9 +1062,20 @@ class FrontController extends Controller
 
         });
 
-        //dd($categories->toArray());
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request('POST', 'https://tourism-service.herokuapp.com/generatePDF/', [
+            'form_params' => [
+                'data' => $touristicPlaces->toArray(),
+                'id' => $pdfCode
+            ]
+        ]);
+        $body = (string) $response->getBody();
+        $content = json_decode($body);
+
+        //dd($touristicPlaces->toArray());
         return view('admin.reports.reports')
-        ->with('touristicPlaces', $touristicPlaces->sortByDesc("rateAvg"));
+        ->with('touristicPlaces', $touristicPlaces->sortByDesc("rateAvg"))
+        ->with('pdfCode', $pdfCode);
     }
 
     public function generateReport(){
