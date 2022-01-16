@@ -39,32 +39,10 @@
             
             <div class="row">
               <form method="POST" action="{{ action('FrontController@saveUpdatedTag') }}" style="padding-top: 5%" enctype="multipart/form-data">
-                @csrf <!-- {{ csrf_field() }} -->
-
-                
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-4">
-
-                          <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);">
-                            <img src="{{ asset('images/tags/' . $tag['tagFile']) }}" width="100%" height="80%" style="border-radius: 25px; padding-left: 10%;padding-right: 10%">
-                            <div class="container">
-                            
-                            </div>
-                          </div>
-                            
-                        </div>
-
-                        <div class="col-md-4"><br>
-                            <label for="mainImage">Cambiar imagen</label>
-                            <input id="image" type="file" name="image"><br>
-                        </div>
-                    </div>
-                    
-                </div>
+                @csrf <!-- {{ csrf_field() }} -->        
 
                 <div class="form-group">
-                    <label for="tagName">Nombre</label>
+                    <label for="tagName">Nombres</label>
                     <input class="form-control" required name="tagName" type="text" id="tagName" value="{{ $tag['tagName'] }}">
                     <input class="form-control" required name="tagId" type="text" id="tagId" value="{{ $tag['tagId'] }}" hidden>
                 </div>

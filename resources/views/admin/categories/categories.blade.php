@@ -91,7 +91,7 @@
                             </td>
                             <td>
                                 <a class="nav-link" href="{{ route('admin.category.destroy', $category['categoryId'])}}" onclick="return confirm('Eliminar esta categoria?')" style="width: fit-content">   
-                                  <i class="fas fa-edit"></i>
+                                  <i class="fas fa-trash-alt"></i>
                                 </a>
                             </td>
                           </tr>

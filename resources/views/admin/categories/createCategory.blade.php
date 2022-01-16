@@ -19,15 +19,15 @@
                 <div class="col-md-1"></div>
                 <div class="col-md-10">
                   <div class="form-group">
-                      <label for="categoryName">Nombre</label>
-                      <input class="form-control" required name="categoryName" type="text" id="categoryName" required>
+                      <label for="categoryName"><i class="fas fa-address-card" style="margin-right: 5px;font-size: large"></i>Nombre</label>
+                      <input class="form-control" required name="categoryName" type="text" id="categoryName" required placeholder="Ej. Pastas, Hambuerguesas">
                   </div>
 
                   <div class="form-group">
                       
                   </div>   
 
-                  <label for="inputPlaceTags">Tag</label><br>
+                  <label for="inputPlaceTags"><i class="fas fa-tags" style="margin-right: 5px;font-size: large"></i>Tag</label><br>
                   <select class="form-control select-tag" required="required" name="inputPlaceTag" id="selectTags" style="">
                       @foreach($tags as $tag)
                           <option value="{{$tag['tagId']}}">{{$tag['tagName']}}</option>

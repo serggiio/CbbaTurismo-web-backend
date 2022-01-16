@@ -44,29 +44,29 @@
                 @csrf <!-- {{ csrf_field() }} -->
 
                   <div class="form-group">
-                    <label for="inputUserName">Nombre</label>
+                    <label for="inputUserName"><i class="fas fa-tags" style="margin-right: 5px;font-size: large"></i>Nombre</label>
                     <input class="form-control" required name="inputUserName" type="text" id="inputUserName">
                   </div>
 
                   <div class="form-group">
-                      <label for="inputUserLastName">Apellido</label>
+                      <label for="inputUserLastName"><i class="fas fa-tags" style="margin-right: 5px;font-size: large"></i>Apellido</label>
                       <input class="form-control" required name="inputUserLastName" type="text" id="inputUserLastName">
                   </div>
 
                   <div class="form-group">
-                      <label for="inputUserEmail">Correo</label>
+                      <label for="inputUserEmail"><i class="fas fa-at" style="margin-right: 5px;font-size: large"></i>Correo</label>
                       <input class="form-control" required name="inputUserEmail" type="email" id="inputUserEmail">
                   </div>
 
                   <div class="form-group">
-                      <label for="inputUserPassword">Contraseña</label>
+                      <label for="inputUserPassword"><i class="fas fa-unlock" style="margin-right: 5px;font-size: large"></i>Contraseña</label>
                       <input class="form-control" required name="inputUserPassword" type="password" id="inputUserPassword">
                   </div>
 
 
                   <div class="row">
                       <div class="col-md-6">
-                          <label for="inputUserType">Rol</label>
+                          <label for="inputUserType"><i class="fas fa-user-tag" style="margin-right: 5px;font-size: large"></i>Rol</label>
                           <select onchange="selectListener()" class="form-control select-province" required="" id="inputUserType" name="inputUserType">
                               @foreach($userTypes as $userType)
                                   <option value="{{$userType['increments']}}">{{$userType['nameType']}}</option>

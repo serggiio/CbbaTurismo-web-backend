@@ -691,7 +691,7 @@ class FrontController extends Controller
     }
 
     public function tags(){
-        $tags = TagObj::orderBy('tagName', 'desc')->get();
+        $tags = TagObj::orderBy('created_at', 'desc')->get();
 
         //dd($tags->toArray());
         return view('admin.tags.tags')
@@ -750,14 +750,13 @@ class FrontController extends Controller
             return redirect()->route('front.tagDetail', ['id' => $tag['tagId']]);
         }
 
-
-        if($file=$request->file('image')){
+        /*if($file=$request->file('image')){
             if (\File::exists(public_path(). '/images/tags/' . $tag['tagFile'])) \File::delete(public_path(). '/images/tags/' . $tag['tagFile']);
             $name = $data['tagName'] . '.' . $file->getClientOriginalExtension();
             $newData['tagFile'] = $name;
             $path = public_path() . '/images/tags/';
             $file->move($path, $name);
-        }
+        }*/
 
         $newData['tagName'] = $data['tagName'];
 
@@ -783,12 +782,12 @@ class FrontController extends Controller
             return redirect()->route('front.tags');
         }
 
-        if($file=$request->file('image')){
+        /*if($file=$request->file('image')){
             $name = $data['tagName'] . '.' . $file->getClientOriginalExtension();
             $newTag['tagFile'] = $name;
             $path = public_path() . '/images/tags/';
             $file->move($path, $name);
-        }
+        }*/
 
         $storedTag = new TagObj($newTag);
         $storedTag->save();
@@ -1202,9 +1201,9 @@ class FrontController extends Controller
     public function actions()
     {
         $userList = UserTableObj::where('statusId', '=', 4)
-                                ->orderBy('created_at', 'desc')
+                                ->orderBy('created_at', 'DESC')
                                 ->get();
-        $actionList = ActionObj::orderBy('created_at', 'desc')->get();
+        $actionList = ActionObj::orderBy('created_at', 'DESC')->get();
         $actionList->each(function($action){
             $action->user->userType;
         });
@@ -1217,7 +1216,7 @@ class FrontController extends Controller
         //dd($userList->toArray());
 
         $tourismList = TouristicObj::where('placeStatusId', '=', 4)
-                                ->orderBy('created_at', 'desc')
+                                ->orderBy('created_at', 'DESC')
                                 ->get();
         $tourismList->each(function($tourismList){
             $tourismList->user;
@@ -1273,12 +1272,21 @@ class FrontController extends Controller
             $action->user->userType;
         });
 
+        $tourismList = TouristicObj::where('placeStatusId', '=', 4)
+        ->orderBy('created_at', 'desc')
+        ->get();
+        $tourismList->each(function($tourismList){
+            $tourismList->user;
+            $tourismList->status;
+        }); 
+
         $user = \Auth::user();
         $this->saveLogAction($user['userId'], 'Aprobacion', 'Usuario - Turismo', '', json_encode($selectedUser));
 
         flash('El registro y los datos asociados fueron aprobados!')->success();
         return view('admin.actions.actions')
         ->with('users', $userList)
+        ->with('places', $tourismList)
         ->with('actions', $actionList);
 
     }
@@ -1308,13 +1316,27 @@ class FrontController extends Controller
             });
         });
 
+        $actionList = ActionObj::orderBy('created_at', 'desc')->get();
+        $actionList->each(function($action){
+            $action->user->userType;
+        });
+
+        $tourismList = TouristicObj::where('placeStatusId', '=', 4)
+        ->orderBy('created_at', 'desc')
+        ->get();
+        $tourismList->each(function($tourismList){
+            $tourismList->user;
+            $tourismList->status;
+        }); 
+
         $user = \Auth::user();
         $this->saveLogAction($user['userId'], 'Aprobacion', 'Usuario - Turismo', json_encode($selectedUser), '');
 
         flash('Se elimino el registro y los datos asociados!')->warning();
         return view('admin.actions.actions')
-        ->with('users', $userList);
-
+        ->with('users', $userList)
+        ->with('places', $tourismList)
+        ->with('actions', $actionList);
     }
 
     public function actionDestroyPlace($id)

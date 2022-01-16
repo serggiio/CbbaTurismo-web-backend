@@ -4,9 +4,6 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Nuevo tag</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
         </div>
         <div class="modal-body">
 
@@ -14,15 +11,9 @@
             @csrf <!-- {{ csrf_field() }} -->
 
             <div class="form-group">
-              <label for="tagName">Nombre</label>
-              <input class="form-control" required name="tagName" type="text" id="tagName" required>
-            </div>
-
-            <label for="files">Selecciona una imagen:</label>
-            <input required type="file" class="form-control" name="image">
-
-           
-          
+              <label for="tagName"><i class="fas fa-address-card" style="margin-right: 5px;font-size: large"></i>Nombre</label>
+              <input class="form-control" required name="tagName" type="text" id="tagName" required placeholder="Ej. Restaurantes">
+            </div>                
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-primary">Crear</button>

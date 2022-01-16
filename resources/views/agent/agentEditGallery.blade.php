@@ -67,7 +67,7 @@
                             <div class="col-md-3 card" style="background-image: linear-gradient(to top, #d9f2bc, #c0e597, #a7d771, #8dca49, #71bc10);">
                               <div class="card-body" style="height: 100%" style="border-radius: 25px;">
                                 
-                                <img width="100%" height="100%" src="{{ asset($gallery['galleryPath'] . '/' . $item['imagePath']) }}" class="">
+                                <img width="100%" height="100%" src="{{ asset($gallery['galleryPath'] . '/' . $item['imagePath']) }}" class="" onerror="this.src='{{ asset('images/notFound.png') }}'">
                                 
                               </div>
                               <div class="card-footer">

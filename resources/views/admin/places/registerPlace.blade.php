@@ -45,25 +45,25 @@
                 @csrf <!-- {{ csrf_field() }} -->
 
                   <div class="form-group">
-                    <label for="inputPlaceName">Nombre</label>
+                    <label for="inputPlaceName"><i class="fas fa-address-card" style="margin-right: 5px;font-size: large"></i>Nombre</label>
                     <input class="form-control" required name="inputPlaceName" type="text" id="inputPlaceName">
                   </div>
 
                   <div class="form-check">
                     <input class="form-check-input" type="radio" name="inputPlaceType" id="inputPlaceType" value="place" checked onclick="handleRadio(this);">
-                    <label class="form-check-label" for="Radios1">Lugar turistico</label><br>
+                    <label class="form-check-label" for="Radios1"><i class="fas fa-tree" style="margin-right: 5px;font-size: large"></i>Lugar turistico</label><br>
                     <input class="form-check-input" type="radio" name="inputPlaceType" id="inputPlaceType" value="event" onclick="handleRadio(this);">
-                    <label class="form-check-label" for="Radios2">Evento</label>
+                    <label class="form-check-label" for="Radios2"><i class="fas fa-calendar-week" style="margin-right: 5px;font-size: large"></i>Evento</label>
                   </div>
                   <br>
                   <div class="form-group" id="eventDates">
                     <div class="form-group">
-                      <label for="startDate"> Fecha de inicio</label>
+                      <label for="startDate"><i class="far fa-clock" style="margin-right: 5px;font-size: large"></i> Fecha de inicio</label>
                       <input class="form-control" type="date" id="startDate" name="startDate"
                             value="{{ date("Y-m-d") }}">
                     </div>
                     <div class="form-group">
-                      <label for="endDate"> Fecha fin</label>
+                      <label for="endDate"><i class="far fa-clock" style="margin-right: 5px;font-size: large"></i> Fecha fin</label>
                       <input class="form-control" type="date" id="endDate" name="endDate"
                             value="{{ date("Y-m-d") }}">
                     </div>
@@ -71,7 +71,7 @@
 
                   <div class="row">
                       <div class="col-md-6">
-                          <label for="inputPlaceProvince">Provincia</label>
+                          <label for="inputPlaceProvince"><i class="fas fa-city" style="margin-right: 5px;font-size: large"></i> Provincia</label>
                           <select onchange="selectListener()" class="form-control select-province" required="" id="inputPlaceProvince" name="inputPlaceProvince">
                               @foreach($provinces as $province)
                                   <option value="{{$province}}">{{$province['provinceName']}}</option>
@@ -79,7 +79,7 @@
                           </select>
                       </div>
                       <div class="col-md-6">
-                          <label for="inputPlaceTags">Tags</label>
+                          <label for="inputPlaceTags"><i class="fas fa-tags" style="margin-right: 5px;font-size: large"></i>Tags</label>
                           <select class="form-control select-tag" multiple="multiple" required="required" name="inputPlaceTags[]" id="selectTags">
                               @foreach($tags as $tag)
                                   <option value="{{$tag['tagId']}}">{{$tag['tagName']}}</option>
@@ -90,7 +90,7 @@
 
                   <div class="row">
                     <div class="col-md-6">
-                        <label for="inputPlaceCategories">Categorias</label>
+                        <label for="inputPlaceCategories"><i class="fas fa-tags" style="margin-right: 5px;font-size: large"></i>Categorías</label>
                         <select class="form-control select-category" multiple="multiple" name="inputPlaceCategories[]" id="selectCategories">
 
                         </select>
@@ -99,14 +99,13 @@
 
 
                   <div class="form-group">
-                      <label for="inputPlaceStreet">Calles</label>
+                      <label for="inputPlaceStreet"><i class="fas fa-road" style="margin-right: 5px;font-size: large"></i> Calles</label>
                       <input class="form-control" name="inputPlaceStreet" type="text" id="inputPlaceStreet">
                   </div>
 
                   <div class="form-group">
-                    <label for="image">Imagen</label>
+                    <label for="image"><i class="far fa-image" style="margin-right: 5px;font-size: large"></i>Imagen</label>
                     <input id="image" type="file" name="image" required><br>
-                    <label for="img">Tamaño maximo 250 x 250</label>
                   </div>
 
                   <div class="form-group">
@@ -130,7 +129,7 @@
                             <div class="card-header" id="headingTwo">
                               <h5 class="mb-0">
                                 <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                  Historia
+                                  <i class="fas fa-scroll" style="margin-right: 5px;font-size: large"></i> Historia
                                 </button>
                               </h5>
                             </div>
@@ -146,7 +145,7 @@
                             <div class="card-header" id="headingThree">
                               <h5 class="mb-0">
                                 <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                  Mapa
+                                  <i class="fas fa-map-marked" style="margin-right: 5px;font-size: large"></i>Mapa
                                 </button>
                               </h5>
                             </div>

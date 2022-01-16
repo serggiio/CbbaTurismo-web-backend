@@ -42,29 +42,29 @@
                     @csrf <!-- {{ csrf_field() }} -->
 
                     <div class="form-group">                        
-                        <label for="created_at">Fecha de registro: </label>
+                        <label for="created_at"><i class="far fa-clock" style="margin-right: 5px;font-size: large"></i>Fecha de registro: </label>
                         <input class="form-control" name="created_at" type="text" id="created_at" readonly value="{{ $user['created_at'] }}">
                         <input class="form-control" hidden name="userId" type="text" id="userId" readonly value="{{ $user['userId'] }}">
                     </div>
 
                     <div class="form-group">                        
-                        <label for="name">Nombre</label>
+                        <label for="name"><i class="fas fa-address-card" style="margin-right: 5px;font-size: large"></i>Nombre</label>
                         <input class="form-control" name="name" type="text" id="name" value="{{ $user['name'] }}">
                     </div>
 
                     <div class="form-group">                        
-                        <label for="lastName">Apellido</label>
+                        <label for="lastName"><i class="fas fa-address-card" style="margin-right: 5px;font-size: large"></i>Apellido</label>
                         <input class="form-control" name="lastName" type="text" id="lastName" value="{{ $user['lastName'] }}">
                     </div>
 
                     <div class="form-group">                        
-                        <label for="email">Correo: </label>
+                        <label for="email"><i class="fas fa-at" style="margin-right: 5px;font-size: large"></i>Correo: </label>
                         <input class="form-control" name="email" type="text" id="email" value="{{ $user['email'] }}">
                     </div>
 
                     <div class="row">
                         <div class="col-md-6">
-                            <label for="inputUserType">Tipo de usuario</label>
+                            <label for="inputUserType"><i class="fas fa-user-tag" style="margin-right: 5px;font-size: large"></i>Tipo de usuario</label>
                             <select class="form-control select-type" required="" id="inputUserType" name="inputUserType">
                                
                                 @foreach($types as $type)
@@ -79,7 +79,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="inputUserStatus">Estado: </label>
+                            <label for="inputUserStatus"><i class="fas fa-unlock-alt" style="margin-right: 5px;font-size: large"></i>Estado: </label>
                             <select class="form-control select-status" required="" id="inputUserStatus" name="inputUserStatus">
                                 @foreach($status as $status)
                                 @if ($status['statusId'] == $user['statusId'])

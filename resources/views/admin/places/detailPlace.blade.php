@@ -235,7 +235,7 @@
 
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label for="inputPlaceCategories"><i class="fas fa-tags" style="margin-right: 5px;font-size: large"></i>Categorias</label>
+                                            <label for="inputPlaceCategories"><i class="fas fa-tags" style="margin-right: 5px;font-size: large"></i>Categorías</label>
                                             <select class="form-control select-category" multiple="multiple" name="inputPlaceCategories[]" id="selectCategories">
                                                 
                                             </select>
@@ -319,7 +319,7 @@
                                             <div class="card">
                                                 <div class="card-content">
                                                   <img style="height: 300px" class="card-img-top img-fluid" src="{{ asset($gallery['galleryPath'] . '/' . $gallery['images'][0]['imagePath']) }}"
-                                                    alt="Card image cap">
+                                                    alt="Card image cap" onerror="this.src='{{ asset('images/notFound.png') }}'">
                                                   <div class="card-body">
                                                     <h4 class="card-title">{{ $gallery["galleryName"] }}</h4>
 
@@ -390,7 +390,7 @@
                                 <br><br>
                                 @foreach ($place['product'] as $product)                                    
                                     <div class="card flex-row col-md-6">                                        
-                                        <img src="{{ asset('images/places/' . $place->touristicPlaceId . '/products/' . $product->productIcon) }}" height="200px" width="25%">
+                                        <img src="{{ asset('images/places/' . $place->touristicPlaceId . '/products/' . $product->productIcon) }}" height="200px" width="25%" onerror="this.src='{{ asset('images/notFound.png') }}'">
                                         <div class="card-body">
                                             <a style="padding: 0" class="btn btn-outline-info" href="{{route('admin.product.edit', [$product->productId])}}">Editar</a>   
                                             <a style="padding: 0" class="btn btn-outline-warning" onclick="return confirm('Eliminar este producto??')" href="{{route('admin.product.destroy', [$product->productId])}}">Eliminar</a>

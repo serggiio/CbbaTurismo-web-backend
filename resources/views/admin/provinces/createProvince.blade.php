@@ -17,14 +17,14 @@
               <div class="col-md-1"></div>
               <div class="col-md-10">
                 <div class="form-group">
-                    <label for="provinceName">Nombre</label>
-                    <input class="form-control" required name="provinceName" type="text" id="provinceName" required>
+                    <label for="provinceName"><i class="fas fa-address-card" style="margin-right: 5px;font-size: large"></i>Nombre</label>
+                    <input class="form-control" required name="provinceName" type="text" id="provinceName" required placeholder="Ej. Arani, Arque">
                 </div>
                   <br><br>
                   <div class="mapHolder" id="mapholder"></div><br>
                   <div class="form-group">
-                      <input class="form-control" name="inputPlaceLatitude" type="text" id="inputPlaceLatitude" required>
-                      <input class="form-control" name="inputPlaceLongitude" type="text" id="inputPlaceLongitude" required>
+                      <input class="form-control" name="inputPlaceLatitude" type="text" id="inputPlaceLatitude" required placeholder="Latitud...">
+                      <input class="form-control" name="inputPlaceLongitude" type="text" id="inputPlaceLongitude" required placeholder="Longitud...">
                   </div>
                   
               </div>

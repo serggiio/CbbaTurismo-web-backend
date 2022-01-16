@@ -37,20 +37,20 @@
                   <form method="POST" action="{{ action('AgentController@updateAgent') }}" style="padding-top: 5%" enctype="multipart/form-data">
                     @csrf <!-- {{ csrf_field() }} -->
                     <div class="mb-3">
-                      <label for="inputEmail" class="form-label" style="color: white">Correo electronico</label>
+                      <label for="inputEmail" class="form-label" style="color: white"><i class="fas fa-at" style="margin-right: 5px;font-size: large"></i> Correo electronico</label>
                       <input class="form-control" name="inputEmail" value="{{ $user['email'] }}" type="email" id="inputEmail">
                       <input class="form-control" name="inputId" value="{{ $user['userId'] }}" type="text" id="inputId" hidden>
                     </div>
                     <div class="mb-3">
-                      <label for="inputName" class="form-label" style="color: white">Nombre</label>
+                      <label for="inputName" class="form-label" style="color: white"><i class="fas fa-address-card" style="margin-right: 5px;font-size: large"></i> Nombre</label>
                       <input class="form-control" name="inputName" value="{{ $user['name'] }}" type="text" id="inputName" required>
                     </div>
                     <div class="mb-3">
-                      <label for="inputLastName" class="form-label" style="color: white">Apellido</label>
+                      <label for="inputLastName" class="form-label" style="color: white"><i class="fas fa-address-card" style="margin-right: 5px;font-size: large"></i> Apellido</label>
                       <input class="form-control" name="inputLastName" value="{{ $user['lastName'] }}" type="text" id="inputLastName" required>
                     </div>
                     <div class="mb-3">
-                      <label for="inputPhone" class="form-label" style="color: white">Telefono de contacto</label>
+                      <label for="inputPhone" class="form-label" style="color: white"><i class="fas fa-phone" style="margin-right: 5px;font-size: large"></i> Telefono de contacto</label>
                       <input class="form-control" name="inputPhone" value="{{ $user['phoneNumber'] }}" type="number" id="inputPhone" required>
                     </div>
                     

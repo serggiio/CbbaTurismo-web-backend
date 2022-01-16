@@ -61,7 +61,7 @@
                                             <div class="col-md-6">
                                                 
                                                 <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);">
-                                                    <img src="{{ asset('images/places/' . $place->touristicPlaceId . '/' . $place->mainImage) }}" width="100%" height="100%" style="border-radius: 25px; padding-left: 10%;padding-right: 10%; max-height: 400px">
+                                                    <img src="{{ asset('images/places/' . $place->touristicPlaceId . '/' . $place->mainImage) }}" width="100%" height="100%" style="border-radius: 25px; padding-left: 10%;padding-right: 10%; max-height: 400px" onerror="this.src='{{ asset('images/notFound.png') }}'">
                                                     <div class="container">
                                                     
                                                     </div>
@@ -69,7 +69,7 @@
                                             </div>
 
                                             <div class="col-md-4"><br>
-                                                <label for="mainImage">Cambiar imagen</label>
+                                                <label for="mainImage"><i class="far fa-image" style="margin-right: 5px;font-size: large"></i>Cambiar imagen</label>
                                                 <input id="image" type="file" name="image"><br>
                                             </div>
                                         </div>
@@ -77,41 +77,41 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="placeName">Nombre</label>
+                                        <label for="placeName"><i class="fas fa-address-card" style="margin-right: 5px;font-size: large"></i>Nombre</label>
                                         <input class="form-control" required name="placeName" type="text" id="placeName" value="{{ $place['placeName'] }}">
                                         <input class="form-control" required name="touristicPlaceId" type="text" id="touristicPlaceId" value="{{ $place['touristicPlaceId'] }}" hidden>
                                     </div>  
                                     
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="inputPlaceType" id="radioPlace" value="place" onclick="handleRadio(this);">
-                                        <label class="form-check-label" for="Radios1">Lugar turistico</label><br>
+                                        <label class="form-check-label" for="Radios1"><i class="fas fa-tree" style="margin-right: 5px;font-size: large"></i>Lugar turistico</label><br>
                                         <input class="form-check-input" type="radio" name="inputPlaceType" id="radioEvent" value="event" onclick="handleRadio(this);">
-                                        <label class="form-check-label" for="Radios2">Evento</label>
+                                        <label class="form-check-label" for="Radios2"><i class="fas fa-calendar-week" style="margin-right: 5px;font-size: large"></i>Evento</label>
                                     </div>
                                     <br>
 
                                     <div class="form-group" id="eventDates">
                                         <div class="form-group">
-                                          <label for="startDate"> Fecha de inicio</label>
+                                          <label for="startDate"><i class="far fa-clock" style="margin-right: 5px;font-size: large"></i> Fecha de inicio</label>
                                           <input class="form-control" type="date" id="startDate" name="startDate"
                                                 value="{{ date("Y-m-d") }}">
                                         </div>
                                         <div class="form-group">
-                                          <label for="endDate"> Fecha fin</label>
+                                          <label for="endDate"><i class="far fa-clock" style="margin-right: 5px;font-size: large"></i> Fecha fin</label>
                                           <input class="form-control" type="date" id="endDate" name="endDate"
                                                 value="{{ date("Y-m-d") }}">
                                         </div>
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="streets">Calles</label>
+                                        <label for="streets"><i class="fas fa-road" style="margin-right: 5px;font-size: large"></i>Calles</label>
                                         <input class="form-control" name="streets" type="text" id="streets" value="{{ $place['streets'] }}">
                                     </div>
 
 
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label for="inputPlaceProvince">Provincia</label>
+                                            <label for="inputPlaceProvince"><i class="fas fa-city" style="margin-right: 5px;font-size: large"></i>Provincia</label>
                                             <select onchange="selectListener()" class="form-control select-province" required="" id="inputPlaceProvince" name="inputPlaceProvince">
                                                 @foreach($provinces as $province)
                                                 @if ($province['provinceId'] == $place['provinceId'])
@@ -124,7 +124,7 @@
                                             </select>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="inputPlaceTags">Tags</label>
+                                            <label for="inputPlaceTags"><i class="fas fa-tags" style="margin-right: 5px;font-size: large"></i>Tags</label>
                                             <select class="form-control select-tag" multiple="multiple" required="required" name="inputPlaceTags[]" id="selectTagsitos">                                                    
 
                                                 @foreach($tags as $tag)
@@ -147,7 +147,7 @@
 
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label for="inputPlaceCategories">Categorias</label>
+                                            <label for="inputPlaceCategories"><i class="fas fa-tags" style="margin-right: 5px;font-size: large"></i>Categorias</label>
                                             <select class="form-control select-category" multiple="multiple" name="inputPlaceCategories[]" id="selectCategories">
                                                 
                                             </select>
@@ -158,13 +158,13 @@
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="statusRadio" id="activeRadio" value="2">
                                                 <label class="form-check-label" for="activeRadio">
-                                                  Activo
+                                                    <i class="fas fa-toggle-on" style="margin-right: 5px;font-size: large"></i>Activo
                                                 </label>
                                               </div>
                                               <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="statusRadio" id="inactiveRadio" value="1">
                                                 <label class="form-check-label" for="inactiveRadio">
-                                                  Inactivo
+                                                    <i class="fas fa-toggle-off" style="margin-right: 5px;font-size: large"></i>Inactivo
                                                 </label>
                                               </div>
                                         </div>
@@ -190,7 +190,7 @@
                                         <div class="accordion-item">
                                           <h2 class="accordion-header" id="flush-headingThree">
                                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-                                              Historia
+                                                <i class="fas fa-scroll" style="margin-right: 5px;font-size: large"></i>Historia
                                             </button>
                                           </h2>
                                           <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
@@ -259,7 +259,7 @@
 
                                             </div>
                                             <div class="card-body">
-                                                <img width="100%" height="100%" src="{{ asset($gallery['galleryPath'] . '/' . $gallery['images'][0]['imagePath']) }}" class="">
+                                                <img width="100%" height="100%" src="{{ asset($gallery['galleryPath'] . '/' . $gallery['images'][0]['imagePath']) }}" class="" onerror="this.src='{{ asset('images/notFound.png') }}'">
                                             </div>
                                             <div class="card-footer">
                                                 <a href="{{route('frontAgent.galleryEdit', [$gallery->galleryId])}}" class="btn btn-outline-dark"><i class="fas fa-edit"></i></a>
@@ -328,7 +328,7 @@
                                 <br><br>
                                 @foreach ($place['product'] as $product)                                    
                                     <div class="card flex-row col-md-6">                                        
-                                        <img src="{{ asset('images/places/' . $place->touristicPlaceId . '/products/' . $product->productIcon) }}" height="200px" width="25%">
+                                        <img src="{{ asset('images/places/' . $place->touristicPlaceId . '/products/' . $product->productIcon) }}" height="200px" width="25%" onerror="this.src='{{ asset('images/notFound.png') }}'">
                                         <div class="card-body">
                                             <a style="padding: 0" class="btn btn-outline-info" href="{{route('agent.product.edit', [$product->productId])}}">Editar</a>   
                                             <a style="padding: 0" class="btn btn-outline-warning" onclick="return confirm('Eliminar este producto??')" href="{{route('agent.product.destroy', [$product->productId])}}">Eliminar</a>

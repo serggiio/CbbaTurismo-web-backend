@@ -72,7 +72,7 @@
                               <div class="card">
                                   <div class="card-content">
                                     <img style="height: 300px" class="card-img-top img-fluid" src="{{ asset($gallery['galleryPath'] . '/' . $item['imagePath']) }}"
-                                      alt="Card image cap">
+                                      alt="Card image cap" onerror="this.src='{{ asset('images/notFound.png') }}'">
                                     <div class="card-body" style="background-image: linear-gradient(to top, #d9f2bc, #bfe396, #a5d470, #8ac449, #6eb512);">
                                       <a href="{{route('admin.galleryImage.destroy', $item['imageId'])}}" onclick="deleteControl({{ $gallery['images'] }})" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
                                     </div>

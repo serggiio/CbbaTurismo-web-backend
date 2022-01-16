@@ -9,7 +9,7 @@ class Tag extends Model
     protected $table = 'tag';
     protected $primaryKey = 'tagId';
     protected $fillable = [
-        'tagName', 'tagFile'
+        'tagName'
     ];
 
     public function touristicPlace(){

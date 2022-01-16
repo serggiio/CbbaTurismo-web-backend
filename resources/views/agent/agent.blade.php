@@ -85,7 +85,7 @@
                         <div class="card mb-3 shadow-lg p-3 mb-5  " style="width: 100%;border-radius: 25px; background-image: linear-gradient(to right top, #1a2320, #194e3b, #0f7d52, #16ad63, #3ae06d);">
                             <div class="row g-0">
                             <div class="col-md-4">
-                                <img src="{{ asset('images/places/' . $item->touristicPlaceId . '/' . $item->mainImage) }}" width="100%" height="100%" style="border-radius: 25px;">
+                                <img src="{{ asset('images/places/' . $item->touristicPlaceId . '/' . $item->mainImage) }}" width="100%" height="100%" style="border-radius: 25px;" onerror="this.src='{{ asset('images/notFound.png') }}'">
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
