@@ -1087,7 +1087,8 @@ class FrontController extends Controller
         $pdf = PDF::loadView('admin.reports.pdf.template', compact('touristicPlaces'));
 
 
-        return $pdf->stream('reporte-turismo.pdf');
+        return $pdf->download('teste.pdf');
+        //return $pdf->stream('reporte-turismo.pdf');
     }
 
     public function editProduct($id)
