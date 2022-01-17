@@ -82,7 +82,7 @@
                 <br><br>
                 
                 <a class="btn btn-outline-info previewButton" href="{{route('welcome.previewList')}}">Vista previa</a><br>
-                <a href="{{ asset('androidApp/CbbaTurismo-App.apk') }}">App Android</a> <a href="{{ asset('androidApp/CbbaTurismo-App.apk') }}" class="btn btn-outline-info previewButton"><i class="fab fa-android" style="font-size: 150%"></i></a><br>
+                <a href="{{ asset('androidApp/CbbaTurismo-App.apk') }}" download rel="noopener noreferrer" target="_blank">App Android</a> <a href="{{ asset('androidApp/CbbaTurismo-App.apk') }}" class="btn btn-outline-info previewButton"><i class="fab fa-android" style="font-size: 150%"></i></a><br>
             
             </p>
             <br>
