@@ -105,6 +105,14 @@ Route::group(['prefix' => 'touristicPlace', 'middleware' => 'cors'], function() 
     Route::get('/productImg/{id}', 'TouristicPlaceController@getProductImage');
 });
 
+    //Route::get('/App', 'TouristicPlaceController@getApp');
+    Route::get('/App', [
+
+        'as' 	=> 		'Api.App',
+        'uses'	=>		'TouristicPlaceController@getApp'
+        
+    ]);
+
 Route::get('/testMail', function(){
 
     return Mail::to("sergioss21er@gmail.com")->send(new welcome("cdngmwuk"));

@@ -790,6 +790,18 @@ class TouristicPlaceController extends Controller
     }
 
 
+    public function getApp()
+    {
+        $path = public_path(). '/androidApp/CbbaTurismo-App.apk'; 
+        //dd($path);
+        //return response()->download($path);
+        return response()->file($path ,[
+            'Content-Type'=>'application/vnd.android.package-archive',
+            'Content-Disposition'=> 'attachment; filename="CbbaTurismo-App.apk"',
+        ]) ;
+    }
+
+
 
 
     
