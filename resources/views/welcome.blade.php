@@ -77,6 +77,7 @@
 
         <div class="rightNav">
             <img src="{{ asset('images/header/icono4.png') }}" alt="" class="mainIcon">    
+            <a href="{{ asset('androidApp/CbbaTurismo-App.apk') }}" download rel="noopener noreferrer" target="_blank">App Android</a>
             <p class="navText">Descrube los mejores destinos turisticos con información que se actualiza constantemente para una
                 mejor expericencia.
                 <br><br>
