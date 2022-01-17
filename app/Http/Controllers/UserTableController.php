@@ -68,6 +68,7 @@ class UserTableController extends Controller
             ]);    */
 
             $userData['save']['password'] = bcrypt($userData['save']['password']);
+            $userData['save']['typeId'] = 3;
 
             $queryData = UserTableObj::where("email", "=", $userData['save']['email'])->get()->first();
 
