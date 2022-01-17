@@ -77,7 +77,8 @@
                                 </div>
                                 <div class="row" style=" margin-left: 5%;margin-right: 5%;">
                                     <h3 class="card-title" style="width: 90%">Historia</h3><hr>
-                                    <div class="overflow-auto card" style="height: 200px; padding: 30px">{{ $place['history'] }}</div>
+                                    <div class="overflow-auto card" style="height: 200px; padding: 30px">
+                                      <?php $x = "&lt;p&gt;html&lt;/p&gt;"; echo html_entity_decode(htmlspecialchars($place['history'], ENT_QUOTES)) ?></div>
                                 </div>
                             </div>
                                 
